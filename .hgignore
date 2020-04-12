@@ -1,0 +1,11 @@
+\.orig$
+\.orig\..*$
+\.chg\..*$
+\.rej$
+\.conflict\~$
+^\.projectKnowledge$
+^dist$
+^\.idea$
+^tests/theme/\.idea$
+syntax: glob
+vendor/

@@ -1,0 +1,38 @@
+<?php
+/*
+  Plugin Name: WP Helper
+  Version: 0.72.4
+  Plugin URI: https://www.wpsolved.io/helper/
+  Author: Justus Meyer
+  Author URI: https://www.wpsolved.io
+  Description: WP Helper provides a list of methods to aid in WordPress theme- and plug-in development, as well as various tools to aid in debugging.
+  Text Domain: WordPressHelper
+  Domain Path: /languages
+ */
+
+require_once(__DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php');
+
+use \ion\WordPress\IWordPressHelper;
+use \ion\WordPress\WordPressHelper as WP;
+use \ion\WordPress\Helper\IContext;
+
+WP::createContext('ion', 'wp-helper', __FILE__, __DIR__, [])
+        
+    ->initialize(function(IContext $context) {    
+
+        // empty for now!
+    })
+
+    ->activate(function(IContext $context) {    
+
+        // empty for now!
+    })
+    
+    ->deactivate(function(IContext $context) {    
+
+        // empty for now!
+    })
+
+    ->uninstall(null)
+
+->finalize();    

@@ -1,0 +1,55 @@
+{
+  "name": "ion/wp-helper/theme",
+  "type": "library",
+  "description": "A test theme for WP Helper.",
+  "keywords": [
+    "WP Test Plugin",
+    "WPHelper Test Plugin",
+    "WP Helper Test Plugin",
+    "wp-helper Test Plugin",
+    "WordPress Test Plugin",
+    "WordPressHelper Test Plugin",
+    "WordPress Helper Test Plugin",
+    "WordPress Test Plugin",
+    "WordPress Plugin Test Plugin",
+    "WordPress Plugins Test Plugin",
+    "WordPress Theme Test Plugin",
+    "WordPress Themes Test Plugin"
+  ],
+  "homepage": "https://wpsolved.io/helper",
+  "license": "LGPL-3.0",
+  "authors": [
+    {
+      "name": "Justus Meyer",
+      "role": "developer",
+      "homepage": "https://bitbucket.org/justusmeyer/",
+      "email": "justus@justusmeyer.com"
+    }
+  ],
+  "support": {
+    "issues": "https://bitbucket.org/justusmeyer/wp-helper/issues"
+  },
+  "require": {
+    "php": "^7.1",
+    "ion/wp-helper": "*@dev"
+  },
+  "require-dev": {
+
+  },
+  "autoload": {
+    "psr-4": {
+      "ion\\": "source/ion/"
+    },
+    "files": [
+      "include.php"
+    ]
+  },
+  "minimum-stability": "dev",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://justusmeyer@bitbucket.org/wpsolved/wp-helper/"
+
+    }
+  ]
+}
