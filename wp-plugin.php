@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: WP Helper
-  Version: 0.72.4
+  Version: 0.72.5
   Plugin URI: https://www.wpsolved.io/helper/
   Author: Justus Meyer
   Author URI: https://www.wpsolved.io
@@ -14,21 +14,21 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
 use \ion\WordPress\IWordPressHelper;
 use \ion\WordPress\WordPressHelper as WP;
-use \ion\WordPress\Helper\IContext;
+use \ion\WordPress\Helper\IHelperContext;
 
 WP::createContext('ion', 'wp-helper', __FILE__, __DIR__, [])
         
-    ->initialize(function(IContext $context) {    
+    ->initialize(function(IHelperContext $context) {    
 
         // empty for now!
     })
 
-    ->activate(function(IContext $context) {    
+    ->activate(function(IHelperContext $context) {    
 
         // empty for now!
     })
     
-    ->deactivate(function(IContext $context) {    
+    ->deactivate(function(IHelperContext $context) {    
 
         // empty for now!
     })
