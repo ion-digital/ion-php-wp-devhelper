@@ -49,6 +49,25 @@ table.form-table.multi-column:not(.multi-column-2) > tbody > tr > td > table > t
     padding-top: 0px;
 }
 
+table.logentries th.column-id,
+table.logentries td.column-id,
+th.column-id,
+td.column-id
+{
+    width: 5%;
+    white-space:nowrap;
+}
+
+table.logentries th.column-level,
+table.logentries td.column-level,
+table.logentries th.column-time,
+table.logentries td.column-time
+{
+    width: 10%;
+    white-space: nowrap;
+}
+
+
 
 @media screen and (min-width: 782px) {
 

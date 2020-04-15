@@ -347,7 +347,7 @@ return false;
 JS
 ), true);
             }
-            WP::addAdminTable("Log", "log-entries", "Log Entry", "Log Entries", "id", null, false, false, false)->addColumn(WP::textTableColumn("ID", "id", "id"))->addColumn(WP::textTableColumn("Message", "message", "message"))->addColumn(WP::textTableColumn("Level", "level", "level"))->addColumn(WP::textTableColumn("Time", "time", "time"))->read(function () use($log) {
+            WP::addAdminTable("Log", "log-entries", "Log Entry", "Log Entries", "id", null, false, false, false)->addColumn(WP::textTableColumn("ID", "id", "id"))->addColumn(WP::textTableColumn("Level", "level", "level"))->addColumn(WP::textTableColumn("Time", "time", "time"))->addColumn(WP::textTableColumn("Message", "message", "message"))->read(function () use($log) {
                 $formatLevel = function ($level) {
                     $class = "level log-level-{$level}";
                     return "<span class=\"{$class}\">{$level}</span>";

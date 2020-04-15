@@ -420,9 +420,9 @@ JS
             
             WP::addAdminTable("Log", "log-entries", "Log Entry", "Log Entries", "id", null, false, false, false)
                     ->addColumn(WP::textTableColumn("ID", "id", "id"))
-                    ->addColumn(WP::textTableColumn("Message", "message", "message"))
                     ->addColumn(WP::textTableColumn("Level", "level", "level"))
-                    ->addColumn(WP::textTableColumn("Time", "time", "time"))                    
+                    ->addColumn(WP::textTableColumn("Time", "time", "time"))    
+                    ->addColumn(WP::textTableColumn("Message", "message", "message"))
                     ->read(function () use ($log) {
 
                         $formatLevel = function($level) {

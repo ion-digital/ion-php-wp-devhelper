@@ -831,6 +831,7 @@ final class HelperContext extends Base implements IHelperContext, IObserver {
         return true;
     }       
     
+	//TODO: Kill this method - there is a better way to do this and its caused enough trouble!!!
     public function template(string $name, bool $echo = false): string {        
 
         if (substr_compare($name, '.php', -strlen('.php')) !== 0) {
@@ -848,7 +849,8 @@ final class HelperContext extends Base implements IHelperContext, IObserver {
         $output = ob_get_clean();
 
         if ($echo === true) {            
-            header("HTTP/1.1 200 OK");
+            
+            http_response_code(200);
             echo $output;
         }
 
