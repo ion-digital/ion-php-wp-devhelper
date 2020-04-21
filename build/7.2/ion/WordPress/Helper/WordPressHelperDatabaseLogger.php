@@ -53,11 +53,11 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
         $currentTimeStamp = (int) current_time('timestamp');
         $slug = $this->getSlug();
         $records = null;
-        $limit = WP::getOption(Constants::MAX_DISPLAYED_LOG_ENTRIES, null);
-        if ($limit === null) {
+        $limit = PHP::toInt(WP::getOption(Constants::MAX_DISPLAYED_LOG_ENTRIES, null));
+        if (PHP::isEmpty($limit)) {
             $limit = 100;
         }
-        if ($ageInDays === null) {
+        if (PHP::isEmpty($ageInDays)) {
             $records = WP::dbQuery("SELECT * FROM `{$table}` WHERE `slug` = '{$slug}' ORDER BY `time` DESC, `id` DESC LIMIT {$limit}");
         } else {
             $age = $ageInDays === null ? 1 : $ageInDays;

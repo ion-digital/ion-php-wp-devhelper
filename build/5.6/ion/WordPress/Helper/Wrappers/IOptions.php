@@ -8,6 +8,7 @@ namespace ion\WordPress\Helper\Wrappers;
  *
  * @author Justus
  */
+use ion\WordPress\Helper\IAdminCustomizeHelper;
 
 interface IOptions
 {
@@ -64,5 +65,14 @@ interface IOptions
      */
     
     static function removeOption($key, $postId = null, OptionMetaType $type = null);
+    
+    /**
+     * method
+     * 
+     * 
+     * @return IAdminCustomizeHelper
+     */
+    
+    static function addCustomizationSection($title, $slug = null, $priority = null, $textDomain = null);
 
 }

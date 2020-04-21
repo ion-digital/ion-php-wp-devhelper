@@ -9,7 +9,6 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
-use ion\WordPress\WordPressHelper;
 use ion\WordPress\Helper\Constants;
 use ion\WordPress\WordPressHelper as WP;
 use ion\PhpHelper as PHP;
@@ -279,7 +278,7 @@ TEMPLATE;
                         }
                     } else {
                         if (array_key_exists('name', $field)) {
-                            $dbValue = WordPressHelper::getOption($field['name'], '', $postId);
+                            $dbValue = WP::getOption($field['name'], '', $postId);
                         }
                     }
                     $value = $loadProcessor === null ? $dbValue : $loadProcessor($dbValue);
@@ -452,7 +451,7 @@ TEMPLATE;
                 }
                 $formAction .= 'key=' . $state['key'];
             }
-            $formAction = WordPressHelper::getBackEndUri('admin-post.php') . ($formAction === null ? '' : $formAction);
+            $formAction = WP::getBackEndUri('admin-post.php') . ($formAction === null ? '' : $formAction);
         } else {
             $formAction = $this->descriptor["action"];
         }
@@ -905,7 +904,7 @@ TEMPLATE;
                 if ($state['create'] === false && $state['update'] === false) {
                     if ($this->updateProcessor === null || $this->createProcessor === null && PHP::isInt($metaId)) {
                         foreach ($newValues as $key => $value) {
-                            WordPressHelper::setOption($key, $value, $metaId, $metaType);
+                            WP::setOption($key, $value, $metaId, $metaType);
                         }
                     } else {
                         if (PHP::isInt($metaId) && (PHP::isCountable($oldValues) && count($oldValues) === 0)) {
@@ -964,12 +963,12 @@ TEMPLATE;
                     $url = $scheme . $host . $path . (count($query) > 0 ? '?' . http_build_query($query) : '');
                     //die($url);
                     if ($metaId === null) {
-                        WordPressHelper::redirect($url);
+                        WP::redirect($url);
                     }
                 } else {
                     $idReferrer = filter_input(INPUT_POST, '__postReferrer', FILTER_SANITIZE_URL);
                     if ($idReferrer !== null) {
-                        WordPressHelper::redirect($idReferrer);
+                        WP::redirect($idReferrer);
                     }
                 }
                 //WordPressHelper::notifySuccess("Settings saved.");

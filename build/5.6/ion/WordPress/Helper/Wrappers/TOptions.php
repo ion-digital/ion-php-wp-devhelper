@@ -23,6 +23,10 @@ use ion\ISemVer;
 use ion\SemVer;
 use ion\Types\StringObject;
 use ion\WordPress\Helper\Wrappers\OptionMetaType;
+use WP_Customize_Manager;
+use WP_Customize_Media_Control;
+use ion\WordPress\Helper\IAdminCustomizeHelper;
+use ion\WordPress\Helper\AdminCustomizeHelper;
 /**
  * Description of TRewriteApi
  *
@@ -30,6 +34,7 @@ use ion\WordPress\Helper\Wrappers\OptionMetaType;
  */
 trait TOptions
 {
+    private static $themeOptions = [];
     /**
      * method
      * 
@@ -38,9 +43,52 @@ trait TOptions
     
     protected static function initialize_TOptions()
     {
-        //        static::registerWrapperAction('init', function() {
-        //
-        //        });
+        static::registerWrapperAction('customize_register', function (WP_Customize_Manager $wpCustomize) {
+            //            echo("<pre>");
+            //        var_dump(static::$themeOptions);
+            //            die("</pre>");
+            foreach (static::$themeOptions as $sectionSlug => $themeOption) {
+                $wpCustomize->add_section($sectionSlug, ['title' => $themeOption['title'], 'priority' => $themeOption['priority']]);
+                foreach ($themeOption['settings'] as $settingSlug => $setting) {
+                    $wpCustomize->add_setting($settingSlug, ['default' => null, 'transport' => 'refresh']);
+                    $label = !PHP::isEmpty($themeOption['textDomain']) ? __($setting['label'], $themeOption['textDomain']) : $setting['label'];
+                    if ($setting['type'] == 'media') {
+                        $wpCustomize->add_control(new WP_Customize_Media_Control($wpCustomize, $settingSlug, ['label' => $label, 'section' => $sectionSlug, 'settings' => $settingSlug, 'priority' => 8]));
+                        continue;
+                    }
+                    if ($setting['type'] == 'select') {
+                        $wpCustomize->add_control($settingSlug, ['label' => $label, 'section' => $sectionSlug, 'settings' => $settingSlug, 'type' => 'select', 'choices' => $setting['options']]);
+                        continue;
+                    }
+                    if ($setting['type'] == 'checkbox') {
+                        $wpCustomize->add_control($settingSlug, ['label' => $label, 'section' => $sectionSlug, 'settings' => $settingSlug, 'type' => 'checkbox']);
+                        continue;
+                    }
+                    if ($setting['type'] == 'text') {
+                        if ($setting['multiLine'] === true) {
+                            $wpCustomize->add_control($settingSlug, ['label' => $label, 'section' => $sectionSlug, 'settings' => $settingSlug, 'type' => 'textarea']);
+                            continue;
+                        }
+                        $wpCustomize->add_control($settingSlug, ['label' => $label, 'section' => $sectionSlug, 'settings' => $settingSlug, 'type' => 'text']);
+                        continue;
+                    }
+                }
+            }
+        });
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return IAdminCustomizeHelper
+     */
+    
+    public static function addCustomizationSection($title, $slug = null, $priority = null, $textDomain = null)
+    {
+        $themeOption = ['slug' => $slug === null ? WP::slugify($title) : $slug, 'title' => $title, 'priority' => $priority === null ? 30 : $priority, 'textDomain' => $textDomain, 'settings' => []];
+        static::$themeOptions[$themeOption['slug']] =& $themeOption;
+        return new AdminCustomizeHelper($themeOption['settings']);
     }
     
     /**
