@@ -41,11 +41,6 @@
             <file>file:/D:/justus/Documents/Projects/NetBeans/WPHelper/source/ion/WordPress/Tools/WordPressHelperTools.php</file>
         </group>
         <group name="My Clients"/>
-        <group name="PHP">
-            <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/source/classes/ion/WordPress/Helper/HelperContext.php</file>
-            <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/assets/styles/wp-helper-admin.css</file>
-            <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/source/classes/ion/WordPress/Helper/Tools.php</file>
-            <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/source/classes/ion/WordPress/Helper/Wrappers/TCommon.php</file>
-        </group>
+        <group name="PHP"/>
     </open-files>
 </project-private>

@@ -12,9 +12,6 @@ namespace ion\WordPress\Helper;
  * @author Justus
  */
 
-use \ion\WordPress\WordPressHelper;
-
-
 use \ion\WordPress\Helper\Constants;
 use \ion\WordPress\WordPressHelper as WP;
 use \ion\PhpHelper as PHP;
@@ -217,7 +214,7 @@ TEMPLATE;
                         
                         if(array_key_exists('name', $field)) {
                             
-                            $dbValue = WordPressHelper::getOption($field['name'], '', $postId);
+                            $dbValue = WP::getOption($field['name'], '', $postId);
                         }
                     }
 
@@ -466,7 +463,7 @@ TEMPLATE;
                 $formAction .= 'key=' . $state['key'];
             }
 
-            $formAction = WordPressHelper::getBackEndUri('admin-post.php') . ($formAction === null ? '' : $formAction);
+            $formAction = WP::getBackEndUri('admin-post.php') . ($formAction === null ? '' : $formAction);
             
         } else {
             
@@ -1030,7 +1027,7 @@ TEMPLATE;
 
                         foreach ($newValues as $key => $value) {
                             
-                            WordPressHelper::setOption($key, $value, $metaId, $metaType);
+                            WP::setOption($key, $value, $metaId, $metaType);
                         }
                         
                     } else {
@@ -1117,7 +1114,7 @@ TEMPLATE;
                     
                     if($metaId === null) {
                         
-                        WordPressHelper::redirect($url);
+                        WP::redirect($url);
                     }
                     
                 } else {
@@ -1126,7 +1123,7 @@ TEMPLATE;
   
                     if($idReferrer !== null) {
                                             
-                        WordPressHelper::redirect($idReferrer);
+                        WP::redirect($idReferrer);
                     }
                 }
 
