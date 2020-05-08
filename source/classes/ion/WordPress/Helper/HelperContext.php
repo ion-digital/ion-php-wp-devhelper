@@ -129,7 +129,7 @@ final class HelperContext extends Base implements IHelperContext, IObserver {
         $this->workingDir = $workingDir;
         $this->workingUri = $workingUri;
 
-        $this->contextId = count(array_values(WP::getContexts())) + 1;
+        $this->contextId = PHP::count(array_values(WP::getContexts())) + 1;
 
         $this->primary = (bool) !defined(Constants::WP_HELPER);
 

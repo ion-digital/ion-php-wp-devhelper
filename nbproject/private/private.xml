@@ -41,6 +41,8 @@
             <file>file:/D:/justus/Documents/Projects/NetBeans/WPHelper/source/ion/WordPress/Tools/WordPressHelperTools.php</file>
         </group>
         <group name="My Clients"/>
-        <group name="PHP"/>
+        <group name="PHP">
+            <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/source/classes/ion/WordPress/Helper/HelperContext.php</file>
+        </group>
     </open-files>
 </project-private>

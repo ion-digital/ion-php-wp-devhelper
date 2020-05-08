@@ -6,6 +6,7 @@ namespace ion\WordPress\Helper;
 
 use ion\WordPress\Helper\Constants;
 use ion\WordPress\WordPressHelper as WP;
+use ion\PhpHelper as PHP;
 /**
  * Description of AdminTableHelper
  *
@@ -198,7 +199,7 @@ class AdminTableHelper implements IAdminTableHelper
                     }
                 }
             }
-            $tmp = parse_url(filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL));
+            $tmp = parse_url(PHP::getServerRequestUri());
             $scheme = array_key_exists('scheme', $tmp) ? $tmp['scheme'] . '://' : '';
             $host = array_key_exists('host', $tmp) ? $tmp['host'] : '';
             $path = array_key_exists('path', $tmp) ? $tmp['path'] : '';
@@ -392,6 +393,10 @@ SQL
                     $where[] = 'CAST(`' . $self->parent['key'] . '` AS CHAR(255)) LIKE (%s)';
                     $values[] = $wpdb->esc_like($item);
                 }
+                // echo "<pre>";
+                // var_dump($values);
+                // echo "\n\nDELETE FROM `$table` WHERE " . join(' OR ', $where);
+                // die("</pre>");
                 WP::dbQuery("DELETE FROM `{$table}` WHERE " . join(' OR ', $where), $values);
             }
         });

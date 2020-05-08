@@ -100,7 +100,7 @@ final class HelperContext extends Base implements IHelperContext, IObserver
         $this->loadPath = $loadPath;
         $this->workingDir = $workingDir;
         $this->workingUri = $workingUri;
-        $this->contextId = count(array_values(WP::getContexts())) + 1;
+        $this->contextId = PHP::count(array_values(WP::getContexts())) + 1;
         $this->primary = (bool) (!defined(Constants::WP_HELPER));
         if (!defined(Constants::WP_HELPER)) {
             define(Constants::WP_HELPER, Package::getInstance('ion', 'wp-helper')->getVersion()->toString());

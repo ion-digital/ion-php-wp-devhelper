@@ -1367,13 +1367,17 @@ SQL
 
                         if(!in_array('`' . $key . '`', $columns)) {
 
-                            $columns['`' . $key . '`'] = $value;
+                            $columns['`' . $key . '`'] = static::getTypeParameter(null, $value);
                         }            
                     }                       
 
                     $insertColumnsString = join(', ', array_keys($columns));
                     $insertValuesString = join(', ', array_values($columns));
                     
+// echo "<pre>";
+// var_dump($values);
+// echo "\n\nINSERT INTO `$table` ($insertColumnsString) VALUES ($insertValuesString)";
+// die("</pre>");
                     WP::dbQuery("INSERT INTO `$table` ($insertColumnsString) VALUES ($insertValuesString)", array_values($values));
                 });
     }           
