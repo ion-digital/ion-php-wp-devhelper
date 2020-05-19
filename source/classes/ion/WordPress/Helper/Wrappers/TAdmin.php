@@ -10,6 +10,7 @@ use \Throwable;
 use \WP_Post;
 use \WP_User;
 use \WP_Term;
+use \WP_Comment;
 use \ion\WordPress\IWordPressHelper;
 use \ion\Types\Arrays\IMap;
 use \ion\Types\Arrays\Map;
@@ -1942,5 +1943,105 @@ JS
         
         return static::$currentAdminPage;
     }
+    
+   
+    public static function getCurrentAdminObjectType(): ?string {
+        
+        if(!WP::isAdmin()) {
+            
+            return null;
+        }
+             
+        global $pagenow;
+
+        if(PHP::isEmpty($pagenow)) {
+
+            return null;
+        }
+        
+        if($pagenow == 'post.php') {
+            
+            return WP_Post::class;
+        }
+        
+        if($pagenow == 'term.php') {
+            
+            return WP_Term::class;
+        }
+
+        if($pagenow == 'profile.php' || $pagenow == 'user-edit.php') {
+            
+            return WP_User::class;
+        }
+
+        if($pagenow == 'comment.php') {
+            
+            return WP_Comment::class;
+        }        
+        
+        return null;
+    }
+    
+    public static function getCurrentAdminObject(): ?object {
+        
+        if(static::getCurrentAdminObjectId() === null) {
+            
+            return null;
+        }
+        
+        if(static::getCurrentAdminObjectType() == WP_Post::class) {
+            
+            return PHP::toNull(get_post(static::getCurrentAdminObjectId()));
+        }
+        
+        if(static::getCurrentAdminObjectType() == WP_Term::class) {
+            
+            return PHP::toNull(get_term(static::getCurrentAdminObjectId()));
+        }        
+        
+        if(static::getCurrentAdminObjectType() == WP_User::class) {
+            
+            return PHP::toNull(get_userdata(static::getCurrentAdminObjectId()));
+        }
+
+        if(static::getCurrentAdminObjectType() == WP_Comment::class) {
+            
+            return PHP::toNull(get_comment(static::getCurrentAdminObjectId()));
+        }
+        
+        return null;
+    }
+   
+    public static function getCurrentAdminObjectId(): ?int {
+        
+        if(static::getCurrentAdminObjectType() == WP_Post::class) {
+            
+            return PHP::toInt(PHP::filterInput('post', [ INPUT_GET ], FILTER_VALIDATE_INT));
+        }
+        
+        if(static::getCurrentAdminObjectType() == WP_Term::class) {
+            
+            return PHP::toInt(PHP::filterInput('tag_ID', [ INPUT_GET ], FILTER_VALIDATE_INT));
+        }        
+        
+        if(static::getCurrentAdminObjectType() == WP_User::class) {
+            
+            global $pagenow;
+            
+            if($pagenow == 'profile.php') {
+                
+                return PHP::toInt(get_current_user_id());
+            }
+            
+            return PHP::toInt(PHP::filterInput('user_id', [ INPUT_GET ], FILTER_VALIDATE_INT));
+        }
+
+        if(static::getCurrentAdminObjectType() == WP_Comment::class) {
+            
+            return PHP::toInt(PHP::filterInput('c', [ INPUT_GET ], FILTER_VALIDATE_INT));
+        }
+        
+        return null;
+    }    
 
 }

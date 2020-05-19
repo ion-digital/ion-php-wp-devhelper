@@ -83,6 +83,13 @@ interface IAdmin {
     
     static function getCurrentAdminPage(): ?string;
     
+    static function getCurrentAdminObjectType(): ?string;
+    
+    static function getCurrentAdminObject(): ?object;
+   
+    static function getCurrentAdminObjectId(): ?int;
+    
+    
 //    static function getDashboardBackEndMenuPage(): IAdminMenuPageHelper;
 //
 //    static function getPostsBackEndMenuPage(): IAdminMenuPageHelper;
