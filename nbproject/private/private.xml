@@ -44,5 +44,9 @@
         <group name="PHP">
             <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/source/classes/ion/WordPress/Helper/HelperContext.php</file>
         </group>
+        <group name="ION">
+            <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/source/classes/ion/WordPress/Helper/AdminCustomizeHelper.php</file>
+            <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/source/classes/ion/WordPress/Helper/Wrappers/TOptions.php</file>
+        </group>
     </open-files>
 </project-private>
