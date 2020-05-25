@@ -79,5 +79,11 @@ interface IAdmin
     static function addAdminPageAction(string $page, string $caption, string $uri) : void;
     
     static function getCurrentAdminPage() : ?string;
+    
+    static function getCurrentAdminObjectType() : ?string;
+    
+    static function getCurrentAdminObject() : ?object;
+    
+    static function getCurrentAdminObjectId() : ?int;
 
 }

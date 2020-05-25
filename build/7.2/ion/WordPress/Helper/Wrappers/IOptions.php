@@ -12,18 +12,66 @@ use ion\WordPress\Helper\IAdminCustomizeHelper;
 
 interface IOptions
 {
+    static function getSiteOption(string $name, $default = null);
+    
+    static function setSiteOption(string $name, $value = null, bool $autoLoad = false) : bool;
+    
+    static function hasSiteOption(string $name) : bool;
+    
+    static function removeSiteOption(string $name) : bool;
+    
+    static function getPostOption(string $name, int $metaId, $default = null);
+    
+    static function setPostOption(string $name, int $metaId, $value = null, bool $autoLoad = false) : bool;
+    
+    static function hasPostOption(string $name, int $metaId) : bool;
+    
+    static function removePostOption(string $name, int $metaId, $value = null) : bool;
+    
+    static function getTermOption(string $name, int $metaId, $default = null);
+    
+    static function setTermOption(string $name, int $metaId, $value = null, bool $autoLoad = false) : bool;
+    
+    static function hasTermOption(string $name, int $metaId) : bool;
+    
+    static function removeTermOption(string $name, int $metaId, $value = null) : bool;
+    
+    static function getUserOption(string $name, int $metaId, $default = null);
+    
+    static function setUserOption(string $name, int $metaId, $value = null, bool $autoLoad = false) : bool;
+    
+    static function hasUserOption(string $name, int $metaId) : bool;
+    
+    static function removeUserOption(string $name, int $metaId, $value = null) : bool;
+    
+    static function getCommentOption(string $name, int $metaId, $default = null);
+    
+    static function setCommentOption(string $name, int $metaId, $value = null, bool $autoLoad = false) : bool;
+    
+    static function hasCommentOption(string $name, int $metaId) : bool;
+    
+    static function removeCommentOption(string $name, int $metaId, $value = null) : bool;
+    
+    static function addCustomizationSection(string $title, string $slug = null, int $priority = null, string $textDomain = null) : IAdminCustomizeHelper;
+    
+    static function getCustomizationOption(string $name, $default = null);
+    
+    static function setCustomizationOption(string $name, $value = null) : void;
+    
+    static function hasCustomizationOption(string $name) : bool;
+    
+    static function removeCustomizationOption(string $name) : void;
+    
     static function getOption(string $key, $default = null, int $id = null, OptionMetaType $type = null, bool $raw = false);
     
-    static function getRawOption(string $key, $default = null, int $id = null, OptionMetaType $type = null);
-    
     static function setOption(string $key, $value = null, int $id = null, OptionMetaType $type = null, bool $raw = false, bool $autoLoad = false) : bool;
-    
-    static function setRawOption(string $key, $value = null, int $id = null, OptionMetaType $type = null, bool $autoLoad = false) : bool;
     
     static function hasOption(string $key, int $id = null, OptionMetaType $type = null) : bool;
     
     static function removeOption(string $key, int $postId = null, OptionMetaType $type = null) : bool;
     
-    static function addCustomizationSection(string $title, string $slug = null, int $priority = null, string $textDomain = null) : IAdminCustomizeHelper;
+    static function getRawOption(string $key, $default = null, int $id = null, OptionMetaType $type = null);
+    
+    static function setRawOption(string $key, $value = null, int $id = null, OptionMetaType $type = null, bool $autoLoad = false) : bool;
 
 }

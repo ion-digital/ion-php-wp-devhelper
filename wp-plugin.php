@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: WP Helper
-  Version: 0.72.8
+  Version: 0.73.1
   Plugin URI: https://www.wpsolved.io/helper/
   Author: Justus Meyer
   Author URI: https://www.wpsolved.io

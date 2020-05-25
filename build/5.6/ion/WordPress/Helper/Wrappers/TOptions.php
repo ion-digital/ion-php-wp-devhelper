@@ -77,20 +77,7 @@ trait TOptions
         });
     }
     
-    /**
-     * method
-     * 
-     * 
-     * @return IAdminCustomizeHelper
-     */
-    
-    public static function addCustomizationSection($title, $slug = null, $priority = null, $textDomain = null)
-    {
-        $themeOption = ['slug' => $slug === null ? WP::slugify($title) : $slug, 'title' => $title, 'priority' => $priority === null ? 30 : $priority, 'textDomain' => $textDomain, 'settings' => []];
-        static::$themeOptions[$themeOption['slug']] =& $themeOption;
-        return new AdminCustomizeHelper($themeOption['settings']);
-    }
-    
+    // --- DEPRECATED ---
     /**
      * method
      * 
@@ -189,42 +176,25 @@ trait TOptions
     
     public static function hasOption($key, $id = null, OptionMetaType $type = null)
     {
-        global $wpdb;
-        $sqlQuery = null;
-        $optionField = 'option_name';
-        if ($id === null) {
-            $sqlQuery = "SELECT * FROM `{$wpdb->prefix}options` WHERE {$optionField} LIKE ('{$key}') LIMIT 1";
-        } else {
-            $tbl = null;
-            $field = null;
-            if ($type === null) {
-                $type = OptionMetaType::POST();
-            }
-            switch ($type->toValue()) {
-                case OptionMetaType::TERM:
-                    $tbl = 'termmeta';
-                    $field = 'term_id';
-                    break;
-                case OptionMetaType::USER:
-                    $tbl = 'usermeta';
-                    $field = 'user_id';
-                    break;
-                case OptionMetaType::COMMENT:
-                    $tbl = 'commentmeta';
-                    $field = 'comment_id';
-                    break;
-                case OptionMetaType::POST:
-                    $tbl = 'postmeta';
-                    $field = 'post_id';
-                    break;
-            }
-            $sqlQuery = "SELECT * FROM `{$wpdb->prefix}{$tbl}` WHERE `meta_key` LIKE ('{$key}') AND `{$field}` = {$id} LIMIT 1";
+        $tmp = null;
+        if ($type === null) {
+            $type = OptionMetaType::POST();
         }
-        $results = $wpdb->get_results($sqlQuery, OBJECT);
-        if (count($results) > 0) {
-            return true;
+        switch ($type->toValue()) {
+            case OptionMetaType::TERM:
+                $tmp = 'term';
+                break;
+            case OptionMetaType::USER:
+                $tmp = 'user';
+                break;
+            case OptionMetaType::COMMENT:
+                $tmp = 'comment';
+                break;
+            case OptionMetaType::POST:
+                $tmp = 'post';
+                break;
         }
-        return false;
+        return static::_hasOption($key, $tmp, $id);
     }
     
     /**
@@ -249,6 +219,8 @@ trait TOptions
                 return delete_user_meta($id, $key);
             case OptionMetaType::POST:
                 return delete_post_meta($id, $key);
+            case OptionMetaType::COMMENT:
+                return delete_comment_meta($id, $key);
         }
     }
     
@@ -274,6 +246,373 @@ trait TOptions
     public static function setRawOption($key, $value = null, $id = null, OptionMetaType $type = null, $autoLoad = false)
     {
         return static::setOption($key, $value, $id, $type, true, $autoLoad);
+    }
+    
+    // --- USE THESE INSTEAD ---
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    private static function _hasOption($name, $type, $id = null)
+    {
+        global $wpdb;
+        $sqlQuery = null;
+        $optionField = 'option_name';
+        if ($id === null) {
+            $sqlQuery = "SELECT * FROM `{$wpdb->prefix}options` WHERE {$optionField} LIKE ('{$name}') LIMIT 1";
+        } else {
+            $sqlQuery = "SELECT * FROM `{$wpdb->prefix}{$type}meta` WHERE `meta_key` LIKE ('{$name}') AND `{$type}_id` = {$id} LIMIT 1";
+        }
+        $results = $wpdb->get_results($sqlQuery, 'OBJECT');
+        if (PHP::count($results) > 0) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return mixed
+     */
+    
+    public static function getSiteOption($name, $default = null)
+    {
+        if (!static::hasSiteOption($key)) {
+            return $default;
+        }
+        $value = get_option($key, null);
+        if (PHP::isEmpty($value, false, false)) {
+            return $default;
+        }
+        return $value;
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function setSiteOption($name, $value = null, $autoLoad = false)
+    {
+        return (bool) update_option($name, $value, $autoLoad);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function hasSiteOption($name)
+    {
+        return static::_hasOption($name);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function removeSiteOption($name)
+    {
+        return (bool) delete_option($name);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return mixed
+     */
+    
+    public static function getPostOption($name, $metaId, $default = null)
+    {
+        if (!static::hasPostOption($name)) {
+            return $default;
+        }
+        $value = get_post_meta($id, $name, true);
+        if (PHP::isEmpty($value, false, false)) {
+            return $default;
+        }
+        return $value;
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function setPostOption($name, $metaId, $value = null, $autoLoad = false)
+    {
+        return (bool) update_post_meta($metaId, $name, $value);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function hasPostOption($name, $metaId)
+    {
+        return static::_hasOption($name, 'post', $id);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function removePostOption($name, $metaId, $value = null)
+    {
+        return (bool) delete_post_meta($metaId, $name, $value);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return mixed
+     */
+    
+    public static function getTermOption($name, $metaId, $default = null)
+    {
+        if (!static::hasTermOption($name)) {
+            return $default;
+        }
+        $value = get_term_meta($id, $name, true);
+        if (PHP::isEmpty($value, false, false)) {
+            return $default;
+        }
+        return $value;
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function setTermOption($name, $metaId, $value = null, $autoLoad = false)
+    {
+        return (bool) update_term_meta($metaId, $name, $value);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function hasTermOption($name, $metaId)
+    {
+        return static::_hasOption($name, 'term', $id);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function removeTermOption($name, $metaId, $value = null)
+    {
+        return (bool) delete_term_meta($metaId, $name, $value);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return mixed
+     */
+    
+    public static function getUserOption($name, $metaId, $default = null)
+    {
+        if (!static::hasUserOption($name)) {
+            return $default;
+        }
+        $value = get_user_meta($id, $name, true);
+        if (PHP::isEmpty($value, false, false)) {
+            return $default;
+        }
+        return $value;
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function setUserOption($name, $metaId, $value = null, $autoLoad = false)
+    {
+        return (bool) update_user_meta($metaId, $name, $value);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function hasUserOption($name, $metaId)
+    {
+        return static::_hasOption($name, 'user', $id);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function removeUserOption($name, $metaId, $value = null)
+    {
+        return (bool) delete_user_meta($metaId, $name, $value);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return mixed
+     */
+    
+    public static function getCommentOption($name, $metaId, $default = null)
+    {
+        if (!static::hasCommentOption($name)) {
+            return $default;
+        }
+        $value = get_comment_meta($id, $name, true);
+        if (PHP::isEmpty($value, false, false)) {
+            return $default;
+        }
+        return $value;
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function setCommentOption($name, $metaId, $value = null, $autoLoad = false)
+    {
+        return (bool) update_comment_meta($metaId, $name, $value);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function hasCommentOption($name, $metaId)
+    {
+        return static::_hasOption($name, 'comment', $id);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function removeCommentOption($name, $metaId, $value = null)
+    {
+        return (bool) delete_comment_meta($metaId, $name, $value);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return mixed
+     */
+    
+    public static function getCustomizationOption($name, $default = null)
+    {
+        if (!static::hasCustomizationOption($name)) {
+            return $default;
+        }
+        return get_theme_mod($name, null);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return void
+     */
+    
+    public static function setCustomizationOption($name, $value = null)
+    {
+        set_theme_mod($name, $value);
+        return;
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return bool
+     */
+    
+    public static function hasCustomizationOption($name)
+    {
+        return static::getCustomizationOption($name) !== null;
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return void
+     */
+    
+    public static function removeCustomizationOption($name)
+    {
+        remove_theme_mod($name);
+        return;
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return IAdminCustomizeHelper
+     */
+    
+    public static function addCustomizationSection($title, $slug = null, $priority = null, $textDomain = null)
+    {
+        $themeOption = ['slug' => $slug === null ? WP::slugify($title) : $slug, 'title' => $title, 'priority' => $priority === null ? 30 : $priority, 'textDomain' => $textDomain, 'settings' => []];
+        static::$themeOptions[$themeOption['slug']] =& $themeOption;
+        return new AdminCustomizeHelper($themeOption['settings']);
     }
 
 }

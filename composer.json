@@ -32,7 +32,7 @@
     },
     "require": {
         "php": ">=5.6",    
-        "ion/core": "^0.12",
+        "ion/core": "^0.13",
         "psr/log": "1.0.2",
         "erusev/parsedown": "^1.7.1"
     },

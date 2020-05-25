@@ -307,5 +307,29 @@ interface IAdmin
      */
     
     static function getCurrentAdminPage() : ?string;
+    
+    /**
+     * method
+     * 
+     * @return ?string
+     */
+    
+    static function getCurrentAdminObjectType() : ?string;
+    
+    /**
+     * method
+     * 
+     * @return ?object
+     */
+    
+    static function getCurrentAdminObject();
+    
+    /**
+     * method
+     * 
+     * @return ?int
+     */
+    
+    static function getCurrentAdminObjectId() : ?int;
 
 }
