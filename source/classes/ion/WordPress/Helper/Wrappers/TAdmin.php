@@ -1981,38 +1981,14 @@ JS
         
         return null;
     }
-    
-    public static function getCurrentAdminObject(): ?object {
-        
-        if(static::getCurrentAdminObjectId() === null) {
-            
-            return null;
-        }
-        
-        if(static::getCurrentAdminObjectType() == WP_Post::class) {
-            
-            return PHP::toNull(get_post(static::getCurrentAdminObjectId()));
-        }
-        
-        if(static::getCurrentAdminObjectType() == WP_Term::class) {
-            
-            return PHP::toNull(get_term(static::getCurrentAdminObjectId()));
-        }        
-        
-        if(static::getCurrentAdminObjectType() == WP_User::class) {
-            
-            return PHP::toNull(get_userdata(static::getCurrentAdminObjectId()));
-        }
 
-        if(static::getCurrentAdminObjectType() == WP_Comment::class) {
-            
-            return PHP::toNull(get_comment(static::getCurrentAdminObjectId()));
-        }
-        
-        return null;
-    }
    
     public static function getCurrentAdminObjectId(): ?int {
+                
+        if(!WP::isAdmin()) {
+            
+            return null;
+        }        
         
         if(static::getCurrentAdminObjectType() == WP_Post::class) {
             
@@ -2043,5 +2019,39 @@ JS
         
         return null;
     }    
+    
+    public static function getCurrentAdminObject(): ?object {
+                
+        if(!WP::isAdmin()) {
+            
+            return null;
+        }        
+        
+        if(static::getCurrentAdminObjectId() === null) {
+            
+            return null;
+        }
+        
+        if(static::getCurrentAdminObjectType() == WP_Post::class) {
+            
+            return PHP::toNull(get_post(static::getCurrentAdminObjectId()));
+        }
+        
+        if(static::getCurrentAdminObjectType() == WP_Term::class) {
+            
+            return PHP::toNull(get_term(static::getCurrentAdminObjectId()));
+        }        
+        
+        if(static::getCurrentAdminObjectType() == WP_User::class) {
+            
+            return PHP::toNull(get_userdata(static::getCurrentAdminObjectId()));
+        }
 
+        if(static::getCurrentAdminObjectType() == WP_Comment::class) {
+            
+            return PHP::toNull(get_comment(static::getCurrentAdminObjectId()));
+        }
+        
+        return null;
+    }
 }

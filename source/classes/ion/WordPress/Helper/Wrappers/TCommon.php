@@ -450,34 +450,34 @@ JS;
         return setcookie($name, $value, ($expiryTimeStamp != null ? $expiryTimeStamp : 0), $path, $domain, $secure, $httpOnly);
     }    
     
-    public static function getCurrentObjectType(): ?string {
+    public static function getCurrentObjectType(bool $ignoreTheLoop = false): ?string {
         
         if(static::isAdmin()) {
             
             return static::getCurrentAdminObjectType();
         }
         
-        return static::getCurrentTemplateObjectType();
+        return static::getCurrentTemplateObjectType($ignoreTheLoop);
     }
     
-    public static function getCurrentObject(): ?object {
+    public static function getCurrentObject(bool $ignoreTheLoop = false): ?object {
         
         if(static::isAdmin()) {
             
             return static::getCurrentAdminObject();
         }
         
-        return static::getCurrentTemplateObject();    
+        return static::getCurrentTemplateObject($ignoreTheLoop);    
         
     }
    
-    public static function getCurrentObjectId(): ?int {
+    public static function getCurrentObjectId(bool $ignoreTheLoop = false): ?int {
         
         if(static::isAdmin()) {
             
             return static::getCurrentAdminObjectId();
         }
         
-        return static::getCurrentTemplateObjectId();
+        return static::getCurrentTemplateObjectId($ignoreTheLoop);
     }
 }

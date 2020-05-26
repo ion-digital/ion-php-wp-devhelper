@@ -427,72 +427,64 @@ trait TTemplate {
         return $wp_query->found_posts;        
     }
     
-    public static function getCurrentTemplateObjectType(): ?string {
+    public static function getCurrentTemplateObjectId(bool $ignoreTheLoop = false): ?int {
+        
+        if(WP::isAdmin()) {
+            
+            return null;
+        }
+        
+        if(in_the_loop() && !$ignoreTheLoop) {
+
+            return PHP::toInt(get_the_ID());
+        }        
+        
+        if(is_singular() || static::isPostsPage(null)) {
+            
+            return PHP::toInt(get_queried_object_id());
+        }
+        
+        return null;
+    }    
+    
+    public static function getCurrentTemplateObjectType(bool $ignoreTheLoop = false): ?string {
         
         if(WP::isAdmin()) {
             
             return null;
         }
 
-        return WP_Post::class;
+        if(static::getCurrentTemplateObjectId($ignoreTheLoop) === null) {
+            
+            return null;
+        }        
+        
+        if(is_singular() || static::isPostsPage(null)) {
+            
+            return WP_Post::class;
+        }
+        
+        return null;        
     }
     
-    public static function getCurrentTemplateObject(): ?object {
+    public static function getCurrentTemplateObject(bool $ignoreTheLoop = false): ?object {
         
         
-        if(static::getCurrentTemplateObjectId() === null) {
+        if(WP::isAdmin()) {
+            
+            return null;
+        }        
+        
+        if(static::getCurrentTemplateObjectId($ignoreTheLoop) === null) {
             
             return null;
         }
         
-        if(static::getCurrentTemplateObjectType() == WP_Post::class) {
+        if(static::getCurrentTemplateObjectType($ignoreTheLoop) == WP_Post::class) {
             
-            return PHP::toNull(get_post(static::getCurrentTemplateObjectId()));
+            return PHP::toNull(get_post(static::getCurrentTemplateObjectId($ignoreTheLoop)));
         }
         
-//        if(static::getCurrentTemplateObjectType() == WP_Term::class) {
-//            
-//            return PHP::toNull(get_term(static::getCurrentTemplateObjectId()));
-//        }        
-//        
-//        if(static::getCurrentTemplateObjectType() == WP_User::class) {
-//            
-//            return PHP::toNull(get_userdata(static::getCurrentTemplateObjectId()));
-//        }
-//
-//        if(static::getCurrentTemplateObjectType() == WP_Comment::class) {
-//            
-//            return PHP::toNull(get_comment(static::getCurrentTemplateObjectId()));
-//        }
-        
         return null;
-    }
-   
-    public static function getCurrentTemplateObjectId(): ?int {
-         
-        if(static::getCurrentTemplateObjectType() == WP_Post::class) {
-
-            if(in_the_loop()) {
-                
-                return PHP::toInt(get_the_ID());
-            }        
-            
-            return PHP::toInt(get_queried_object_id());
-        }
-        
-//        if(static::getCurrentTemplateObjectType() == WP_Term::class) {
-//            
-//        }        
-//        
-//        if(static::getCurrentTemplateObjectType() == WP_User::class) {
-//            
-//            //return PHP::toInt(get_current_user_id());
-//        }
-//
-//        if(static::getCurrentTemplateObjectType() == WP_Comment::class) {
-//
-//        }
-        
-        return null;
-    }
+    }    
 }

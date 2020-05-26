@@ -52,9 +52,9 @@ interface ICommon {
             
         ): bool;
     
-    static function getCurrentObjectType(): ?string;
+    static function getCurrentObjectType(bool $ignoreTheLoop = false): ?string;
     
-    static function getCurrentObject(): ?object;
+    static function getCurrentObject(bool $ignoreTheLoop = false): ?object;
    
-    static function getCurrentObjectId(): ?int;    
+    static function getCurrentObjectId(bool $ignoreTheLoop = false): ?int;    
 }

@@ -31,11 +31,11 @@ interface ITemplate {
     
     static function isArchive(): bool;   
 
-    static function getCurrentTemplateObjectType(): ?string;
+    static function getCurrentTemplateObjectType(bool $ignoreTheLoop = false): ?string;
     
-    static function getCurrentTemplateObject(): ?object;
+    static function getCurrentTemplateObject(bool $ignoreTheLoop = false): ?object;
    
-    static function getCurrentTemplateObjectId(): ?int;    
+    static function getCurrentTemplateObjectId(bool $ignoreTheLoop = false): ?int;    
     
     // --- Deprecated ---
     
