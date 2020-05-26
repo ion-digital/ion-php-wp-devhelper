@@ -51,4 +51,10 @@ interface ICommon {
             bool $httpOnly = null
             
         ): bool;
+    
+    static function getCurrentObjectType(): ?string;
+    
+    static function getCurrentObject(): ?object;
+   
+    static function getCurrentObjectId(): ?int;    
 }

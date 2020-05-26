@@ -449,4 +449,35 @@ JS;
         
         return setcookie($name, $value, ($expiryTimeStamp != null ? $expiryTimeStamp : 0), $path, $domain, $secure, $httpOnly);
     }    
+    
+    public static function getCurrentObjectType(): ?string {
+        
+        if(static::isAdmin()) {
+            
+            return static::getCurrentAdminObjectType();
+        }
+        
+        return static::getCurrentTemplateObjectType();
+    }
+    
+    public static function getCurrentObject(): ?object {
+        
+        if(static::isAdmin()) {
+            
+            return static::getCurrentAdminObject();
+        }
+        
+        return static::getCurrentTemplateObject();    
+        
+    }
+   
+    public static function getCurrentObjectId(): ?int {
+        
+        if(static::isAdmin()) {
+            
+            return static::getCurrentAdminObjectId();
+        }
+        
+        return static::getCurrentTemplateObjectId();
+    }
 }

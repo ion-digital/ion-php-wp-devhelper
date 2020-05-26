@@ -8,6 +8,9 @@ namespace ion\WordPress\Helper\Wrappers;
 
 use \Throwable;
 use \WP_Post;
+use \WP_User;
+use \WP_Term;
+use \WP_Comment;
 use \ion\WordPress\IWordPressHelper;
 use \ion\Types\Arrays\IMap;
 use \ion\Types\Arrays\Map;
@@ -422,5 +425,74 @@ trait TTemplate {
         }
         
         return $wp_query->found_posts;        
+    }
+    
+    public static function getCurrentTemplateObjectType(): ?string {
+        
+        if(WP::isAdmin()) {
+            
+            return null;
+        }
+
+        return WP_Post::class;
+    }
+    
+    public static function getCurrentTemplateObject(): ?object {
+        
+        
+        if(static::getCurrentTemplateObjectId() === null) {
+            
+            return null;
+        }
+        
+        if(static::getCurrentTemplateObjectType() == WP_Post::class) {
+            
+            return PHP::toNull(get_post(static::getCurrentTemplateObjectId()));
+        }
+        
+//        if(static::getCurrentTemplateObjectType() == WP_Term::class) {
+//            
+//            return PHP::toNull(get_term(static::getCurrentTemplateObjectId()));
+//        }        
+//        
+//        if(static::getCurrentTemplateObjectType() == WP_User::class) {
+//            
+//            return PHP::toNull(get_userdata(static::getCurrentTemplateObjectId()));
+//        }
+//
+//        if(static::getCurrentTemplateObjectType() == WP_Comment::class) {
+//            
+//            return PHP::toNull(get_comment(static::getCurrentTemplateObjectId()));
+//        }
+        
+        return null;
+    }
+   
+    public static function getCurrentTemplateObjectId(): ?int {
+         
+        if(static::getCurrentTemplateObjectType() == WP_Post::class) {
+
+            if(in_the_loop()) {
+                
+                return PHP::toInt(get_the_ID());
+            }        
+            
+            return PHP::toInt(get_queried_object_id());
+        }
+        
+//        if(static::getCurrentTemplateObjectType() == WP_Term::class) {
+//            
+//        }        
+//        
+//        if(static::getCurrentTemplateObjectType() == WP_User::class) {
+//            
+//            //return PHP::toInt(get_current_user_id());
+//        }
+//
+//        if(static::getCurrentTemplateObjectType() == WP_Comment::class) {
+//
+//        }
+        
+        return null;
     }
 }

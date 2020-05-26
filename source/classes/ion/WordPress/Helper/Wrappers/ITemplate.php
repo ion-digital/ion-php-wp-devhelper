@@ -30,6 +30,14 @@ interface ITemplate {
     static function isCategory(string $name = null): bool;
     
     static function isArchive(): bool;   
+
+    static function getCurrentTemplateObjectType(): ?string;
+    
+    static function getCurrentTemplateObject(): ?object;
+   
+    static function getCurrentTemplateObjectId(): ?int;    
+    
+    // --- Deprecated ---
     
     static function getUriObject(): ?object;
     
