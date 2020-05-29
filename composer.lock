@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d487642ea529d96d62fa2e32ce2c674",
+    "content-hash": "577786cf359ac2ae143d45618c543373",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -53,30 +53,30 @@
             "time": "2019-03-17T18:47:21+00:00"
         },
         {
-            "name": "ion/auto-loader",
-            "version": "v0.5.6",
+            "name": "ion/autoloader",
+            "version": "v0.5.8",
             "source": {
                 "type": "git",
-                "url": "https://bitbucket.org/ion-digital-projects/auto-loader.git",
-                "reference": "296f007851301e0a80179d7b3d0ad4687a627d68"
+                "url": "https://bitbucket.org/ion-digital-projects/autoloader.git",
+                "reference": "514c4a64a47e4085e88b986f9502de0de51dd9a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/ion-digital-projects/auto-loader/get/296f007851301e0a80179d7b3d0ad4687a627d68.zip",
-                "reference": "296f007851301e0a80179d7b3d0ad4687a627d68",
+                "url": "https://bitbucket.org/ion-digital-projects/autoloader/get/514c4a64a47e4085e88b986f9502de0de51dd9a9.zip",
+                "reference": "514c4a64a47e4085e88b986f9502de0de51dd9a9",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6"
             },
             "require-dev": {
-                "ion/dev": "@dev",
+                "ion/dev": "dev-master",
                 "php": "^7.2"
             },
             "type": "library",
             "autoload": {
                 "files": [
-                    "bootstrap.php"
+                    "autoload.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -87,12 +87,12 @@
                 {
                     "name": "Justus Meyer",
                     "email": "justus@justusmeyer.com",
-                    "homepage": "https://bitbucket.org/justusmeyer/",
+                    "homepage": "https://justusmeyer.com",
                     "role": "developer"
                 }
             ],
-            "description": "A small auto-loading library, compatible with Composer, that allows you to customise your auto-loading functionality.",
-            "homepage": "https://bitbucket.org/justusmeyer/auto-loader",
+            "description": "A small autoloading library, compatible with Composer, that allows you to customise your autoloading functionality.",
+            "homepage": "https://bitbucket.org/ion-digital-projects/autoloader",
             "keywords": [
                 "autoload",
                 "autoload helper",
@@ -100,33 +100,33 @@
                 "bootstrap",
                 "php"
             ],
-            "time": "2019-09-05T08:33:57+00:00"
+            "time": "2020-05-28T23:51:59+00:00"
         },
         {
             "name": "ion/core",
-            "version": "v0.13.1",
+            "version": "v0.13.9",
             "source": {
                 "type": "git",
                 "url": "https://bitbucket.org/ion-digital-projects/core.git",
-                "reference": "e74b225e934bd556145a1d8b1be5c0099ab43333"
+                "reference": "20f4f0fa7260ac8a36deb0a866bb755d3d91a81f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/ion-digital-projects/core/get/e74b225e934bd556145a1d8b1be5c0099ab43333.zip",
-                "reference": "e74b225e934bd556145a1d8b1be5c0099ab43333",
+                "url": "https://bitbucket.org/ion-digital-projects/core/get/20f4f0fa7260ac8a36deb0a866bb755d3d91a81f.zip",
+                "reference": "20f4f0fa7260ac8a36deb0a866bb755d3d91a81f",
                 "shasum": ""
             },
             "require": {
-                "ion/php-helper": "^0.8.6",
+                "ion/php-helper": "^0.8",
                 "php": ">=5.6"
             },
             "require-dev": {
-                "ion/dev": "@dev"
+                "ion/dev": "dev-master"
             },
             "type": "library",
             "autoload": {
                 "files": [
-                    "bootstrap.php"
+                    "autoload.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -150,33 +150,33 @@
                 "ion",
                 "serialization"
             ],
-            "time": "2020-05-25T13:01:57+00:00"
+            "time": "2020-05-29T01:39:45+00:00"
         },
         {
             "name": "ion/php-helper",
-            "version": "v0.8.12",
+            "version": "v0.8.13",
             "source": {
                 "type": "git",
                 "url": "https://bitbucket.org/ion-digital-projects/php-helper.git",
-                "reference": "551989e7338adfae1cdd798a0e933c5315c342e1"
+                "reference": "be9f067ff2b9e6e4a979c8ecc32dd2fe04d9e326"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/ion-digital-projects/php-helper/get/551989e7338adfae1cdd798a0e933c5315c342e1.zip",
-                "reference": "551989e7338adfae1cdd798a0e933c5315c342e1",
+                "url": "https://bitbucket.org/ion-digital-projects/php-helper/get/be9f067ff2b9e6e4a979c8ecc32dd2fe04d9e326.zip",
+                "reference": "be9f067ff2b9e6e4a979c8ecc32dd2fe04d9e326",
                 "shasum": ""
             },
             "require": {
-                "ion/auto-loader": "^0.5.2",
+                "ion/autoloader": "^0.5",
                 "php": ">=5.6"
             },
             "require-dev": {
-                "ion/dev": "@dev"
+                "ion/dev": "dev-master"
             },
             "type": "library",
             "autoload": {
                 "files": [
-                    "bootstrap.php"
+                    "autoload.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -199,7 +199,7 @@
                 "php helper",
                 "php-helper"
             ],
-            "time": "2020-05-11T14:07:39+00:00"
+            "time": "2020-05-29T01:06:47+00:00"
         },
         {
             "name": "psr/log",
@@ -312,12 +312,12 @@
             "source": {
                 "type": "git",
                 "url": "https://bitbucket.org/ion-digital-projects/dev.git",
-                "reference": "1a8f8ae7dfacc996896adea7056179ea8b677b35"
+                "reference": "358999014f4baea59d8c3e86ba726043736371a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/ion-digital-projects/dev/get/1a8f8ae7dfacc996896adea7056179ea8b677b35.zip",
-                "reference": "1a8f8ae7dfacc996896adea7056179ea8b677b35",
+                "url": "https://bitbucket.org/ion-digital-projects/dev/get/358999014f4baea59d8c3e86ba726043736371a3.zip",
+                "reference": "358999014f4baea59d8c3e86ba726043736371a3",
                 "shasum": ""
             },
             "require": {
@@ -338,7 +338,7 @@
             "autoload": {
                 "psr-4": {
                     "ion\\": [
-                        "source/ion/"
+                        "source/classes/ion/"
                     ]
                 }
             },
@@ -366,7 +366,7 @@
                 "development tools",
                 "ion"
             ],
-            "time": "2020-05-11T15:18:21+00:00"
+            "time": "2020-05-29T00:58:18+00:00"
         },
         {
             "name": "ion/php-trans-porter",
@@ -2063,12 +2063,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/cache.git",
-                "reference": "7281e845c955963f71c697734de55b41d9877854"
+                "reference": "aaf9cf1923794c950976bbcc35eb19a26aad95e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/cache/zipball/7281e845c955963f71c697734de55b41d9877854",
-                "reference": "7281e845c955963f71c697734de55b41d9877854",
+                "url": "https://api.github.com/repos/symfony/cache/zipball/aaf9cf1923794c950976bbcc35eb19a26aad95e8",
+                "reference": "aaf9cf1923794c950976bbcc35eb19a26aad95e8",
                 "shasum": ""
             },
             "require": {
@@ -2134,7 +2134,7 @@
                 "caching",
                 "psr6"
             ],
-            "time": "2020-05-23T15:32:20+00:00"
+            "time": "2020-05-28T08:58:00+00:00"
         },
         {
             "name": "symfony/cache-contracts",
@@ -2471,12 +2471,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/error-handler.git",
-                "reference": "5fa68390f49f9c2b301df1b23e104454fcfd0715"
+                "reference": "0df9a23c0f9eddbb6682479fee6fd58b88add75b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/error-handler/zipball/5fa68390f49f9c2b301df1b23e104454fcfd0715",
-                "reference": "5fa68390f49f9c2b301df1b23e104454fcfd0715",
+                "url": "https://api.github.com/repos/symfony/error-handler/zipball/0df9a23c0f9eddbb6682479fee6fd58b88add75b",
+                "reference": "0df9a23c0f9eddbb6682479fee6fd58b88add75b",
                 "shasum": ""
             },
             "require": {
@@ -2520,7 +2520,7 @@
             ],
             "description": "Symfony ErrorHandler Component",
             "homepage": "https://symfony.com",
-            "time": "2020-05-24T08:33:35+00:00"
+            "time": "2020-05-28T10:39:14+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -3991,5 +3991,7 @@
     "platform": {
         "php": ">=5.6"
     },
-    "platform-dev": []
+    "platform-dev": {
+        "php": ">=7.2"
+    }
 }
