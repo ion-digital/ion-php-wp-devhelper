@@ -96,7 +96,7 @@ trait TContext
             return;
         })->uninstall([static::class, 'doUninstall'])->finalize(function (IHelperContext $context) {
             $this->finalize();
-            $this->onFinalized();
+            //$this->onFinalized();
             return;
         });
     }
@@ -221,17 +221,6 @@ trait TContext
      */
     
     protected function finalize() : void
-    {
-        // Empty, for now...
-    }
-    
-    /**
-     * method
-     * 
-     * @return void
-     */
-    
-    protected function onFinalized() : void
     {
         // Empty, for now...
     }

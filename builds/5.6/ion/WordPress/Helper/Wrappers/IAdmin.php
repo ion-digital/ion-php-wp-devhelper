@@ -37,7 +37,7 @@ interface IAdmin
      * @return array
      */
     
-    static function textInputField($label, $name = null, $value = null, $id = null, $hint = null, $multiLine = false, $fancy = false, $span = false, $readOnly = false, $enabled = true, $echo = false);
+    static function textInputField($label, $name = null, $value = null, $id = null, $hint = null, $multiLine = false, $fancy = false, $span = false, $readOnly = false, $disabled = false, $echo = false);
     
     /**
      * method
@@ -64,7 +64,7 @@ interface IAdmin
      * @return array
      */
     
-    static function dropDownListInputField($label, array $values, $name = null, $value = null, $id = null, $hint = null, $emptyMessage = null, callable $modifyValues = null, $span = false, $readOnly = false, $enabled = true, $echo = false);
+    static function dropDownListInputField($label, array $values, $name = null, $value = null, $id = null, $hint = null, $emptyMessage = null, callable $modifyValues = null, $span = false, $readOnly = false, $disabled = false, $echo = false);
     
     /**
      * method
@@ -73,7 +73,7 @@ interface IAdmin
      * @return array
      */
     
-    static function listInputField($label, array $values, $name = null, array $value = null, $id = null, $hint = null, $emptyMessage = null, callable $modifyValues = null, $span = false, $readOnly = false, $enabled = true, $echo = false);
+    static function listInputField($label, array $values, $name = null, array $value = null, $id = null, $hint = null, $emptyMessage = null, callable $modifyValues = null, $span = false, $readOnly = false, $disabled = false, $echo = false);
     
     /**
      * method
@@ -82,7 +82,7 @@ interface IAdmin
      * @return array
      */
     
-    static function colourPickerInputField($label, $name = null, $value = null, $id = null, $hint = null, $span = false, $readOnly = false, $enabled = true, $echo = false);
+    static function colourPickerInputField($label, $name = null, $value = null, $id = null, $hint = null, $span = false, $readOnly = false, $disabled = false, $echo = false);
     
     /**
      * method
@@ -91,7 +91,7 @@ interface IAdmin
      * @return array
      */
     
-    static function checkBoxInputField($label, $name = null, $value = null, $id = null, $hint = null, $span = false, $enabled = true, $readOnly = false, $echo = false);
+    static function checkBoxInputField($label, $name = null, $value = null, $id = null, $hint = null, $span = false, $disabled = false, $readOnly = false, $echo = false);
     
     /**
      * method
@@ -100,7 +100,7 @@ interface IAdmin
      * @return array
      */
     
-    static function dateTimeInputField($label, $name = null, $value = null, $id = null, $hint = null, $datePicker = true, $timePicker = true, $span = false, $readOnly = false, $enabled = true, $echo = false);
+    static function dateTimeInputField($label, $name = null, $value = null, $id = null, $hint = null, $datePicker = true, $timePicker = true, $span = false, $readOnly = false, $disabled = false, $echo = false);
     
     /**
      * method
@@ -109,7 +109,7 @@ interface IAdmin
      * @return array
      */
     
-    static function dateInputField($label, $name = null, $value = null, $id = null, $hint = null, $span = false, $readOnly = false, $enabled = true, $echo = false);
+    static function dateInputField($label, $name = null, $value = null, $id = null, $hint = null, $span = false, $readOnly = false, $disabled = false, $echo = false);
     
     /**
      * method
@@ -118,7 +118,7 @@ interface IAdmin
      * @return array
      */
     
-    static function timeInputField($label, $name = null, $value = null, $id = null, $hint = null, $span = false, $readOnly = false, $enabled = true, $echo = false);
+    static function timeInputField($label, $name = null, $value = null, $id = null, $hint = null, $span = false, $readOnly = false, $disabled = false, $echo = false);
     
     /**
      * method
@@ -127,7 +127,7 @@ interface IAdmin
      * @return array
      */
     
-    static function button($label, $id = null, $hint = null, IAdminFormHelper $form = null, $span = false, $enabled = true, $javaScript = null, $echo = true);
+    static function button($label, $id = null, $hint = null, IAdminFormHelper $form = null, $span = false, $disabled = false, $javaScript = null, $echo = true);
     
     /**
      * method

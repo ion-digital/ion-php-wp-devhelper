@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: WP Helper
-  Version: 0.74.2
+  Version: 0.75.1
   Plugin URI: https://justusmeyer.com/b/wordpress-helper/
   Author: Justus Meyer
   Author URI: https://justusmeyer.com
@@ -34,4 +34,4 @@ WP::createContext('ion', 'wp-helper', __FILE__, __DIR__, [])
 
     ->uninstall(null)
 
-->finalize();    
+->finalize();

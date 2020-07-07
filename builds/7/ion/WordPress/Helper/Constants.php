@@ -75,11 +75,16 @@ final class Constants {
     const LIST_ACTION_QUERYSTRING_PARAMETER = 'list-action';
     const LIST_UPDATE_QUERYSTRING_PARAMETER = 'id';
   
-    const AUTHOR_COMPANY = 'ION MEDIA SOLUTIONS CC';
+    const AUTHOR_COMPANY = 'ION DIGITAL CC';
     const AUTHOR_NAME = 'Justus Meyer';
-    const MAINTAINER_NAME = 'WP Solved';
-    const MAINTAINER_SITE = 'https://www.wpsolved.io';
-    const AUTHOR_SITE = 'https://www.wpsolved.io/helper';
+    const MAINTAINER_NAME = 'Justus Meyer';
+    const MAINTAINER_SITE = 'https://justusmeyer.com/wordpress-development';
+    const AUTHOR_SITE = 'https://justusmeyer.com/wordpress-development';
+    
+    const HELPER_SITE = "https://justusmeyer.com/wordpress-helper";
+    const WORDPRESS_SITE = "https://www.wordpress.org";   
+    
+    const QUICK_404_OPTION = 'wp-helper-quick-404';
     
     const ABOUT_CONTENT = <<<TEXT
 <h2>WP Helper</h2>

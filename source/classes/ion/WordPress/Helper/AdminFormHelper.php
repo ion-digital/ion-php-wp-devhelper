@@ -848,7 +848,7 @@ TEMPLATE;
     }   
     
    public function process(int $metaId = null, OptionMetaType $metaType = null) {
-
+       
         if ($this->processed === false) {
 
             $postBack = filter_input(INPUT_POST, '__postBack', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -1021,7 +1021,6 @@ TEMPLATE;
 //exit;                
                 
                 if ($state['create'] === false && $state['update'] === false) {
-                     
                     
                     if ($this->updateProcessor === null || ($this->createProcessor === null && PHP::isInt($metaId))) {
 
@@ -1036,12 +1035,24 @@ TEMPLATE;
                             
                             $tmp = $this->createProcessor;
                             $tmp($this->doCreateHandler($newValues), $state['key'], $metaId, $metaType);
-                            
+
                         } else {
+                            
+//                            if($this->descriptor['id'] == 'settings') {
+//                                
+//echo '<pre>';                
+//
+//var_dump($data);
+//var_dump($oldValues);
+//var_dump($newValues);
+//
+//echo '</pre>';
+//exit;          
+//                                exit;
+//                            }
                             
                             $tmp = $this->updateProcessor;
                             $tmp($state['record'], $this->doUpdateHandler($newValues), $oldValues, $state['key'], $metaId, $metaType);
-
                         }
                     }
                     

@@ -222,10 +222,13 @@ trait TPaths
      * @return string
      */
     
-    public static function getAdminUrl(string $filename) : string
+    public static function getAdminUrl(string $filename, string $page = null) : string
     {
-        //(!PHP::strEndsWith($filename, '.php') ? '.php' : '')
-        return esc_url(admin_url($filename . '.php'));
+        $uri = admin_url($filename . (!PHP::strEndsWith($filename, '.php') ? '.php' : ''));
+        if ($page !== null) {
+            $uri .= "?page={$page}";
+        }
+        return esc_url($uri);
     }
     
     /**

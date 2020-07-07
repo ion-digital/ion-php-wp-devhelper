@@ -70,7 +70,7 @@ trait TAdmin {
                 $form = ' ' . $form;
             }
 
-            return "wp-helper $page$form$classes";                
+            return "wp-helper $page$form$classes";
         }, 0, true);
 
         static::registerWrapperAction('wp_update_nav_menu_item', function(int $menuId) {
@@ -1027,6 +1027,18 @@ TEMPLATE;
             ]
         ];
 
+        //TODO: See if the form has already been registered? If we don't, you might register a form... and nothing gets updated when you save it (and you can't figure out why - wahy).
+//        foreach(static::$forms as $tmp) {
+//            
+//            var_dump($tmp);
+//            exit;
+//            
+//            if($tmp['id'] === $descriptor['id']) {
+//            
+//                throw new WordPressHelperException("Form '{$descriptor['id']}' has already been defined - please specify a different form ID.");
+//            }
+//        }
+        
         $form = new AdminFormHelper($descriptor);
 
         static::$forms[] = $form;
@@ -1492,7 +1504,7 @@ TEMPLATE;
                 }
             }
 
-            if (count($values) > 0) {
+            if (count($values) > 0 || $emptyMessage === null) {
 
                 $cnt = 0;
 
@@ -1524,14 +1536,11 @@ TEMPLATE;
                 $htmlTemplate = "<select multiple size=\"$size\" type=\"text\" id=\"{id}\" name=\"{name}[]\" aria-described-by=\"{id}-hint\"{readOnly}{disabled}>$optionsHtmlTemplate</select>";
                 return static::applyTemplate($htmlTemplate, $field);
             }
-            
-            if ($emptyMessage === null) {
-                $emptyMessage = 'No items';
-            }
 
             $emptyMessage = trim($emptyMessage);
 
-            if (strlen($emptyMessage) > 0) {
+            if (strlen($emptyMessage) === 0) {
+                
                 $emptyMessage = "<strong><em>$emptyMessage</em></strong>";
             }
 
@@ -1595,7 +1604,8 @@ TEMPLATE;
             "post" => function (/* string */
             $postValue = null) {
 
-//                if ($postValue === "on") {
+//                if (strtolower($postValue) === "on") {
+//                    
 //                    return true;
 //                }
 

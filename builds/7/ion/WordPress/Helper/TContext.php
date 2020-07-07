@@ -100,7 +100,7 @@ trait TContext {
         ->finalize(function(IHelperContext $context) {         
             
             $this->finalize();
-            $this->onFinalized();
+            //$this->onFinalized();
             return;
         });
                
@@ -169,9 +169,9 @@ trait TContext {
         // Empty, for now...
     }
     
-    protected function onFinalized(): void {
-        
-        // Empty, for now...
-    }      
+//    protected function onFinalized(): void {
+//        
+//        // Empty, for now...
+//    }      
 
 }

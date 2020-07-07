@@ -911,6 +911,18 @@ TEMPLATE;
                             $tmp = $this->createProcessor;
                             $tmp($this->doCreateHandler($newValues), $state['key'], $metaId, $metaType);
                         } else {
+                            //                            if($this->descriptor['id'] == 'settings') {
+                            //
+                            //echo '<pre>';
+                            //
+                            //var_dump($data);
+                            //var_dump($oldValues);
+                            //var_dump($newValues);
+                            //
+                            //echo '</pre>';
+                            //exit;
+                            //                                exit;
+                            //                            }
                             $tmp = $this->updateProcessor;
                             $tmp($state['record'], $this->doUpdateHandler($newValues), $oldValues, $state['key'], $metaId, $metaType);
                         }

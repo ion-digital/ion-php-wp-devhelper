@@ -133,9 +133,16 @@ trait TPaths {
         return $directory;
     }
     
-    public static function getAdminUrl(string $filename): string {
-        //(!PHP::strEndsWith($filename, '.php') ? '.php' : '')
-        return esc_url(admin_url($filename . '.php'));
+    public static function getAdminUrl(string $filename, string $page = null): string {
+        
+        $uri = admin_url($filename . (!PHP::strEndsWith($filename, '.php') ? '.php' : ''));
+        
+        if($page !== null) {
+            
+            $uri .= "?page={$page}";
+        }
+        
+        return esc_url($uri);
     }
     
     public static function getAjaxUrl(string $name = null, array $parameters = null): string {

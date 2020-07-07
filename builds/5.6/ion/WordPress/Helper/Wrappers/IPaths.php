@@ -97,7 +97,7 @@ interface IPaths
      * @return string
      */
     
-    static function getAdminUrl($filename);
+    static function getAdminUrl($filename, $page = null);
     
     /**
      * method

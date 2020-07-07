@@ -128,13 +128,14 @@ class Tools
     private static function getSettingsView(IHelperContext $context)
     {
         return function () use($context) {
-            WP::addAdminForm("Settings")->setOptionPrefix(null)->addGroup("General")->addField(WP::checkBoxInputField("Hide settings interface", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Helper settings interface (you can enable it again, by navigating to 'Tools &gt; Helper')."))->addField(WP::checkBoxInputField("HTML Auto paragraphs", Constants::TOOLS_AUTO_PARAGRAPHS_OPTION, null, null, "Enable automatic paragraph insertion for content."))->addGroup("Logging", null, null, 1)->addField(WP::checkBoxInputField("Enable logging", Constants::ENABLE_LOGGING, null, null, "Enable logging functionality."))->addField(WP::textInputField("Purge age", Constants::LOGS_PURGE_AGE, null, null, "The amount of days before archived log entries are purged (specify <em>0</em> for never)."))->addField(WP::textInputField("Max displayed log entries", Constants::MAX_DISPLAYED_LOG_ENTRIES, null, null, "The maximum amount of records to display when viewing a log (in the administration panel)."))->redirect(function ($values) {
+            WP::addAdminForm("Settings", 'wp-helper-settings')->setOptionPrefix(null)->addGroup("General")->addField(WP::checkBoxInputField("Hide settings interface", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Helper settings interface (you can enable it again, by navigating to 'Tools &gt; Helper')."))->addField(WP::checkBoxInputField("HTML Auto paragraphs", Constants::TOOLS_AUTO_PARAGRAPHS_OPTION, null, null, "Enable automatic paragraph insertion for content."))->addGroup("Logging", null, null, 1)->addField(WP::checkBoxInputField("Enable logging", Constants::ENABLE_LOGGING, null, null, "Enable logging functionality."))->addField(WP::textInputField("Purge age", Constants::LOGS_PURGE_AGE, null, null, "The amount of days before archived log entries are purged (specify <em>0</em> for never)."))->addField(WP::textInputField("Max displayed log entries", Constants::MAX_DISPLAYED_LOG_ENTRIES, null, null, "The maximum amount of records to display when viewing a log (in the administration panel)."))->addGroup("Development Tools", null, null, 1)->addField(WP::checkBoxInputField("Enable quick 404 override", Constants::QUICK_404_OPTION, null, null, "Override the 404 functionality of the site to immediately display a very simple message and end the script."))->redirect(function ($values) {
                 // /wordpress/wp-admin/tools.php?page=wp-helper-enable
                 if ($values[Constants::TOOLS_HIDDEN_OPTION] === true) {
                     WP::setOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false);
                     WP::redirect(WP::getAdminUrl('tools') . '?page=wp-helper-enable');
                 }
             })->render();
+            //var_dump($f->
         };
     }
     
@@ -539,7 +540,10 @@ HTML;
             if (WP::isDebugMode() === true) {
                 echo '<span class="debug-mode">Debug mode</span> ';
             }
-            echo '<span>Powered by <a href="http://www.wordpress.org" target="_blank">WordPress</a> <strong>' . $wordPressVersion . '</strong></span> | <span>Fueled by <a href="http://www.wpsolved.io/helper" target="_blank">WP Helper</a> <strong>' . $helperVersion . '</strong></span> | <span>Custom WordPress solutions at <a href="http://www.wpsolved.io" target="_blank">WP Solved</a></span> | <span>Server time: ' . $serverTime . '</span> | <span>WordPress time: ' . $wordPressTime . '</span> | <span>Peak memory usage: ' . $mem . '</span>';
+            $wpHelperBlurbUri = Constants::HELPER_SITE;
+            $wpBlurbUri = Constants::WORDPRESS_SITE;
+            $wpDevBlurb = Constants::AUTHOR_SITE;
+            echo '<span>Powered by <a href="' . $wpBlurbUri . '" target="_blank">WordPress</a> <strong>' . $wordPressVersion . '</strong></span> | <span>Fueled by <a href="' . $wpHelperBlurbUri . '" target="_blank">WP Helper</a> <strong>' . $helperVersion . '</strong></span> | <span>Need Custom WordPress Solutions? <a href="' . $wpDevBlurb . '" target="_blank">Custom WordPress Development</a></span> | <span>Server time: ' . $serverTime . '</span> | <span>WordPress time: ' . $wordPressTime . '</span> | <span>Peak memory usage: ' . $mem . '</span>';
         });
         add_action('init', function () use($context, $wpHelperSettings) {
             if (!WP::hasOption(Constants::TOOLS_HIDDEN_OPTION) || !WP::hasOption(Constants::TOOLS_FULLY_HIDDEN_OPTION)) {

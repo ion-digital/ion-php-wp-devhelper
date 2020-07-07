@@ -802,6 +802,17 @@ TEMPLATE;
     public static function addAdminForm($title, $id = null, $action = null, $columns = 1, $hideKey = true)
     {
         $descriptor = ["id" => $id === null ? static::slugify($title) : $id, "title" => $title, "action" => $action, "notices" => static::$notices, "columns" => $columns, "html" => null, "hideKey" => $hideKey, "groups" => [AdminFormHelper::createGroupDescriptorInstance()]];
+        //TODO: See if the form has already been registered? If we don't, you might register a form... and nothing gets updated when you save it (and you can't figure out why - wahy).
+        //        foreach(static::$forms as $tmp) {
+        //
+        //            var_dump($tmp);
+        //            exit;
+        //
+        //            if($tmp['id'] === $descriptor['id']) {
+        //
+        //                throw new WordPressHelperException("Form '{$descriptor['id']}' has already been defined - please specify a different form ID.");
+        //            }
+        //        }
         $form = new AdminFormHelper($descriptor);
         static::$forms[] = $form;
         //        echo '<pre>';
@@ -1148,7 +1159,7 @@ TEMPLATE;
                     $values = $tmp;
                 }
             }
-            if (count($values) > 0) {
+            if (count($values) > 0 || $emptyMessage === null) {
                 $cnt = 0;
                 foreach ($values as $key => $selectValue) {
                     if (is_array($selectValue) === true) {
@@ -1167,11 +1178,8 @@ TEMPLATE;
                 $htmlTemplate = "<select multiple size=\"{$size}\" type=\"text\" id=\"{id}\" name=\"{name}[]\" aria-described-by=\"{id}-hint\"{readOnly}{disabled}>{$optionsHtmlTemplate}</select>";
                 return static::applyTemplate($htmlTemplate, $field);
             }
-            if ($emptyMessage === null) {
-                $emptyMessage = 'No items';
-            }
             $emptyMessage = trim($emptyMessage);
-            if (strlen($emptyMessage) > 0) {
+            if (strlen($emptyMessage) === 0) {
                 $emptyMessage = "<strong><em>{$emptyMessage}</em></strong>";
             }
             return $emptyMessage;
@@ -1231,7 +1239,8 @@ TEMPLATE;
         $name = $name !== null ? $name : static::slugify($label);
         $id = $id !== null ? $id : static::slugify($name) . '-field';
         $field = ['type' => 'CheckBox', "label" => $label, "name" => $name, "id" => $id, "hint" => $hint, "html" => null, "span" => $span, 'readOnly' => $readOnly, 'disabled' => $disabled, "post" => function ($postValue = null) {
-            //                if ($postValue === "on") {
+            //                if (strtolower($postValue) === "on") {
+            //
             //                    return true;
             //                }
             return filter_var($postValue, FILTER_VALIDATE_BOOLEAN);

@@ -30,7 +30,7 @@ interface IPaths {
     
     static function getBackEndUri(string $path = null, int $blogId = null): string;
 
-    static function getAdminUrl(string $filename): string;
+    static function getAdminUrl(string $filename, string $page = null): string;
     
     static function getAjaxUrl(string $name = null, array $parameters = null): string;    
     
