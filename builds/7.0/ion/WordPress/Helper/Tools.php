@@ -171,6 +171,7 @@ class Tools
                 return false;
             }])->addColumnGroup("Information", "information")->addColumn(WP::textTableColumn("Package", "package-name", "package-name"))->addColumn(WP::checkBoxTableColumn("Primary", "is-primary", "is-primary"))->addColumn(WP::textTableColumn("Context Type", "type", "type"))->addColumnGroup("Paths", "paths")->addColumn(WP::textTableColumn('Working Path', 'working-dir', 'working-dir'))->addColumn(WP::textTableColumn('Working URI', 'working-uri', 'working-uri'))->addColumn(WP::textTableColumn('Entry Point', 'loading-path', 'loading-path'))->addColumn(WP::textTableColumn('Version', 'context-version', 'context-version'));
             //->addColumn(WP::textTableColumn('Helper Path', 'helper-dir', 'helper-dir'));
+            //->addColumn(WP::textTableColumn('DEBUG_COLUMN', 'sort-key', 'sort-key'));
             $list->read(function () {
                 $rows = [];
                 foreach (WP::getContexts() as $id => $ctx) {
@@ -195,7 +196,7 @@ class Tools
                         //'context-id' => $ctx->getId(),
                         //                                'context-slug' => $ctx->getSlug(),
                         //                                'context-name' => ($ctx->getProjectName() === null ? '<em>None</em>' : $ctx->getProjectName()),
-                        'package-name' => ($ctx->getParent() === null ? '' : '&raquo; ') . $ctx->getPackageName(),
+                        'package-name' => ($ctx->getParent() === null ? '' : $ctx->getParent()->getPackageName() . ' &raquo; ') . $ctx->getPackageName(),
                         'is-primary' => $ctx->isPrimary(),
                         //                                'version' => ($ctx->getVersion() === null ? 'N/A' : $ctx->getVersion()->toString()),
                         'type' => $ctx->getParent() === null ? $type : $type . ($ctx->getParent() === null ? '' : " ({$ctx->getParent()->getPackageName()})"),
@@ -204,8 +205,19 @@ class Tools
                         'working-uri' => $ctx->getWorkingUri(),
                         'loading-path' => basename($ctx->getLoadPath()),
                         'context-version' => $ctx->getVersion() !== null ? $ctx->getVersion()->toString() : null,
+                        //                                'helper-dir' => $ctx->getHelperDirectory()
+                        'sort-key' => ($ctx->isPrimary() ? '0' : '1') . '-' . PHP::strToDashedCase(($ctx->getParent() === null ? '' : $ctx->getParent()->getPackageName()) . "-{$ctx->getPackageName()}"),
                     ];
                 }
+                usort($rows, function ($a, $b) {
+                    if ($a['sort-key'] > $b['sort-key']) {
+                        return 1;
+                    }
+                    if ($a['sort-key'] < $b['sort-key']) {
+                        return -1;
+                    }
+                    return 0;
+                });
                 return $rows;
             })->render();
         };
