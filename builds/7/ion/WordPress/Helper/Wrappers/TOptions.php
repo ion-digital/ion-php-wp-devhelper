@@ -380,14 +380,14 @@ trait TOptions {
         
     // --- USE THESE INSTEAD ---    
     
-    private static function _hasOption(string $name, string $type, int $id = null): bool {
+    private static function _hasOption(string $name, string $type = null, int $id = null): bool {
         
         global $wpdb;
 
         $sqlQuery = null;
         $optionField = 'option_name';            
         
-        if($id === null) {
+        if($id === null || $type === null) {
             
             $sqlQuery = "SELECT * FROM `{$wpdb->prefix}options` WHERE {$optionField} LIKE ('{$name}') LIMIT 1";
             
@@ -408,12 +408,12 @@ trait TOptions {
     
     public static function getSiteOption(string $name, /* mixed */ $default = null) /* mixed */ {
         
-        if (!static::hasSiteOption($key)) {
+        if (!static::hasSiteOption($name)) {
             
             return $default;
         }
         
-        $value = get_option($key, null);       
+        $value = get_option($name, null);       
 
         if (PHP::isEmpty($value, false, false)) {
             
