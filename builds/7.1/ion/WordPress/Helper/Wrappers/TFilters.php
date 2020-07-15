@@ -39,7 +39,7 @@ trait TFilters
         static::registerWrapperAction('init', function () {
             foreach (array_keys(static::$filters) as $key) {
                 foreach (static::$filters[$key] as $filter) {
-                    add_filter($key, $filter);
+                    add_filter($key, $filter['function'], $filter['priority'], $filter['args']);
                 }
             }
         });
@@ -52,9 +52,9 @@ trait TFilters
      * @return void
      */
     
-    public static function addFilter(string $name, callable $function) : void
+    public static function addFilter(string $name, callable $function, int $priority = null, int $args = null) : void
     {
-        static::$filters[$name][] = $function;
+        static::$filters[$name][] = ['function' => $function, 'priority' => $priority, 'args' => $args];
     }
     
     /**

@@ -18,7 +18,7 @@ interface IFilters
      * @return void
      */
     
-    static function addFilter(string $name, callable $function) : void;
+    static function addFilter(string $name, callable $function, int $priority = null, int $args = null) : void;
     
     /**
      * method

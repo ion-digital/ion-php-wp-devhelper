@@ -40,16 +40,16 @@ trait TFilters {
                 
                 foreach (static::$filters[$key] as $filter) {
                     
-                    add_filter($key, $filter);
+                    add_filter($key, $filter['function'], $filter['priority'], $filter['args']);
                 }
             }                 
         });        
         
     }    
     
-    public static function addFilter(string $name, callable $function): void {
+    public static function addFilter(string $name, callable $function, int $priority = null, int $args = null): void {
 
-        static::$filters[$name][] = $function;
+        static::$filters[$name][] = [ 'function' => $function, 'priority' => $priority, 'args' => $args ];
     }       
     
     public static function removeFilter(string $name, callable $function, int $priority = null) {
