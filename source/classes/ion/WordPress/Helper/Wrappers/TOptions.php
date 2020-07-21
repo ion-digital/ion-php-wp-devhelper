@@ -241,9 +241,9 @@ trait TOptions {
 
     public static function setOption(string $key, /* mixed */ $value = null, int $id = null, OptionMetaType $type = null, bool $raw = false, bool $autoLoad = false): bool {
 
-        if (!$raw /* && $value !== null */) {
+        if ($raw === false /* && $value !== null */) {
                
-            $value = serialize($value);
+            $value = @serialize($value);
             
         } else {
             

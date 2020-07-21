@@ -12,7 +12,7 @@ namespace ion\WordPress\Helper\Wrappers;
  */
 interface IFilters {
 
-    static function addFilter(string $name, callable $function, int $priority = null, int $args = null): void;    
+    static function addFilter(string $name, callable $function, int $priority = null, int $args = null, int $order = null): void;    
     
     static function removeFilter(string $name, callable $function, int $priority = null);  
     

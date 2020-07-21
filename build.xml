@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ion/wp-helper" default="info">
-    <import file="vendor/ion/dev/source/ant/package-build-wordpress.xml" />
+            
+    <import file="./vendor/ion/dev/source/ant/build-wordpress.xml" />
+    
 </project>

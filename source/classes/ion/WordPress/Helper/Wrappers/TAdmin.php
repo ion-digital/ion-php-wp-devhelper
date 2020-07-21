@@ -104,7 +104,7 @@ trait TAdmin {
 
                             if(!PHP::isEmpty($value)) {
 
-                                static::setOption($field['name'], $value, $wpItemId);
+                                static::setOption($field['name'], $value, $wpItemId, null, true);
                             }
                         }
                     }     
@@ -1117,7 +1117,7 @@ TEMPLATE;
 
             // The following values are NOT applied to the field array - they are temporarily modified here
 
-            $field["value"] = $value;
+            $field["value"] = htmlentities($value);
             $field['disabled'] = ($field['disabled'] === true ? ' disabled' : '');
             $field['readOnly'] = ($field['readOnly'] === true ? ' readonly' : '');
             
