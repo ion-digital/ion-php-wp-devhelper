@@ -6,8 +6,6 @@
 
 namespace ion\WordPress\Helper;
 
-use \ion\Types\Arrays\IMap;
-use \ion\Types\Arrays\IVector;
 
 /**
  *

@@ -6,8 +6,6 @@
 
 namespace ion\WordPress\Helper;
 
-use \ion\Types\Arrays\IMap;
-use \ion\Types\Arrays\IVector;
 
 
 /**
@@ -62,7 +60,7 @@ class WordPressPostType implements IWordPressPostType {
 //        string $slug,
 //        string $pluralItemName,
 //        string $singleItemName,
-//        IMap $labels = null,
+//        array $labels = null,
 //        string $description = null,
 //        bool $public = true,
 //        bool $excludeFromSearch = null,
@@ -75,10 +73,10 @@ class WordPressPostType implements IWordPressPostType {
 //        string $menuIcon = null,
 //        string $singleCapabilityType = null,
 //        string $pluralCapabilityType = null,
-//        IMap $capabilities = null,
+//        array $capabilities = null,
 //        bool $mapMetaCap = null,
 //        bool $hierarchical = false,
-//        IMap $supports = null,
+//        array $supports = null,
 //        callable $registerMetaBox = null,
 //        IVector $taxonomies = null,
 //        bool $rewriteWithFront = true,
@@ -136,12 +134,12 @@ class WordPressPostType implements IWordPressPostType {
         return $this;
     }
     
-    public function setLabels(IMap $labels): IMap {
+    public function setLabels(array $labels): array {
         $this->labels = $labels;
         return $this->labels;
     }
     
-    public function getLabels(): IMap {
+    public function getLabels(): array {
         return $this->labels;
     }
     
@@ -266,12 +264,12 @@ class WordPressPostType implements IWordPressPostType {
     }
     
     
-    public function setCapabilities(IMap $capabilities): IMap {
+    public function setCapabilities(array $capabilities): array {
         $this->capabilities = $capabilities;
         return $this->capabilities;
     }
     
-    public function getCapabilities(): IMap {
+    public function getCapabilities(): array {
         return $this->capabilities;
     }
     
@@ -296,12 +294,12 @@ class WordPressPostType implements IWordPressPostType {
     }
     
     
-    public function setSupports(IMap $supports): IMap {
+    public function setSupports(array $supports): array {
         $this->supports = $supports;
         return $this->supports;
     }
     
-    public function getSupports(): IMap {
+    public function getSupports(): array {
         return $this->supports;
     }
     
@@ -317,12 +315,12 @@ class WordPressPostType implements IWordPressPostType {
     
     // taxonomies
     
-    public function setTaxonomies(IVector $taxonomies): IVector {
+    public function setTaxonomies(array $taxonomies): array {
         $this->parent['taxonomies'] = $taxonomies;
         return $this->taxonomies;
     }
     
-    public function getTaxonomies(): IVector {
+    public function getTaxonomies(): array {
         return $this->parent['taxonomies'];
     }
     

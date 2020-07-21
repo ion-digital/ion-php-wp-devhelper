@@ -11,8 +11,6 @@ namespace ion\WordPress\Helper\Wrappers;
  * @author Justus
  */
 
-use \ion\Types\Arrays\IVector;
-use \ion\Types\Arrays\IMap;
 use \ion\WordPress\Helper\IWordPressPostType;
 use \WP_Term;
 use \WP_Post;
@@ -26,13 +24,13 @@ interface IPosts {
         string $singularLabel,
         string $description = null,            
         string $menuIcon = null,  
-        IVector $supports = null,
-        IVector $taxonomies = null,                        
+        array $supports = null,
+        array $taxonomies = null,                        
         callable $registerMetaBox = null,
         bool $hierarchical = null,            
         bool $hasArchive = null,    
         string $archiveSlug = null,            
-        IMap $labels = null,
+        array $labels = null,
         bool $public = null,
         bool $excludeFromSearch = null,
         bool $publiclyQueryable = null,
@@ -43,7 +41,7 @@ interface IPosts {
         int $menuPosition = null,        
         string $singleCapabilityType = null,
         string $pluralCapabilityType = null,
-        IMap $capabilities = null,
+        array $capabilities = null,
         bool $mapMetaCap = null,
         bool $rewrite = null,
         string $rewriteSlug = null,
