@@ -30,7 +30,7 @@ use ion\Types\StringObject;
  */
 trait TCron
 {
-    //const CRON_SNAPSHOT_NAME = 'wp-helper::cron-jobs';
+    //const CRON_SNAPSHOT_NAME = 'wp-devhelper::cron-jobs';
     private static $cronIntervals = [];
     private static $cronJobs = [];
     /**

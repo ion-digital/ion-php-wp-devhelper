@@ -1,11 +1,11 @@
 {
   "name": "ion/wp-helper/theme",
   "type": "library",
-  "description": "A test theme for WP Helper.",
+  "description": "A test theme for WP Devhelper.",
   "keywords": [
     "WP Test Theme",
     "WPHelper Test Theme",
-    "WP Helper Test Theme",
+    "WP Devhelper Test Theme",
     "wp-helper Test Theme",
     "WordPress Test Theme",
     "WordPressHelper Test Theme",

@@ -68,20 +68,20 @@ final class Constants
     const WORDPRESS_SITE = "https://www.wordpress.org";
     const QUICK_404_OPTION = 'wp-helper-quick-404';
     const ABOUT_CONTENT = <<<TEXT
-<h2>WP Helper</h2>
+<h2>WP Devhelper</h2>
 <p>            
-<strong>WP Helper</strong> is a library of functions that theme and plug-in developers can use
+<strong>WP Devhelper</strong> is a library of functions that theme and plug-in developers can use
 to provide a consistent experience to their users, by abstracting as much of the standard WordPress
 functionality, hooks and settings as possible - resulting in a much simpler and less time-consuming 
 way to develop with WordPress.
 </p>
 <p>
-<strong>WP Helper</strong> helps developers to stop worrying about WordPress-specific implementation 
+<strong>WP Devhelper</strong> helps developers to stop worrying about WordPress-specific implementation 
 details and gotchas - and to get on with the business of building something awesome!
 </p>
 <h2>Why is it here?</h2>
 <p>
-<strong>WP Helper</strong> can function as:            
+<strong>WP Devhelper</strong> can function as:            
 </p>
 <ul>
 <li>an included PHP library (as <em>part</em> of a theme or plug-in that is installed),</li>

@@ -36,7 +36,22 @@ trait TFilters {
         
         static::registerWrapperAction('init', function() {
             
-            foreach (array_keys(static::$filters) as $key) {
+            foreach (array_keys(static::$filters) as $key) {                                
+                
+                usort(static::$filters[$key], function($a, $b) {
+
+                    if($a['order'] > $b['order']) {
+
+                        return 1;
+                    }
+
+                    if($a['order'] < $b['order']) {
+
+                        return -1;
+                    }
+
+                    return 0;
+                });
                 
                 foreach (static::$filters[$key] as $filter) {
                     
@@ -47,9 +62,9 @@ trait TFilters {
         
     }    
     
-    public static function addFilter(string $name, callable $function, int $priority = null, int $args = null): void {
+    public static function addFilter(string $name, callable $function, int $priority = null, int $args = null, int $order = null): void {
 
-        static::$filters[$name][] = [ 'function' => $function, 'priority' => $priority, 'args' => $args ];
+        static::$filters[$name][] = [ 'function' => $function, 'priority' => $priority, 'args' => $args, 'order' => ($order === null ? 0 : $order) ];
     }       
     
     public static function removeFilter(string $name, callable $function, int $priority = null) {

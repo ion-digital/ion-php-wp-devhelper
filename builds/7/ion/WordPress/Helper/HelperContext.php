@@ -135,7 +135,7 @@ final class HelperContext extends Base implements IHelperContext, IObserver {
 
         if (!defined(Constants::WP_HELPER)) {
             
-            define(Constants::WP_HELPER, Package::getInstance('ion', 'wp-helper')->getVersion()->toString());
+            define(Constants::WP_HELPER, Package::getInstance('ion', 'wp-devhelper')->getVersion()->toString());
         }
 
         $tmp = array_values(array_filter(explode(DIRECTORY_SEPARATOR, $this->getWorkingDirectory())));
@@ -158,7 +158,7 @@ final class HelperContext extends Base implements IHelperContext, IObserver {
         WP::getContexts()[$this->getPackageName()] = $this;
 
         $aliases = [
-            'wp-helper' => 'WP Helper'
+            'wp-devhelper' => 'WP Devhelper'
         ];      
 
         if ($this->contextProjectName !== null) {

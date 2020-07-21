@@ -22,27 +22,27 @@ $wp_helper_admin = (function() {
     this.ajax = function(callbackName, success, failure) {
 
         if(this.initialized === false)
-            throw "[WP Helper] WP Helper has not been initialized.";
+            throw "[WP Devhelper] WP Devhelper has not been initialized.";
 
         if(!callbackName)
-            throw "[WP Helper] 'callbackName' has not been specified.";
+            throw "[WP Devhelper] 'callbackName' has not been specified.";
 
         if(!success)
-            throw "[WP Helper] 'success' has not been defined.";
+            throw "[WP Devhelper] 'success' has not been defined.";
 
         if(success && !jQuery.isFunction(success))
-            throw "[WP Helper] 'success' is not a function.";
+            throw "[WP Devhelper] 'success' is not a function.";
 
         if(failure && !jQuery.isFunction(failure))
-            throw "[WP Helper] 'failure' is not a function.";
+            throw "[WP Devhelper] 'failure' is not a function.";
 
         if(!ajaxurl)
-            throw "[WP Helper] 'ajaxurl' has not been defined.";
+            throw "[WP Devhelper] 'ajaxurl' has not been defined.";
 
         var url = ajaxurl + '?action=' + callbackName;
 
 
-        console.groupCollapsed('[WP Helper Admin] AJAX call', url);
+        console.groupCollapsed('[WP Devhelper Admin] AJAX call', url);
         console.log('[url]', url);
 
         jQuery.ajax(url, {

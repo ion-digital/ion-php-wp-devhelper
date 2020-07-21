@@ -26,7 +26,7 @@ class AdminNavMenuEditWalker extends Walker_Nav_Menu_Edit {
 
     private const OPENING_ELEMENT = '<p class="field-description description description-wide">';
     private const CLOSING_ELEMENT = '</p>';
-    private const REPLACEMENT_ELEMENT = '<p class="field-description description description-wide __wp-helper-processed">';
+    private const REPLACEMENT_ELEMENT = '<p class="field-description description description-wide __wp-devhelper-processed">';
     
     public function start_el(&$output, $item, $depth = 0, $args = array(), $id = 0) {
         

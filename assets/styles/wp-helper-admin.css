@@ -2,7 +2,7 @@
  * See license information at the package root in LICENSE.md
  */
 
-.wp-helper-colorpicker {
+.wp-devhelper-colorpicker {
     width: 26px;
     height :26px;
     border: 1px solid #aaa;
@@ -209,47 +209,47 @@ table.logentries td.column-time
 
 /* --- Tools --- */
 
-body.wp-admin.wp-helper.wp-helper-phpinfo #wpwrap,
-body.wp-admin.wp-helper.wp-helper-phpinfo #wpbody,
-body.wp-admin.wp-helper.wp-helper-phperrors #wpwrap,
-body.wp-admin.wp-helper.wp-helper-phperrors #wpbody {
+body.wp-admin.wp-devhelper.wp-devhelper-phpinfo #wpwrap,
+body.wp-admin.wp-devhelper.wp-devhelper-phpinfo #wpbody,
+body.wp-admin.wp-devhelper.wp-devhelper-phperrors #wpwrap,
+body.wp-admin.wp-devhelper.wp-devhelper-phperrors #wpbody {
     height: 100%;
 }
 
-body.wp-admin.wp-helper.wp-helper-phpinfo #wpbody-content div.wrap,
-body.wp-admin.wp-helper.wp-helper-phpinfo #wpbody-content,
-body.wp-admin.wp-helper.wp-helper-phperrors #wpbody-content div.wrap,
-body.wp-admin.wp-helper.wp-helper-phperrors #wpbody-content {
+body.wp-admin.wp-devhelper.wp-devhelper-phpinfo #wpbody-content div.wrap,
+body.wp-admin.wp-devhelper.wp-devhelper-phpinfo #wpbody-content,
+body.wp-admin.wp-devhelper.wp-devhelper-phperrors #wpbody-content div.wrap,
+body.wp-admin.wp-devhelper.wp-devhelper-phperrors #wpbody-content {
     height: 85%;
 }
 
-.wp-helper.viewport-container,
-.wp-helper.viewport-container .wp-helper.viewport {
+.wp-devhelper.viewport-container,
+.wp-devhelper.viewport-container .wp-devhelper.viewport {
     width: 100%;
     height: 100%; 
 }
 
-/*.wp-helper.viewport-container,
-.wp-helper.viewport-container .wp-helper.php-info.viewport,
-.wp-helper.viewport-container .wp-helper.php-info.viewport {
+/*.wp-devhelper.viewport-container,
+.wp-devhelper.viewport-container .wp-devhelper.php-info.viewport,
+.wp-devhelper.viewport-container .wp-devhelper.php-info.viewport {
     overflow-y: hidden;    
 }*/
 
-.wp-helper.viewport-container .wp-helper.viewport iframe {
+.wp-devhelper.viewport-container .wp-devhelper.viewport iframe {
     width: 100%;
     height: 100%;
         
 }
 
-.wp-helper.phpinfo.viewport-container,
-.wp-helper.phperrors.viewport-container {
+.wp-devhelper.phpinfo.viewport-container,
+.wp-devhelper.phperrors.viewport-container {
     margin-top: 16px;
     margin-bottom: 16px;
     border: 1px solid rgb(204, 204, 204);
     background-color: #ffffff;
 }
 
-.wp-helper.viewport-container .wp-helper.phpinfo.viewport {
+.wp-devhelper.viewport-container .wp-devhelper.phpinfo.viewport {
     
 }
 
@@ -257,7 +257,7 @@ body.wp-admin.wp-helper.wp-helper-phperrors #wpbody-content {
 
 
 
-.wp-helper.about.viewport {
+.wp-devhelper.about.viewport {
     display: inline-block;
     line-height: 19px;
     
@@ -272,7 +272,7 @@ body.wp-admin.wp-helper.wp-helper-phperrors #wpbody-content {
 
 /*
 
-.wp-helper-about a #wp-helper-logo { 
+.wp-devhelper-about a #wp-devhelper-logo { 
     display: block;
     float: right;
     width: 30%;    
@@ -283,11 +283,11 @@ body.wp-admin.wp-helper.wp-helper-phperrors #wpbody-content {
 
 */
 
-.wp-helper-about {
+.wp-devhelper-about {
     display: block;    
 }
 
-.wp-helper-about .header {
+.wp-devhelper-about .header {
     display: block;
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -295,23 +295,23 @@ body.wp-admin.wp-helper.wp-helper-phperrors #wpbody-content {
     border-bottom: 1px dotted rgb(204, 204, 204);    
 }
 
-.wp-helper-about .header .header-logo {
+.wp-devhelper-about .header .header-logo {
     display: block;
     /* float: left; */
 }
 
-.wp-helper-about .header .header-logo a,
-.wp-helper-about .header .header-logo a img
+.wp-devhelper-about .header .header-logo a,
+.wp-devhelper-about .header .header-logo a img
 {
     display: inline-block;
 }
 
-.wp-helper-about .header .header-logo {
+.wp-devhelper-about .header .header-logo {
 
 }
 
 @media screen and (max-width: 782px) {
-    .wp-helper-about .header .header-logo {
+    .wp-devhelper-about .header .header-logo {
         /* min-width: 30%; */
         max-width: 80%;
         margin-left: auto;
@@ -320,31 +320,31 @@ body.wp-admin.wp-helper.wp-helper-phperrors #wpbody-content {
 }
 
 @media screen and (min-width: 782px) {
-    .wp-helper-about .header .header-logo {
+    .wp-devhelper-about .header .header-logo {
         /* min-width: 30%; */
         max-width: 30%;
         /* float: left; */
     }
 }
 
-.wp-helper-about .header .header-logo a,
-.wp-helper-about .header .header-logo a img {
+.wp-devhelper-about .header .header-logo a,
+.wp-devhelper-about .header .header-logo a img {
     width: 100%; 
 }
 
-.wp-helper-about .header .header-content {
+.wp-devhelper-about .header .header-content {
     display: inline-block;
     /* float: left; */
     margin-left: 2rem;
 }
 
-.wp-helper-about .content {
+.wp-devhelper-about .content {
     
 }
 
-.wp-helper-about .header .header-content:after,
-.wp-helper-about .header .header-logo a:after,
-.wp-helper-about .header:after
+.wp-devhelper-about .header .header-content:after,
+.wp-devhelper-about .header .header-logo a:after,
+.wp-devhelper-about .header:after
 {
 
     content: "";
@@ -354,7 +354,7 @@ body.wp-admin.wp-helper.wp-helper-phperrors #wpbody-content {
     visibility: hidden;
 }
 
-.wp-helper-about ul li {
+.wp-devhelper-about ul li {
     list-style-type: disc;
     margin-left: 1rem;
 }
@@ -363,7 +363,7 @@ input[type="checkbox"][disabled] {
     cursor: default;
 }
 
-.wp-helper a#btn-cancel {
+.wp-devhelper a#btn-cancel {
     float: right;
 }
 
@@ -458,7 +458,7 @@ div.wrap.tabbed h1 {
     display: inline-block;
 }
 
-#btn-clear-log-ion-wp-helper {
+#btn-clear-log-ion-wp-devhelper {
     
     margin: 10px 8px; 
 }

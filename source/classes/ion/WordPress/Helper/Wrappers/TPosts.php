@@ -93,13 +93,13 @@ trait TPosts {
         string $singularLabel,
         string $description = null,            
         string $menuIcon = null,  
-        IVector $supports = null,
-        IVector $taxonomies = null,                        
+        array $supports = null,
+        array $taxonomies = null,                        
         callable $registerMetaBox = null,
         bool $hierarchical = null,            
         bool $hasArchive = null,    
         string $archiveSlug = null,            
-        IMap $labels = null,
+        array $labels = null,
         bool $public = null,
         bool $excludeFromSearch = null,
         bool $publiclyQueryable = null,
@@ -110,7 +110,7 @@ trait TPosts {
         int $menuPosition = null,        
         string $singleCapabilityType = null,
         string $pluralCapabilityType = null,
-        IMap $capabilities = null,
+        array $capabilities = null,
         bool $mapMetaCap = null,
         bool $rewrite = null,
         string $rewriteSlug = null,
@@ -137,7 +137,7 @@ trait TPosts {
                 $singularLabel = 'Custom Post';
             }
             
-            $labels = Map::create([
+            $labels = [
                 'name' => $pluralLabel,
                 'singular_name' => $singularLabel,
                 'add_new' => _x('Add New', $slug),
@@ -164,7 +164,7 @@ trait TPosts {
                 //'items_list_navigation' => null,
                 //'items_list' => null,
                 //'name_admin_bar' => null
-            ]);
+            ];
 
         } else {
             if(!$labels->hasKey('name')) {
@@ -177,12 +177,10 @@ trait TPosts {
         }
            
         
-        //var_dump($labels->toArray());
-        
         static::$customPostTypes[$slug] = [
             'slug' => $slug,
             'pluralLabel' => $pluralLabel,
-            'labels' => $labels->toArray(),
+            'labels' => $labels,
             'description' => $description,
             'public' => $public,
             'excludeFromSearch' => $excludeFromSearch,
@@ -195,12 +193,12 @@ trait TPosts {
             'menuIcon' => $menuIcon,
             'singleCapabilityType' => $singleCapabilityType,
             'pluralCapabilityType' => $pluralCapabilityType,
-            'capabilities' => ($capabilities === null ? null : $capabilities->toArray()),
+            'capabilities' => ($capabilities === null ? null : $capabilities),
             'mapMetaCap' => $mapMetaCap,
             'hierarchical' => $hierarchical,
-            'supports' => ($supports === null ? null : $supports->toArray()),
+            'supports' => ($supports === null ? null : $supports),
             'registerMetaBox' => $registerMetaBox,
-            'taxonomies' => ($taxonomies === null ? null : $taxonomies->toArray()),
+            'taxonomies' => ($taxonomies === null ? null : $taxonomies),
             'hasArchive' => $hasArchive,
             'archiveSlug' => $archiveSlug,
             'rewrite' => $rewrite,

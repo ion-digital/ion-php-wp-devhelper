@@ -28,6 +28,7 @@ class AdminFormHelper implements IAdminFormHelper
         return ["id" => (string) $id, "columns" => $columns, "title" => (string) $title, "description" => (string) $description, "fields" => (array) []];
     }
     
+    private $raw;
     private $descriptor;
     private $group;
     private $processed;
@@ -56,6 +57,8 @@ class AdminFormHelper implements IAdminFormHelper
         $this->output = null;
         $this->foreignKeys = [];
         $this->setOptionPrefix(null);
+        $this->setRawOptionOperations(false);
+        //TODO: Need to make this true, without impacting legacy modules
         $this->readFromOptions(null);
         $this->createToOptions(null);
         $this->updateToOptions(null);
@@ -278,7 +281,7 @@ TEMPLATE;
                         }
                     } else {
                         if (array_key_exists('name', $field)) {
-                            $dbValue = WP::getOption($field['name'], '', $postId);
+                            $dbValue = WP::getOption($field['name'], '', $postId, null, $this->getRawOptionOperations());
                         }
                     }
                     $value = $loadProcessor === null ? $dbValue : $loadProcessor($dbValue);
@@ -663,12 +666,36 @@ TEMPLATE;
      * @return IAdminFormHelper
      */
     
+    public function setRawOptionOperations(bool $raw) : IAdminFormHelper
+    {
+        $this->raw = $raw;
+        return $this;
+    }
+    
+    /**
+     * method
+     * 
+     * @return bool
+     */
+    
+    public function getRawOptionOperations() : bool
+    {
+        return $this->raw;
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return IAdminFormHelper
+     */
+    
     public function readFromOptions(string $optionName = null) : IAdminFormHelper
     {
         $self = $this;
         if ($optionName !== null) {
             return $this->read(function ($record = null, string $key = null, int $metaId = null, OptionMetaType $type = null) use($self, $optionName) {
-                $optionRecords = WP::getOption($optionName, [], $metaId, $type);
+                $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                 $result = null;
                 if (PHP::isCountable($optionRecords) && count($optionRecords) > 0) {
                     $result = [];
@@ -688,7 +715,7 @@ TEMPLATE;
             foreach ($self->descriptor['groups'] as $group) {
                 foreach ($group['fields'] as $field) {
                     $key = $field['name'];
-                    $result[$key] = WP::getOption(($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key, null, $metaId, $type);
+                    $result[$key] = WP::getOption(($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key, null, $metaId, $type, $this->getRawOptionOperations());
                 }
             }
             return $result;
@@ -707,7 +734,7 @@ TEMPLATE;
         $self = $this;
         if ($optionName !== null) {
             return $this->update(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, OptionMetaType $type = null) use($self, $optionName) {
-                $optionRecords = WP::getOption($optionName, [], $metaId, $type);
+                $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                 if (count($optionRecords) > 0) {
                     if (array_key_exists((string) $index, $optionRecords) && $metaId === null || $metaId !== null) {
                         $optionRecord = [];
@@ -726,7 +753,7 @@ TEMPLATE;
                         }
                     }
                 }
-                WP::setOption($optionName, $optionRecords, $metaId, $type);
+                WP::setOption($optionName, $optionRecords, $metaId, $type, $this->getRawOptionOperations());
             });
         }
         return $this->update(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, OptionMetaType $type = null) use($self) {
@@ -738,7 +765,7 @@ TEMPLATE;
                 $options[($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key] = $value;
             }
             foreach ($options as $key => $value) {
-                WP::setOption($key, $value, $metaId, $type);
+                WP::setOption($key, $value, $metaId, $type, $this->getRawOptionOperations());
             }
         });
     }
@@ -755,13 +782,13 @@ TEMPLATE;
         $self = $this;
         if ($optionName !== null) {
             return $this->create(function (array $values, string $key = null, int $metaId = null, OptionMetaType $type = null) use($optionName) {
-                $optionRecords = WP::getOption($optionName, [], $metaId, $type);
+                $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                 if (array_key_exists($key, $values)) {
                     $optionRecords[$values[(string) $key]] = $values;
                 } else {
                     $optionRecords[] = $values;
                 }
-                WP::setOption($optionName, $optionRecords, $metaId, $type);
+                WP::setOption($optionName, $optionRecords, $metaId, $type, $this->getRawOptionOperations());
             });
         }
         return $this->create(function (array $values, string $key = null, int $metaId = null, OptionMetaType $type = null) use($optionName) {
@@ -770,7 +797,7 @@ TEMPLATE;
                 $options[($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key] = $value;
             }
             foreach ($options as $key => $value) {
-                WP::setOption($key, $value, $metaId, $type);
+                WP::setOption($key, $value, $metaId, $type, $this->getRawOptionOperations());
             }
         });
     }
@@ -904,7 +931,7 @@ TEMPLATE;
                 if ($state['create'] === false && $state['update'] === false) {
                     if ($this->updateProcessor === null || $this->createProcessor === null && PHP::isInt($metaId)) {
                         foreach ($newValues as $key => $value) {
-                            WP::setOption($key, $value, $metaId, $metaType);
+                            WP::setOption($key, $value, $metaId, $metaType, $this->getRawOptionOperations());
                         }
                     } else {
                         if (PHP::isInt($metaId) && (PHP::isCountable($oldValues) && count($oldValues) === 0)) {

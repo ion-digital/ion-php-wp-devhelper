@@ -71,7 +71,7 @@ trait TTaxonomies
      * @return IWordPressTaxonomy
      */
     
-    public static function addTaxonomy($slug, $pluralLabel, $singularLabel, IVector $postTypes = null, $description = null, $registerMetaBox = true, callable $metaBoxCallback = null, $hierarchical = null, $sort = null, IMap $labels = null, $public = null, $publiclyQueryable = null, $showUi = null, $showInNavMenus = null, $showInMenu = null, $showTagcloud = null, $showInQuickEdit = null, $showAdminColumn = null, IVector $capabilities = null, $rewrite = null, $rewriteSlug = null, $rewriteWithFront = null, $rewriteHierarchical = null, $rewriteEndPointMask = null, $enableQueryVar = null, $queryVar = null, $showInRest = null, $restBase = null, $restControllerClass = null, callable $updateCountCallback = null)
+    public static function addTaxonomy($slug, $pluralLabel, $singularLabel, array $postTypes = null, $description = null, $registerMetaBox = true, callable $metaBoxCallback = null, $hierarchical = null, $sort = null, array $labels = null, $public = null, $publiclyQueryable = null, $showUi = null, $showInNavMenus = null, $showInMenu = null, $showTagcloud = null, $showInQuickEdit = null, $showAdminColumn = null, array $capabilities = null, $rewrite = null, $rewriteSlug = null, $rewriteWithFront = null, $rewriteHierarchical = null, $rewriteEndPointMask = null, $enableQueryVar = null, $queryVar = null, $showInRest = null, $restBase = null, $restControllerClass = null, callable $updateCountCallback = null)
     {
         if ($labels === null) {
             if ($pluralLabel === null) {
@@ -80,7 +80,7 @@ trait TTaxonomies
             if ($singularLabel === null) {
                 $singularLabel = 'Custom Taxonomy';
             }
-            $labels = Map::create(['name' => $pluralLabel, 'singular_name' => $singularLabel, 'menu_name' => $pluralLabel, 'all_items' => "All {$pluralLabel}", 'edit_item' => "Edit {$singularLabel}", 'view_item' => "View {$singularLabel}", 'update_item' => "Update {$singularLabel}", 'add_new_item' => "Add New {$singularLabel}", 'new_item_name' => "New {$singularLabel} Name", 'parent_item' => "Parent {$singularLabel}", 'parent_item_colon' => "Parent {$singularLabel}:", 'search_items' => "Search {$pluralLabel}", 'popular_items' => "Popular {$pluralLabel}", 'separate_items_with_commas' => __("Separate {$pluralLabel} with commas"), 'add_or_remove_items' => __("Add or remove {$pluralLabel}"), 'choose_from_most_used' => __("Choose from the most used {$pluralLabel}"), 'not_found' => "No {$pluralLabel} found."]);
+            $labels = ['name' => $pluralLabel, 'singular_name' => $singularLabel, 'menu_name' => $pluralLabel, 'all_items' => "All {$pluralLabel}", 'edit_item' => "Edit {$singularLabel}", 'view_item' => "View {$singularLabel}", 'update_item' => "Update {$singularLabel}", 'add_new_item' => "Add New {$singularLabel}", 'new_item_name' => "New {$singularLabel} Name", 'parent_item' => "Parent {$singularLabel}", 'parent_item_colon' => "Parent {$singularLabel}:", 'search_items' => "Search {$pluralLabel}", 'popular_items' => "Popular {$pluralLabel}", 'separate_items_with_commas' => __("Separate {$pluralLabel} with commas"), 'add_or_remove_items' => __("Add or remove {$pluralLabel}"), 'choose_from_most_used' => __("Choose from the most used {$pluralLabel}"), 'not_found' => "No {$pluralLabel} found."];
         } else {
             if (!$labels->hasKey('name')) {
                 $labels->set('name', $pluralLabel);
@@ -89,7 +89,7 @@ trait TTaxonomies
                 $labels->set('singular_name', $singularLabel);
             }
         }
-        static::$taxonomies[$slug] = ['slug' => $slug, 'pluralLabel' => $pluralLabel, 'singularLabel' => $singularLabel, 'postTypes' => $postTypes === null ? null : $postTypes->toArray(), 'description' => $description, 'registerMetaBox' => $registerMetaBox, 'metaBoxCallback' => $metaBoxCallback, 'hierarchical' => $hierarchical, 'sort' => $sort, 'labels' => $labels->toArray(), 'public' => $public, 'publiclyQueryable' => $publiclyQueryable, 'showUi' => $showUi, 'showInNavMenus' => $showInNavMenus, 'showInMenu' => $showInMenu, 'showTagcloud' => $showTagcloud, 'showInQuickEdit' => $showInQuickEdit, 'showAdminColumn' => $showAdminColumn, 'capabilities' => $capabilities === null ? null : $capabilities->toArray(), 'rewrite' => $rewrite, 'rewriteSlug' => $rewriteSlug, 'rewriteWithFront' => $rewriteWithFront, 'rewriteHierarchical' => $rewriteHierarchical, 'rewriteEndPointMask' => $rewriteEndPointMask, 'enableQueryVar' => $enableQueryVar, 'queryVar' => $queryVar, 'showInRest' => $showInRest, 'restBase' => $restBase, 'restControllerClass' => $restControllerClass, 'updateCountCallback' => $updateCountCallback];
+        static::$taxonomies[$slug] = ['slug' => $slug, 'pluralLabel' => $pluralLabel, 'singularLabel' => $singularLabel, 'postTypes' => $postTypes === null ? null : $postTypes, 'description' => $description, 'registerMetaBox' => $registerMetaBox, 'metaBoxCallback' => $metaBoxCallback, 'hierarchical' => $hierarchical, 'sort' => $sort, 'labels' => $labels, 'public' => $public, 'publiclyQueryable' => $publiclyQueryable, 'showUi' => $showUi, 'showInNavMenus' => $showInNavMenus, 'showInMenu' => $showInMenu, 'showTagcloud' => $showTagcloud, 'showInQuickEdit' => $showInQuickEdit, 'showAdminColumn' => $showAdminColumn, 'capabilities' => $capabilities === null ? null : $capabilities, 'rewrite' => $rewrite, 'rewriteSlug' => $rewriteSlug, 'rewriteWithFront' => $rewriteWithFront, 'rewriteHierarchical' => $rewriteHierarchical, 'rewriteEndPointMask' => $rewriteEndPointMask, 'enableQueryVar' => $enableQueryVar, 'queryVar' => $queryVar, 'showInRest' => $showInRest, 'restBase' => $restBase, 'restControllerClass' => $restControllerClass, 'updateCountCallback' => $updateCountCallback];
         return new WordPressTaxonomy($slug, static::$taxonomies[$slug]);
     }
     
@@ -100,9 +100,9 @@ trait TTaxonomies
      * @return void
      */
     
-    public static function addPostTypesToTaxonomy($taxonomy, IVector $postTypes)
+    public static function addPostTypesToTaxonomy($taxonomy, array $postTypes)
     {
-        foreach ($postTypes->toArray() as $postType) {
+        foreach ($postTypes as $postType) {
             static::$taxonomiesToLink[$taxonomy][] = $postType;
         }
     }

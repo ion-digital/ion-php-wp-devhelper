@@ -20,9 +20,9 @@ class PlugIn extends WordPressPlugIn {
    
     protected function initialize(IWordPressHelper $context) {
 
-        WP::registerLog('wp-helper-plugin-plugin', 'WP Helper Test Plugin');
+        WP::registerLog('wp-helper-plugin-plugin', 'WP Devhelper Test Plugin');
 
-        WP::addScript("inline", "( function() { console.log('WP Helper Test Plug-in says HI!'); } )();", true, true, true, false);
+        WP::addScript("inline", "( function() { console.log('WP Devhelper Test Plug-in says HI!'); } )();", true, true, true, false);
         
         WP::addScript("jquery", $context->getWorkingUri() . "scripts/jquery-3.2.1.js", true, true);
 
@@ -32,7 +32,7 @@ class PlugIn extends WordPressPlugIn {
         WP::addStyle("admin", $context->getWorkingUri() . "styles/admin.css", true, false);
         WP::addScript("admin", $context->getWorkingUri() . "scripts/admin.js", true, false);
         
-        WP::addPlugInBackEndMenuPage("WP Helper", $context->getView("method-tests"), "Helper Tests", "method-tests")
+        WP::addPlugInBackEndMenuPage("WP Devhelper", $context->getView("method-tests"), "Helper Tests", "method-tests")
 
                 ->addSubMenuPage("Method Tests", $context->getView("method-tests"), "method-tests")
                         ->addSubMenuPageTab("Method Tests", $context->getView("method-tests"))
@@ -50,7 +50,7 @@ class PlugIn extends WordPressPlugIn {
         
         WP::addWidget(new Widget());
 
-        //WP::log('wp-helper-plugin-plugin', 'info', 'WP Helper test plugin initialized.');
+        //WP::log('wp-helper-plugin-plugin', 'info', 'WP Devhelper test plugin initialized.');
 
         WP::addAjaxAction('generate-logs', function() {
 

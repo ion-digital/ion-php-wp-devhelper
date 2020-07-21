@@ -104,13 +104,13 @@ trait TTaxonomies {
         string $slug,
         string $pluralLabel,
         string $singularLabel,
-        IVector $postTypes = null,
+        array $postTypes = null,
         string $description = null,                                  
         bool $registerMetaBox = true,
         callable $metaBoxCallback = null,
         bool $hierarchical = null, 
         bool $sort = null,
-        IMap $labels = null,
+        array $labels = null,
         bool $public = null,
         bool $publiclyQueryable = null,
         bool $showUi = null,
@@ -119,7 +119,7 @@ trait TTaxonomies {
         bool $showTagcloud = null,
         bool $showInQuickEdit = null,
         bool $showAdminColumn = null,
-        IVector $capabilities = null,
+        array $capabilities = null,
         bool $rewrite = null,
         string $rewriteSlug = null,
         bool $rewriteWithFront = null,
@@ -143,7 +143,7 @@ trait TTaxonomies {
                 $singularLabel = 'Custom Taxonomy';
             }
             
-            $labels = Map::create([
+            $labels = [
                 'name' => $pluralLabel,
                 'singular_name' => $singularLabel,                                
                 'menu_name' => $pluralLabel,
@@ -161,7 +161,7 @@ trait TTaxonomies {
                 'add_or_remove_items' => __( "Add or remove {$pluralLabel}" ),
                 'choose_from_most_used' => __( "Choose from the most used {$pluralLabel}" ),
                 'not_found'  => "No {$pluralLabel} found.",               
-            ]);
+            ];
 
         } else {
             if(!$labels->hasKey('name')) {
@@ -177,13 +177,13 @@ trait TTaxonomies {
             'slug' => $slug,
             'pluralLabel' => $pluralLabel,
             'singularLabel' => $singularLabel,
-            'postTypes' => ($postTypes === null ? null : $postTypes->toArray()),
+            'postTypes' => ($postTypes === null ? null : $postTypes),
             'description' => $description,                                  
             'registerMetaBox' => $registerMetaBox,
             'metaBoxCallback' => $metaBoxCallback,
             'hierarchical' => $hierarchical, 
             'sort' => $sort,
-            'labels' => $labels->toArray(),
+            'labels' => $labels,
             'public' => $public,
             'publiclyQueryable' => $publiclyQueryable,
             'showUi' => $showUi,
@@ -192,7 +192,7 @@ trait TTaxonomies {
             'showTagcloud' => $showTagcloud,
             'showInQuickEdit' => $showInQuickEdit,
             'showAdminColumn' => $showAdminColumn,            
-            'capabilities' => ($capabilities === null ? null : $capabilities->toArray()),
+            'capabilities' => ($capabilities === null ? null : $capabilities),
             'rewrite' => $rewrite,
             'rewriteSlug' => $rewriteSlug,
             'rewriteWithFront' => $rewriteWithFront,
@@ -210,9 +210,9 @@ trait TTaxonomies {
         return new WordPressTaxonomy($slug, static::$taxonomies[$slug]);        
     }
     
-    public static function addPostTypesToTaxonomy(string $taxonomy, IVector $postTypes): void {
+    public static function addPostTypesToTaxonomy(string $taxonomy, array $postTypes): void {
         
-        foreach($postTypes->toArray() as $postType) {
+        foreach($postTypes as $postType) {
             static::$taxonomiesToLink[$taxonomy][] = $postType;
         }
         

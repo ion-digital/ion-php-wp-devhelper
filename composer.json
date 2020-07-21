@@ -1,15 +1,15 @@
 {
-    "name": "ion/wp-helper",
+    "name": "ion/wp-devhelper",
     "type": "library",
     "description": "A library that abstracts and simplifies WordPress development - it can also function as an installed WordPress plug-in, providing additional tools to aid in development.",
     "keywords": [
         "WP",
         "WPHelper",
-        "WP Helper",
-        "wp-helper",
+        "WP Devhelper",
+        "wp-devhelper",
         "WordPress",
-        "WordPressHelper",
-        "WordPress Helper",
+        "WordPressDevHelper",
+        "WordPress DevHelper",
         "WordPress",
         "WordPress Plugin",
         "WordPress Plugins",
@@ -32,30 +32,14 @@
     },
     "require": {
         "php": ">=5.6",    
-        "ion/core": "^0.14",
+        "ion/php-helper": "^0.8",
         "psr/log": "1.0.2",
         "erusev/parsedown": "^1.7.1"
     },
     "require-dev": {
         "php": ">=7.2",
-        "ion/dev": "@dev"
-    },    
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://justusmeyer@bitbucket.org/ion-digital-projects/core.git"
-        },
-
-        {
-            "type": "path",
-            "url": "../dev/",
-            "options": {
-                
-                "symlink": true
-            }
-        }
-        
-    ],    
+        "ion/dev": "dev-release/master"
+    },       
     "autoload": {
         "files": [
             "autoload.php"

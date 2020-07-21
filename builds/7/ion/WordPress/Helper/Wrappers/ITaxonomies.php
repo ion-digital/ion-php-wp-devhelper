@@ -22,13 +22,13 @@ interface ITaxonomies {
         string $slug,
         string $pluralLabel,
         string $singularLabel,
-        IVector $postTypes = null,
+        array $postTypes = null,
         string $description = null,                                  
         bool $registerMetaBox = true,
         callable $metaBoxCallback = null,
         bool $hierarchical = null, 
         bool $sort = null,
-        IMap $labels = null,
+        array $labels = null,
         bool $public = null,
         bool $publiclyQueryable = null,
         bool $showUi = null,
@@ -37,7 +37,7 @@ interface ITaxonomies {
         bool $showTagcloud = null,
         bool $showInQuickEdit = null,
         bool $showAdminColumn = null,
-        IVector $capabilities = null,
+        array $capabilities = null,
         bool $rewrite = null,
         string $rewriteSlug = null,
         bool $rewriteWithFront = null,
@@ -51,7 +51,7 @@ interface ITaxonomies {
         callable $updateCountCallback = null                        
     ): IWordPressTaxonomy;
     
-    static function addPostTypesToTaxonomy(string $taxonomy, IVector $postTypes): void;
+    static function addPostTypesToTaxonomy(string $taxonomy, array $postTypes): void;
     
     static function getTermParent(int $termId): ?WP_Term;        
     

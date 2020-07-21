@@ -103,7 +103,7 @@ final class HelperContext extends Base implements IHelperContext, IObserver
         $this->contextId = PHP::count(array_values(WP::getContexts())) + 1;
         $this->primary = (bool) (!defined(Constants::WP_HELPER));
         if (!defined(Constants::WP_HELPER)) {
-            define(Constants::WP_HELPER, Package::getInstance('ion', 'wp-helper')->getVersion()->toString());
+            define(Constants::WP_HELPER, Package::getInstance('ion', 'wp-devhelper')->getVersion()->toString());
         }
         $tmp = array_values(array_filter(explode(DIRECTORY_SEPARATOR, $this->getWorkingDirectory())));
         $this->contextType = strpos($workingDir, DIRECTORY_SEPARATOR . 'themes') ? Constants::CONTEXT_THEME : Constants::CONTEXT_PLUGIN;
@@ -115,7 +115,7 @@ final class HelperContext extends Base implements IHelperContext, IObserver
             throw new WordPressHelperException("Context '{$this->getPackageName()}' has already been defined in '{$tmp}' - context package names need to be unique.");
         }
         WP::getContexts()[$this->getPackageName()] = $this;
-        $aliases = ['wp-helper' => 'WP Helper'];
+        $aliases = ['wp-devhelper' => 'WP Devhelper'];
         if ($this->contextProjectName !== null) {
             $aliases[$this->getPackageName()] = $this->contextProjectName;
         }

@@ -30,6 +30,7 @@ class AdminFormHelper implements IAdminFormHelper {
         ];
     }
     
+    private $raw;
     private $descriptor;
     private $group;
     private $processed;
@@ -49,12 +50,13 @@ class AdminFormHelper implements IAdminFormHelper {
         $this->group = &$descriptor["groups"][0];
         $this->processed = false;
         $this->output = null;
-        $this->foreignKeys = [];
+        $this->foreignKeys = [];        
         
         $this->setOptionPrefix(null);
-        $this->readFromOptions(null);
+        $this->setRawOptionOperations(false); //TODO: Need to make this true, without impacting legacy modules
+        $this->readFromOptions(null); 
         $this->createToOptions(null);
-        $this->updateToOptions(null);        
+        $this->updateToOptions(null);
         
         $this->onRead(null);
         $this->onCreate(null);
@@ -214,7 +216,7 @@ TEMPLATE;
                         
                         if(array_key_exists('name', $field)) {
                             
-                            $dbValue = WP::getOption($field['name'], '', $postId);
+                            $dbValue = WP::getOption($field['name'], '', $postId, null, $this->getRawOptionOperations());
                         }
                     }
 
@@ -686,6 +688,18 @@ TEMPLATE;
         return $this->optionPrefix;
     }
     
+    public function setRawOptionOperations(bool $raw): IAdminFormHelper {
+        
+        $this->raw = $raw;
+        return $this;
+    }
+    
+    public function getRawOptionOperations(): bool {
+        
+        return $this->raw;
+    }    
+   
+    
     public function readFromOptions(string $optionName = null): IAdminFormHelper {
         
         $self = $this;
@@ -694,7 +708,7 @@ TEMPLATE;
             
             return $this->read(function(/* string */ $record = null, string $key = null, int $metaId = null, OptionMetaType $type = null) use ($self, $optionName) {
 
-                        $optionRecords = WP::getOption($optionName, [], $metaId, $type);                    
+                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());                    
 
                         $result = null;
 
@@ -728,7 +742,7 @@ TEMPLATE;
                     
                     $key = $field['name'];                                    
                     
-                    $result[$key] = WP::getOption(($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key, null, $metaId, $type);
+                    $result[$key] = WP::getOption(($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key, null, $metaId, $type, $this->getRawOptionOperations());
                 }
             }            
             
@@ -746,7 +760,7 @@ TEMPLATE;
             
             return $this->update(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, OptionMetaType $type = null) use ($self, $optionName) {
 
-                        $optionRecords = WP::getOption($optionName, [], $metaId, $type);
+                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
 
                         if (count($optionRecords) > 0) {
 
@@ -777,14 +791,14 @@ TEMPLATE;
                             } 
                         }
 
-                        WP::setOption($optionName, $optionRecords, $metaId, $type);
+                        WP::setOption($optionName, $optionRecords, $metaId, $type, $this->getRawOptionOperations());
                     });
         }
         
 
         
         return $this->update(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, OptionMetaType $type = null) use ($self) {
-
+            
             $options = [];
             
             foreach($oldValues as $key => $value) {
@@ -799,10 +813,12 @@ TEMPLATE;
             
             foreach($options as $key => $value) {
                 
-                WP::setOption($key, $value, $metaId, $type);
+                WP::setOption($key, $value, $metaId, $type, $this->getRawOptionOperations());
             }            
         });
     }
+    
+
     
     public function createToOptions(string $optionName = null): IAdminFormHelper {
         $self = $this;
@@ -811,7 +827,7 @@ TEMPLATE;
                     
             return $this->create(function (array $values, string $key = null, int $metaId = null, OptionMetaType $type = null) use ($optionName) {
 
-                        $optionRecords = WP::getOption($optionName, [], $metaId, $type);
+                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
 
                         if(array_key_exists($key, $values)) {
 
@@ -822,7 +838,7 @@ TEMPLATE;
                             $optionRecords[] = $values;
                         }
 
-                        WP::setOption($optionName, $optionRecords, $metaId, $type);
+                        WP::setOption($optionName, $optionRecords, $metaId, $type, $this->getRawOptionOperations());
                     });
         }
         
@@ -837,7 +853,7 @@ TEMPLATE;
 
             foreach($options as $key => $value) {
                 
-                WP::setOption($key, $value, $metaId, $type);
+                WP::setOption($key, $value, $metaId, $type, $this->getRawOptionOperations());
             }     
         });
     }         
@@ -1026,7 +1042,7 @@ TEMPLATE;
 
                         foreach ($newValues as $key => $value) {
                             
-                            WP::setOption($key, $value, $metaId, $metaType);
+                            WP::setOption($key, $value, $metaId, $metaType, $this->getRawOptionOperations());
                         }
                         
                     } else {

@@ -65,7 +65,7 @@ trait TAdmin
             if ($form !== null) {
                 $form = ' ' . $form;
             }
-            return "wp-helper {$page}{$form}{$classes}";
+            return "wp-devhelper {$page}{$form}{$classes}";
         }, 0, true);
         static::registerWrapperAction('wp_update_nav_menu_item', function ($menuId) {
             //edit-menu-item-{$field['name']}
@@ -84,7 +84,7 @@ trait TAdmin
                     if (is_array($_REQUEST[$key])) {
                         foreach ($_REQUEST[$key] as $wpItemId => $value) {
                             if (!PHP::isEmpty($value)) {
-                                static::setOption($field['name'], $value, $wpItemId);
+                                static::setOption($field['name'], $value, $wpItemId, null, true);
                             }
                         }
                     }
@@ -879,7 +879,7 @@ TEMPLATE;
         ];
         $field["html"] = function ($value = null, $keyName = null, $keyValue = null, $nameOverride = null, $idOverride = null) use($htmlTemplate, $field) {
             // The following values are NOT applied to the field array - they are temporarily modified here
-            $field["value"] = $value;
+            $field["value"] = htmlentities($value);
             $field['disabled'] = $field['disabled'] === true ? ' disabled' : '';
             $field['readOnly'] = $field['readOnly'] === true ? ' readonly' : '';
             if ($nameOverride !== null) {
@@ -1201,7 +1201,7 @@ TEMPLATE;
     {
         // http://www.eyecon.ro/colorpicker/
         $htmlTemplate = <<<TEMPLATE
-<div id="{id}-colour-preview" class="wp-helper-colorpicker" style="background-color:#{value};"></div>
+<div id="{id}-colour-preview" class="wp-devhelper-colorpicker" style="background-color:#{value};"></div>
 <input type="hidden" id="{id}" name="{name}" value="{value}" />
 <script type="text/javascript">
 (function() {

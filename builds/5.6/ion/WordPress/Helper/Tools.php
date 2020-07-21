@@ -91,7 +91,7 @@ class Tools
         //        var_dump(WP::getOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false));
         //        exit;
         if (WP::getOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false) === false) {
-            WP::getAdminMenuPage('tools.php')->addSubMenuPage('Helper', static::getEnableView(), 'wp-helper-enable');
+            WP::getAdminMenuPage('tools.php')->addSubMenuPage('Helper', static::getEnableView(), 'wp-devhelper-enable');
         }
     }
     
@@ -104,15 +104,15 @@ class Tools
     private static function getEnableView()
     {
         return function () {
-            WP::addAdminForm("Settings")->setOptionPrefix(null)->addGroup("General")->addField(WP::checkBoxInputField("Hidden", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Helper settings interface in the 'Tools' menu."))->addField(WP::checkBoxInputField("Fully hidden", Constants::TOOLS_FULLY_HIDDEN_OPTION, null, null, "Fully hide the WP Helper settings interface. <br /><br /><strong>Be careful!</strong> You will need to be able to edit your WordPress database options table to revert this - look for the '<em>option_name</em>' with the value '<em>" . Constants::TOOLS_FULLY_HIDDEN_OPTION . "</em>' and remove the record to enable."))->redirect(function ($values) {
-                // /wordpress/wp-admin/tools.php?page=wp-helper-enable
+            WP::addAdminForm("Settings")->setOptionPrefix(null)->addGroup("General")->addField(WP::checkBoxInputField("Hidden", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Devhelper settings interface in the 'Tools' menu."))->addField(WP::checkBoxInputField("Fully hidden", Constants::TOOLS_FULLY_HIDDEN_OPTION, null, null, "Fully hide the WP Devhelper settings interface. <br /><br /><strong>Be careful!</strong> You will need to be able to edit your WordPress database options table to revert this - look for the '<em>option_name</em>' with the value '<em>" . Constants::TOOLS_FULLY_HIDDEN_OPTION . "</em>' and remove the record to enable."))->redirect(function ($values) {
+                // /wordpress/wp-admin/tools.php?page=wp-devhelper-enable
                 if ($values[Constants::TOOLS_FULLY_HIDDEN_OPTION] === true && $values[Constants::TOOLS_HIDDEN_OPTION] === true) {
                     WP::setOption(Constants::TOOLS_HIDDEN_OPTION, false);
                     WP::redirect(WP::getAdminUrl('index'));
                 }
                 if ($values[Constants::TOOLS_HIDDEN_OPTION] === false) {
                     WP::setOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false);
-                    WP::redirect(WP::getAdminUrl('admin') . '?page=wp-helper-settings');
+                    WP::redirect(WP::getAdminUrl('admin') . '?page=wp-devhelper-settings');
                 }
             })->render();
         };
@@ -128,11 +128,11 @@ class Tools
     private static function getSettingsView(IHelperContext $context)
     {
         return function () use($context) {
-            WP::addAdminForm("Settings", 'wp-helper-settings')->setOptionPrefix(null)->addGroup("General")->addField(WP::checkBoxInputField("Hide settings interface", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Helper settings interface (you can enable it again, by navigating to 'Tools &gt; Helper')."))->addField(WP::checkBoxInputField("HTML Auto paragraphs", Constants::TOOLS_AUTO_PARAGRAPHS_OPTION, null, null, "Enable automatic paragraph insertion for content."))->addGroup("Logging", null, null, 1)->addField(WP::checkBoxInputField("Enable logging", Constants::ENABLE_LOGGING, null, null, "Enable logging functionality."))->addField(WP::textInputField("Purge age", Constants::LOGS_PURGE_AGE, null, null, "The amount of days before archived log entries are purged (specify <em>0</em> for never)."))->addField(WP::textInputField("Max displayed log entries", Constants::MAX_DISPLAYED_LOG_ENTRIES, null, null, "The maximum amount of records to display when viewing a log (in the administration panel)."))->addGroup("Development Tools", null, null, 1)->addField(WP::checkBoxInputField("Enable quick 404 override", Constants::QUICK_404_OPTION, null, null, "Override the 404 functionality of the site to immediately display a very simple message and end the script."))->redirect(function ($values) {
-                // /wordpress/wp-admin/tools.php?page=wp-helper-enable
+            WP::addAdminForm("Settings", 'wp-devhelper-settings')->setOptionPrefix(null)->addGroup("General")->addField(WP::checkBoxInputField("Hide settings interface", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Devhelper settings interface (you can enable it again, by navigating to 'Tools &gt; Helper')."))->addField(WP::checkBoxInputField("HTML Auto paragraphs", Constants::TOOLS_AUTO_PARAGRAPHS_OPTION, null, null, "Enable automatic paragraph insertion for content."))->addGroup("Logging", null, null, 1)->addField(WP::checkBoxInputField("Enable logging", Constants::ENABLE_LOGGING, null, null, "Enable logging functionality."))->addField(WP::textInputField("Purge age", Constants::LOGS_PURGE_AGE, null, null, "The amount of days before archived log entries are purged (specify <em>0</em> for never)."))->addField(WP::textInputField("Max displayed log entries", Constants::MAX_DISPLAYED_LOG_ENTRIES, null, null, "The maximum amount of records to display when viewing a log (in the administration panel)."))->addGroup("Development Tools", null, null, 1)->addField(WP::checkBoxInputField("Enable quick 404 override", Constants::QUICK_404_OPTION, null, null, "Override the 404 functionality of the site to immediately display a very simple message and end the script."))->redirect(function ($values) {
+                // /wordpress/wp-admin/tools.php?page=wp-devhelper-enable
                 if ($values[Constants::TOOLS_HIDDEN_OPTION] === true) {
                     WP::setOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false);
-                    WP::redirect(WP::getAdminUrl('tools') . '?page=wp-helper-enable');
+                    WP::redirect(WP::getAdminUrl('tools') . '?page=wp-devhelper-enable');
                 }
             })->render();
             //var_dump($f->
@@ -161,10 +161,10 @@ class Tools
     private static function getStateView(IHelperContext $context)
     {
         return function () use($context) {
-            echo "<p>Primary WP Helper version: <strong>" . Package::getInstance('ion', 'wp-helper')->getVersion()->toString() . "</strong></p>";
-            echo "<p>Primary WP Helper path: <strong>" . WP::getHelperDirectory() . "</strong></p>";
+            echo "<p>Primary WP Devhelper version: <strong>" . Package::getInstance('ion', 'wp-devhelper')->getVersion()->toString() . "</strong></p>";
+            echo "<p>Primary WP Devhelper path: <strong>" . WP::getHelperDirectory() . "</strong></p>";
             echo "<h2>Contexts</h2>";
-            $list = WP::addAdminTable("Contexts", "contexts", "Context", "Contexts", 'package-name', static::getStateDetailView($context), false, false, false, ['<a href="' . WP::getAdminUrl('admin') . '?page=wp-helper-logs&form={record}">View log</a>' => function ($id) {
+            $list = WP::addAdminTable("Contexts", "contexts", "Context", "Contexts", 'package-name', static::getStateDetailView($context), false, false, false, ['<a href="' . WP::getAdminUrl('admin') . '?page=wp-devhelper-logs&form={record}">View log</a>' => function ($id) {
                 if (array_key_exists($id, WP::getLogs())) {
                     return true;
                 }
@@ -288,11 +288,11 @@ class Tools
     private static function getPhpErrorLogView(IHelperContext $context)
     {
         return function () use($context) {
-            $ajaxUrl = WP::getAjaxUrl('wp-helper-phperrors');
+            $ajaxUrl = WP::getAjaxUrl('wp-devhelper-phperrors');
             echo <<<HTML
 <p>Log entries have been reversed to show the newest items first.</p>            
-<div class="wp-helper phperrors viewport-container">
-    <div class="wp-helper phperrors viewport">
+<div class="wp-devhelper phperrors viewport-container">
+    <div class="wp-devhelper phperrors viewport">
         <iframe src="{$ajaxUrl}" />
     </div>
 </div>    
@@ -310,7 +310,7 @@ HTML;
     private static function getLogListView(IHelperContext $context)
     {
         return function () use($context) {
-            WP::addAdminTable("Logs", "logs", "Log", "Logs", "log-slug", static::getLogDetailView($context), false, false, false, ['<a href="' . WP::getAdminUrl('admin') . '?page=wp-helper-logs&form={record}">View</a>' => function ($id) {
+            WP::addAdminTable("Logs", "logs", "Log", "Logs", "log-slug", static::getLogDetailView($context), false, false, false, ['<a href="' . WP::getAdminUrl('admin') . '?page=wp-devhelper-logs&form={record}">View</a>' => function ($id) {
                 return true;
             }])->addColumn(WP::textTableColumn("Log", "name", "name"))->read(function () {
                 $rows = [];
@@ -334,7 +334,7 @@ HTML;
         return function () use($context, $log) {
             if ($log !== null) {
                 $btnId = 'btn-clear-log-' . $log->getSlug();
-                $actionSlug = 'wp-helper-clear-log-' . $log->getSlug();
+                $actionSlug = 'wp-devhelper-clear-log-' . $log->getSlug();
                 $ajaxUrl = WP::getAjaxUrl($actionSlug);
                 WP::button('Clear', $btnId, 'Clear the log.', null, false, false, PHP::strStripWhiteSpace(<<<JS
                         
@@ -407,10 +407,10 @@ JS
     private static function getPhpInfoView(IHelperContext $context)
     {
         return function () use($context) {
-            $ajaxUrl = WP::getAjaxUrl('wp-helper-phpinfo');
+            $ajaxUrl = WP::getAjaxUrl('wp-devhelper-phpinfo');
             echo <<<HTML
-<div class="wp-helper phpinfo viewport-container">
-    <div class="wp-helper phpinfo viewport">
+<div class="wp-devhelper phpinfo viewport-container">
+    <div class="wp-devhelper phpinfo viewport">
         <iframe src="{$ajaxUrl}" />
     </div>
 </div>    
@@ -492,19 +492,19 @@ HTML;
             $maintainerUrl = Constants::MAINTAINER_SITE;
             $authorUrl .= '?return-url=' . rawurlencode(WP::siteLink(null, null, true, false));
             $maintainerUrl .= '?return-url=' . rawurlencode(WP::siteLink(null, null, true, false));
-            $version = Package::getInstance('ion', 'wp-helper')->getVersion()->toString();
-            $content = WP::applyTemplate(Constants::ABOUT_CONTENT, ['wp-helper-version' => $version, 'state-link' => WP::getAdminUrl('admin') . '?page=wp-helper-state', 'maintainer-link' => $maintainerUrl, 'site-name' => 'this site']);
+            $version = Package::getInstance('ion', 'wp-devhelper')->getVersion()->toString();
+            $content = WP::applyTemplate(Constants::ABOUT_CONTENT, ['wp-devhelper-version' => $version, 'state-link' => WP::getAdminUrl('admin') . '?page=wp-devhelper-state', 'maintainer-link' => $maintainerUrl, 'site-name' => 'this site']);
             echo <<<HTML
 
-<span class="wp-helper-about">
+<span class="wp-devhelper-about">
                     
     <span class="header">
         <span class="header-logo">
-            <a href="{$authorUrl}"><img id="wp-helper-logo" src="{$imgSrc}" /></a>
+            <a href="{$authorUrl}"><img id="wp-devhelper-logo" src="{$imgSrc}" /></a>
         </span>
         <span class="header-content">
             <p>
-            WP Helper <strong>{$version}</strong><br />
+            WP Devhelper <strong>{$version}</strong><br />
             <a href="{$authorUrl}" target="_blank">{$authorLink}</a>
             </p>
 
@@ -546,7 +546,7 @@ HTML;
             $serverTime = strftime('%a %e %b %G, %R');
             $wordPressTime = strftime('%a %e %b %G, %R', current_time('timestamp', 0));
             $mem = memory_get_peak_usage(true) / 1024 / 1024 . 'Mb';
-            $helperVersion = Package::getInstance('ion', 'wp-helper')->getVersion()->toString();
+            $helperVersion = Package::getInstance('ion', 'wp-devhelper')->getVersion()->toString();
             $wordPressVersion = get_bloginfo('version');
             //TODO: Need a wrapper function for bloginfo?
             if (WP::isDebugMode() === true) {
@@ -555,7 +555,7 @@ HTML;
             $wpHelperBlurbUri = Constants::HELPER_SITE;
             $wpBlurbUri = Constants::WORDPRESS_SITE;
             $wpDevBlurb = Constants::AUTHOR_SITE;
-            echo '<span>Powered by <a href="' . $wpBlurbUri . '" target="_blank">WordPress</a> <strong>' . $wordPressVersion . '</strong></span> | <span>Fueled by <a href="' . $wpHelperBlurbUri . '" target="_blank">WP Helper</a> <strong>' . $helperVersion . '</strong></span> | <span>Need Custom WordPress Solutions? <a href="' . $wpDevBlurb . '" target="_blank">Custom WordPress Development</a></span> | <span>Server time: ' . $serverTime . '</span> | <span>WordPress time: ' . $wordPressTime . '</span> | <span>Peak memory usage: ' . $mem . '</span>';
+            echo '<span>Powered by <a href="' . $wpBlurbUri . '" target="_blank">WordPress</a> <strong>' . $wordPressVersion . '</strong></span> | <span>Fueled by <a href="' . $wpHelperBlurbUri . '" target="_blank">WP Devhelper</a> <strong>' . $helperVersion . '</strong></span> | <span>Need Custom WordPress Solutions? <a href="' . $wpDevBlurb . '" target="_blank">Custom WordPress Development</a></span> | <span>Server time: ' . $serverTime . '</span> | <span>WordPress time: ' . $wordPressTime . '</span> | <span>Peak memory usage: ' . $mem . '</span>';
         });
         add_action('init', function () use($context, $wpHelperSettings) {
             if (!WP::hasOption(Constants::TOOLS_HIDDEN_OPTION) || !WP::hasOption(Constants::TOOLS_FULLY_HIDDEN_OPTION)) {
@@ -567,14 +567,14 @@ HTML;
                 }
             }
             if (WP::getOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false) === false) {
-                WP::addScript("wp-helper-tools-inline', '( function() { console.log('WP Helper Tools initialized.'); } )();", true, true, true, false);
-                WP::addAjaxAction('wp-helper-phpinfo', function () {
+                WP::addScript("wp-devhelper-tools-inline', '( function() { console.log('WP Devhelper Tools initialized.'); } )();", true, true, true, false);
+                WP::addAjaxAction('wp-devhelper-phpinfo', function () {
                     ob_start();
                     phpinfo();
                     echo ob_get_clean();
                     exit(200);
                 }, true, false);
-                WP::addAjaxAction('wp-helper-phperrors', function () {
+                WP::addAjaxAction('wp-devhelper-phperrors', function () {
                     $path = @ini_get(Constants::PHP_ERROR_LOG);
                     if (file_exists($path)) {
                         $size = 1024 * 128;
@@ -605,13 +605,13 @@ HTML;
                     $icon = 'data:image/svg+xml;base64,';
                     $icon .= base64_encode(file_get_contents($iconDir));
                 }
-                $page = WP::addPlugInAdminMenuPage('About', static::getAboutView($context), 'Helper', 'wp-helper-about', $icon, null)->addSubMenuPage('About', static::getAboutView($context), 'wp-helper-about')->addSubMenuPage('Settings', static::getSettingsView($context), 'wp-helper-settings')->addSubMenuPage('State', static::getStateView($context), 'wp-helper-state')->addSubMenuPageTab('WordPress', static::getWordPressStateView($context), 'wp-helper-wpstate')->addSubMenuPageTab('CRON', static::getCronStateView($context), 'wp-helper-cron')->addSubMenuPageTab('PHP Info', static::getPhpInfoView($context), 'wp-helper-phpinfo');
+                $page = WP::addPlugInAdminMenuPage('About', static::getAboutView($context), 'Helper', 'wp-devhelper-about', $icon, null)->addSubMenuPage('About', static::getAboutView($context), 'wp-devhelper-about')->addSubMenuPage('Settings', static::getSettingsView($context), 'wp-devhelper-settings')->addSubMenuPage('State', static::getStateView($context), 'wp-devhelper-state')->addSubMenuPageTab('WordPress', static::getWordPressStateView($context), 'wp-devhelper-wpstate')->addSubMenuPageTab('CRON', static::getCronStateView($context), 'wp-devhelper-cron')->addSubMenuPageTab('PHP Info', static::getPhpInfoView($context), 'wp-devhelper-phpinfo');
                 if (defined(Constants::WP_CONFIG_DEBUG_LOG) && constant(Constants::WP_CONFIG_DEBUG_LOG) === true && !PHP::isEmpty(@ini_get('error_log'))) {
-                    $page = $page->addSubMenuPageTab('PHP Error Log', static::getPhpErrorLogView($context), 'wp-helper-phperrors');
+                    $page = $page->addSubMenuPageTab('PHP Error Log', static::getPhpErrorLogView($context), 'wp-devhelper-phperrors');
                 }
                 $page->addSubMenuPage('Options', static::getWordPressOptionsView($context), 'wp-wordpress-options');
                 if (WP::getOption(Constants::ENABLE_LOGGING, false) === true && count(WP::getLogs()) > 0) {
-                    $page = $page->addSubMenuPage('Logs', static::getLogListView($context), 'wp-helper-logs');
+                    $page = $page->addSubMenuPage('Logs', static::getLogListView($context), 'wp-devhelper-logs');
                     WP::addAction("wp_loaded", function () use($context, $page) {
                         foreach (WP::getLogs() as $log) {
                             $page->addSubMenuPageTab($log->getName(), static::getLogDetailView($context, $log), $log->getSlug());

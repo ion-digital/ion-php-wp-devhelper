@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b1e336a4f1eecbdbfb28dc9b6a54cd4a",
+    "content-hash": "952394d3894a88620f321f94cddf700d",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -101,57 +101,6 @@
                 "php"
             ],
             "time": "2020-07-21T11:48:04+00:00"
-        },
-        {
-            "name": "ion/core",
-            "version": "v0.14.5+master",
-            "source": {
-                "type": "git",
-                "url": "https://justusmeyer@bitbucket.org/ion-digital-projects/core.git",
-                "reference": "78ea0943effd42bfd975323879355d7bdcda64b2"
-            },
-            "require": {
-                "ion/php-helper": "^0.8",
-                "php": ">=5.6"
-            },
-            "require-dev": {
-                "ion/dev": "dev-release/master"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "autoload.php"
-                ]
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "ion\\": "tests/unit/ion/"
-                }
-            },
-            "license": [
-                "Proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Justus Meyer",
-                    "role": "developer",
-                    "homepage": "https://justusmeyer.com",
-                    "email": "justus@justusmeyer.com"
-                }
-            ],
-            "description": "The base class library needed for all ION packages.",
-            "homepage": "https://bitbucket.org/ion-digital-projects/core",
-            "keywords": [
-                "ION",
-                "base",
-                "dynamic",
-                "immutable",
-                "serialization"
-            ],
-            "support": {
-                "issues": "https://bitbucket.org/ion-digital-projects/core/issues"
-            },
-            "time": "2020-07-21T15:46:17+00:00"
         },
         {
             "name": "ion/php-helper",
@@ -309,11 +258,17 @@
         },
         {
             "name": "ion/dev",
-            "version": "dev-master",
+            "version": "dev-release/master",
+            "source": {
+                "type": "git",
+                "url": "https://bitbucket.org/ion-digital-projects/dev.git",
+                "reference": "b7ca45bf5cd7095e4295495e70819dda54a19b95"
+            },
             "dist": {
-                "type": "path",
-                "url": "../dev",
-                "reference": "d0ebf6035c86fd13cb1a1cde67eeff82c4751bc9"
+                "type": "zip",
+                "url": "https://bitbucket.org/ion-digital-projects/dev/get/b7ca45bf5cd7095e4295495e70819dda54a19b95.zip",
+                "reference": "b7ca45bf5cd7095e4295495e70819dda54a19b95",
+                "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.1",
@@ -337,43 +292,31 @@
                     ]
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "ion\\": [
-                        "tests/unit/ion/"
-                    ]
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL-3.0-or-later"
             ],
             "authors": [
                 {
                     "name": "Justus Meyer",
-                    "role": "developer",
+                    "email": "justus@justusmeyer.com",
                     "homepage": "https://justusmeyer.com",
-                    "email": "justus@justusmeyer.com"
+                    "role": "developer"
                 },
                 {
                     "name": "ION Digital",
-                    "role": "owner",
-                    "homepage": "https://ion.digital"
+                    "homepage": "https://ion.digital",
+                    "role": "owner"
                 }
             ],
             "description": "Development and package deployment support tools, built as a Composer plugin.",
             "homepage": "https://bitbucket.org/ion-digital-projects/dev/",
             "keywords": [
-                "ION",
                 "composer",
-                "development tools"
+                "development tools",
+                "ion"
             ],
-            "support": {
-                "issues": "https://bitbucket.org/ion-digital-projects/dev/issues"
-            },
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "time": "2020-07-21T20:08:52+00:00"
         },
         {
             "name": "ion/php-trans-porter",

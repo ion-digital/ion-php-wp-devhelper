@@ -3,3 +3,5 @@
 /nbproject/private/
 /autoloader.json
 /**/ion-auto-load*.php
+/tests/plugin/nbproject/private/
+/tests/theme/nbproject/private/

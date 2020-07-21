@@ -48,9 +48,9 @@ trait TCommon
             // DateTime Picker
             wp_enqueue_script("wordpresshelper_datetimepicker", static::getHelperUri() . "assets/external/datetimepicker-master/build/jquery.datetimepicker.full.js", [], false, false);
             wp_enqueue_style("wordpresshelper_datetimepicker", static::getHelperUri() . "assets/external/datetimepicker-master/jquery.datetimepicker.css", [], false, "screen");
-            // WP Helper Admin
-            wp_enqueue_style("wordpresshelper-admin", static::getHelperUri() . "assets/styles/wp-helper-admin.css", [], false, "screen");
-            wp_enqueue_script("wordpresshelper-admin", static::getHelperUri() . "assets/scripts/wp-helper-admin.js", [], false, false);
+            // WP Devhelper Admin
+            wp_enqueue_style("wordpresshelper-admin", static::getHelperUri() . "assets/styles/wp-devhelper-admin.css", [], false, "screen");
+            wp_enqueue_script("wordpresshelper-admin", static::getHelperUri() . "assets/scripts/wp-devhelper-admin.js", [], false, false);
             foreach (array_values(static::$scripts) as $script) {
                 if ($script["backEnd"] === true && $script["inline"] === false) {
                     wp_enqueue_script($script["id"], $script["src"], $script["dependencies"], false, $script["addToEnd"]);
@@ -77,7 +77,7 @@ trait TCommon
         static::registerWrapperAction('wp_head', function () {
             $ajaxUrl = admin_url('admin-ajax.php');
             echo <<<JS
-<script id="wp-helper" type="text/javascript">
+<script id="wp-devhelper" type="text/javascript">
 var ajaxurl;
 ajaxurl = '{$ajaxUrl}';
 </script>

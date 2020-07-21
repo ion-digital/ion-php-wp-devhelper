@@ -141,8 +141,8 @@ trait TOptions
     
     public static function setOption($key, $value = null, $id = null, OptionMetaType $type = null, $raw = false, $autoLoad = false)
     {
-        if (!$raw) {
-            $value = serialize($value);
+        if ($raw === false) {
+            $value = @serialize($value);
         } else {
             $value = $value === null ? '' : $value;
         }
