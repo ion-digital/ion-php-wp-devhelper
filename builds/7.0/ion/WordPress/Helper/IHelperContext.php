@@ -9,7 +9,6 @@ namespace ion\WordPress\Helper;
  * @author Justus
  */
 use ion\ISemVer;
-use ion\Types\Arrays\IVector;
 use ion\WordPress\Helper\IWordPressHelperLog;
 
 interface IHelperContext
@@ -155,10 +154,10 @@ interface IHelperContext
     /**
      * method
      * 
-     * @return IVector
+     * @return array
      */
     
-    function getChildren() : IVector;
+    function getChildren() : array;
     
     /**
      * method

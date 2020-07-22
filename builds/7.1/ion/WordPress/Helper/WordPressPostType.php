@@ -4,8 +4,6 @@
  */
 namespace ion\WordPress\Helper;
 
-use ion\Types\Arrays\IMap;
-use ion\Types\Arrays\IVector;
 /**
  * Description of WordPressPostType
  *
@@ -120,10 +118,10 @@ class WordPressPostType implements IWordPressPostType
      * method
      * 
      * 
-     * @return IMap
+     * @return array
      */
     
-    public function setLabels(IMap $labels) : IMap
+    public function setLabels(array $labels) : array
     {
         $this->labels = $labels;
         return $this->labels;
@@ -132,10 +130,10 @@ class WordPressPostType implements IWordPressPostType
     /**
      * method
      * 
-     * @return IMap
+     * @return array
      */
     
-    public function getLabels() : IMap
+    public function getLabels() : array
     {
         return $this->labels;
     }
@@ -432,10 +430,10 @@ class WordPressPostType implements IWordPressPostType
      * method
      * 
      * 
-     * @return IMap
+     * @return array
      */
     
-    public function setCapabilities(IMap $capabilities) : IMap
+    public function setCapabilities(array $capabilities) : array
     {
         $this->capabilities = $capabilities;
         return $this->capabilities;
@@ -444,10 +442,10 @@ class WordPressPostType implements IWordPressPostType
     /**
      * method
      * 
-     * @return IMap
+     * @return array
      */
     
-    public function getCapabilities() : IMap
+    public function getCapabilities() : array
     {
         return $this->capabilities;
     }
@@ -504,10 +502,10 @@ class WordPressPostType implements IWordPressPostType
      * method
      * 
      * 
-     * @return IMap
+     * @return array
      */
     
-    public function setSupports(IMap $supports) : IMap
+    public function setSupports(array $supports) : array
     {
         $this->supports = $supports;
         return $this->supports;
@@ -516,10 +514,10 @@ class WordPressPostType implements IWordPressPostType
     /**
      * method
      * 
-     * @return IMap
+     * @return array
      */
     
-    public function getSupports() : IMap
+    public function getSupports() : array
     {
         return $this->supports;
     }
@@ -553,10 +551,10 @@ class WordPressPostType implements IWordPressPostType
      * method
      * 
      * 
-     * @return IVector
+     * @return array
      */
     
-    public function setTaxonomies(IVector $taxonomies) : IVector
+    public function setTaxonomies(array $taxonomies) : array
     {
         $this->parent['taxonomies'] = $taxonomies;
         return $this->taxonomies;
@@ -565,10 +563,10 @@ class WordPressPostType implements IWordPressPostType
     /**
      * method
      * 
-     * @return IVector
+     * @return array
      */
     
-    public function getTaxonomies() : IVector
+    public function getTaxonomies() : array
     {
         return $this->parent['taxonomies'];
     }

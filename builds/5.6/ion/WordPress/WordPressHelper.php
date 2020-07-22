@@ -16,20 +16,12 @@ use WP_User;
 use ion\WordPress\IWordPressHelper;
 use ion\WordPress\Helper\IHelperContext;
 use ion\WordPress\Helper\HelperContext;
-use ion\Types\Arrays\IMap;
-use ion\Types\Arrays\Map;
-use ion\Types\Arrays\IVector;
-use ion\Types\Arrays\Vector;
 use ion\WordPress\Helper\Tools;
 use ion\WordPress\Helper\Constants;
 use ion\PhpHelper as PHP;
 use ion\Package;
-use ion\System\File;
-use ion\System\Path;
-use ion\System\FileMode;
 use ion\ISemVer;
 use ion\SemVer;
-//use \ion\Types\StringObject;
 use ion\WordPress\Helper\Api\Wrappers\OptionMetaType;
 use ion\WordPress\Helper\WordPressHelperException;
 
@@ -493,7 +485,6 @@ TEMPLATE;
     
     public static function slugify($s)
     {
-        //        return StringObject::create($s)->toDashed()->toString();
         return PHP::strToDashedCase($s);
     }
     

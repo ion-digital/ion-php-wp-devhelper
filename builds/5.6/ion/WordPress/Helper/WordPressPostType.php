@@ -4,8 +4,6 @@
  */
 namespace ion\WordPress\Helper;
 
-use ion\Types\Arrays\IMap;
-use ion\Types\Arrays\IVector;
 /**
  * Description of WordPressPostType
  *
@@ -120,10 +118,10 @@ class WordPressPostType implements IWordPressPostType
      * method
      * 
      * 
-     * @return IMap
+     * @return array
      */
     
-    public function setLabels(IMap $labels)
+    public function setLabels(array $labels)
     {
         $this->labels = $labels;
         return $this->labels;
@@ -132,7 +130,7 @@ class WordPressPostType implements IWordPressPostType
     /**
      * method
      * 
-     * @return IMap
+     * @return array
      */
     
     public function getLabels()
@@ -432,10 +430,10 @@ class WordPressPostType implements IWordPressPostType
      * method
      * 
      * 
-     * @return IMap
+     * @return array
      */
     
-    public function setCapabilities(IMap $capabilities)
+    public function setCapabilities(array $capabilities)
     {
         $this->capabilities = $capabilities;
         return $this->capabilities;
@@ -444,7 +442,7 @@ class WordPressPostType implements IWordPressPostType
     /**
      * method
      * 
-     * @return IMap
+     * @return array
      */
     
     public function getCapabilities()
@@ -504,10 +502,10 @@ class WordPressPostType implements IWordPressPostType
      * method
      * 
      * 
-     * @return IMap
+     * @return array
      */
     
-    public function setSupports(IMap $supports)
+    public function setSupports(array $supports)
     {
         $this->supports = $supports;
         return $this->supports;
@@ -516,7 +514,7 @@ class WordPressPostType implements IWordPressPostType
     /**
      * method
      * 
-     * @return IMap
+     * @return array
      */
     
     public function getSupports()
@@ -553,10 +551,10 @@ class WordPressPostType implements IWordPressPostType
      * method
      * 
      * 
-     * @return IVector
+     * @return array
      */
     
-    public function setTaxonomies(IVector $taxonomies)
+    public function setTaxonomies(array $taxonomies)
     {
         $this->parent['taxonomies'] = $taxonomies;
         return $this->taxonomies;
@@ -565,7 +563,7 @@ class WordPressPostType implements IWordPressPostType
     /**
      * method
      * 
-     * @return IVector
+     * @return array
      */
     
     public function getTaxonomies()

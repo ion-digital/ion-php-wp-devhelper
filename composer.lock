@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "952394d3894a88620f321f94cddf700d",
+    "content-hash": "134b40d80e78c78d0bc2372e3e86995e",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -262,12 +262,12 @@
             "source": {
                 "type": "git",
                 "url": "https://bitbucket.org/ion-digital-projects/dev.git",
-                "reference": "b7ca45bf5cd7095e4295495e70819dda54a19b95"
+                "reference": "dc5cfa47e34410164d2ae9b71e30fb2ff4c9cde6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/ion-digital-projects/dev/get/b7ca45bf5cd7095e4295495e70819dda54a19b95.zip",
-                "reference": "b7ca45bf5cd7095e4295495e70819dda54a19b95",
+                "url": "https://bitbucket.org/ion-digital-projects/dev/get/dc5cfa47e34410164d2ae9b71e30fb2ff4c9cde6.zip",
+                "reference": "dc5cfa47e34410164d2ae9b71e30fb2ff4c9cde6",
                 "shasum": ""
             },
             "require": {
@@ -316,7 +316,7 @@
                 "development tools",
                 "ion"
             ],
-            "time": "2020-07-21T20:08:52+00:00"
+            "time": "2020-07-22T08:42:33+00:00"
         },
         {
             "name": "ion/php-trans-porter",

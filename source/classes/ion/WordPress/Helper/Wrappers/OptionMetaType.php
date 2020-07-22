@@ -12,9 +12,7 @@ namespace ion\WordPress\Helper\Wrappers;
  * @author Justus
  */
 
-use \ion\Types\EnumObject;
-
-class OptionMetaType extends EnumObject {
+class OptionMetaType {
     
     public const POST = 1;
     public const TERM = 2;

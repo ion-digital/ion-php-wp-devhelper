@@ -16,18 +16,12 @@ use \ion\WordPress\WordPressHelper as WP;
 use \ion\WordPress\IWordPressHelper;
 use \ion\PhpHelper as PHP;
 use \ion\ISemVer;
-use \ion\Types\Arrays\IVector;
-use \ion\Types\Arrays\Vector;
 use \ion\Package;
-use \ion\IObserver;
-use \ion\IObservable;
-use \ion\Base;
-use \ion\Types\Arrays\IMap;
 use \ion\SemVer;
 
-final class HelperContext extends Base implements IHelperContext, IObserver {
+final class HelperContext implements IHelperContext /*, IObserver */ {
         
-    use \ion\TObserver;
+//    use \ion\TObserver;
     
     private const OPTION_ACTIVATION_TIMESTAMP = 'activation-timestamp';
     private const OPTION_ACTIVATION_VERSION = 'activation-version';    
@@ -96,8 +90,8 @@ final class HelperContext extends Base implements IHelperContext, IObserver {
             
         $workingUri = null;
         
-        $this->children = Vector::create();
-        $this->observe($this->children);
+ 
+        $this->children = [];
         
         $loadPath = realpath($loadPath);
 
@@ -201,20 +195,20 @@ final class HelperContext extends Base implements IHelperContext, IObserver {
     }
     
 
-    public function onAddObserved(IObservable $observable, IMap $data = null): IObserver {
-        
-        if($observable === $this->children) {
-        
-            $obj = $data->get('value');
-           
-            if($obj !== null) {
-
-                $obj->setParent($this);
-            }
-        }
-    
-        return $this;
-    }    
+//    public function onAddObserved(IObservable $observable, IMap $data = null): IObserver {
+//        
+//        if($observable === $this->children) {
+//        
+//            $obj = $data->get('value');
+//           
+//            if($obj !== null) {
+//
+//                $obj->setParent($this);
+//            }
+//        }
+//    
+//        return $this;
+//    }    
     
     public function getLog(): IWordPressHelperLog {
         
@@ -723,7 +717,7 @@ final class HelperContext extends Base implements IHelperContext, IObserver {
         return $this->parent;
     }
     
-    public function getChildren(): IVector {
+    public function getChildren(): array {
         
         return $this->children;
     }        

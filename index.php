@@ -10,6 +10,12 @@
   Domain Path: /languages
  */
 
+if(!defined('ABSPATH')) {
+    
+    http_response_code(404);
+    exit;
+}
+
 require_once(__DIR__ . '/autoload.php');
 
 use \ion\WordPress\WordPressHelper as WP;

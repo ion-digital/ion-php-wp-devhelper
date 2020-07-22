@@ -150,225 +150,6 @@ trait TOptions {
         
     }
         
-    // --- DEPRECATED ---
-
-    public static function getOption(string $key, /* mixed */ $default = null, int $id = null, OptionMetaType $type = null, bool $raw = false) {
-
-        if (static::hasOption($key, $id, $type) === false) {
-            
-            return $default;
-        }
-
-        $value = null;
-        
-//        var_dump($type);
-        
-        if($id === null) {
-            
-            $value = get_option($key, null);            
-            
-        } else {
-            
-            if($type === null) {
-                
-                $type = OptionMetaType::POST();
-            }            
-        
-//            var_dump($type->toValue());
-            
-            switch($type->toValue()) {
-    
-                case OptionMetaType::TERM: {
-                    
-                    $value = get_term_meta($id, $key, true);
-                    
-//                    echo "<pre>";
-//                    var_dump($id);
-//                    var_dump($key);
-//                    var_dump($value);
-//                    echo "</pre>";                    
-                    
-                    break;
-                }
-
-                case OptionMetaType::USER: {
-                    
-                    $value = get_user_meta($id, $key, true);
-                    break;
-                }         
-                
-                case OptionMetaType::COMMENT: {
-                    
-                    $value = get_comment_meta($id, $key, true);
-                    break;
-                }                    
-                
-                case OptionMetaType::POST: {
-                    
-                    $value = get_post_meta($id, $key, true);
-                    break;
-                }                
-            }            
-        }
-
-        if ($value === null || ($value !== null && $value === '')) {
-            
-            return $default;
-        }
-
-        if ($raw === true) {
-            
-            return $value;
-        }
-
-        $tmp = @unserialize($value);
-        
-        if($tmp !== false) {
-            
-            return $tmp;
-        }
-        
-        return false;
-    }
-
-    public static function setOption(string $key, /* mixed */ $value = null, int $id = null, OptionMetaType $type = null, bool $raw = false, bool $autoLoad = false): bool {
-
-        if ($raw === false /* && $value !== null */) {
-               
-            $value = @serialize($value);
-            
-        } else {
-            
-            $value = ($value === null ? '' : $value);
-        }
-        
-        //($id === null ? update_option($key, $value, $autoLoad) : ($term ?  : ));
-        
-        
-        if($id === null) {
-            
-            return update_option($key, $value, $autoLoad);            
-            
-        } else {
-            
-            if($type === null) {
-                
-                $type = OptionMetaType::POST();
-            }               
-                    
-            switch($type->toValue()) {
-    
-                case OptionMetaType::TERM: {
-                    
-                    return update_term_meta($id, $key, $value);
-                }
-
-                case OptionMetaType::USER: {
-                    
-                    return update_user_meta($id, $key, $value);                    
-                }          
-                
-                case OptionMetaType::COMMENT: {
-                    
-                    return update_comment_meta($id, $key, $value); 
-                }                    
-                                
-                
-                case OptionMetaType::POST: {
-                    
-                    return update_post_meta($id, $key, $value);                    
-                }                
-            }            
-        }   
-        
-        return false;
-    }           
-    
-    public static function hasOption(string $key, int $id = null, OptionMetaType $type = null): bool {
-
-        $tmp = null;
-        
-        if($type === null) {
-
-            $type = OptionMetaType::POST();
-        }        
-        
-        switch($type->toValue()) {
-
-            case OptionMetaType::TERM: {
-
-                $tmp = 'term';
-                break;
-            }
-
-            case OptionMetaType::USER: {
-
-                $tmp = 'user';
-                break;
-            }          
-
-            case OptionMetaType::COMMENT: {
-
-                $tmp = 'comment';
-                break;
-            }                      
-
-            case OptionMetaType::POST: {
-
-                $tmp = 'post';
-                break;
-            }                
-        }
-
-        return static::_hasOption($key, $tmp, $id);
-    }
-
-    public static function removeOption(string $key, int $id = null, OptionMetaType $type = null): bool {
-
-        if($id === null) {
-            
-            return delete_option($key);            
-        }
-            
-        if($type === null) {
-
-            $type = OptionMetaType::POST();
-        }               
-
-        switch($type->toValue()) {
-
-            case OptionMetaType::TERM: {
-
-                return delete_term_meta($id, $key);
-            }
-
-            case OptionMetaType::USER: {
-
-                return delete_user_meta($id, $key);                    
-            }          
-
-            case OptionMetaType::POST: {
-
-                return delete_post_meta($id, $key);
-            }                
-            
-            case OptionMetaType::COMMENT: {
-
-                return delete_comment_meta($id, $key);
-            }              
-        }            
-
-    }         
-    
-    public static function getRawOption(string $key, /* mixed */ $default = null, int $id = null, OptionMetaType $type = null) /* mixed */ {
-        
-        return static::getOption($key, $default, $id, $type, true);
-    }
-    
-    public static function setRawOption(string $key, /* mixed */ $value = null, int $id = null, OptionMetaType $type = null, bool $autoLoad = false): bool {
-        
-        return static::setOption($key, $value, $id, $type, true, $autoLoad);
-    }
         
     // --- USE THESE INSTEAD ---    
     
@@ -604,5 +385,226 @@ trait TOptions {
         
         return new AdminCustomizeHelper($themeOption['settings']);
     }    
+
+
+    // --- DEPRECATED ---
+
+    public static function getOption(string $key, /* mixed */ $default = null, int $id = null, OptionMetaType $type = null, bool $raw = false) {
+
+        if (static::hasOption($key, $id, $type) === false) {
+            
+            return $default;
+        }
+
+        $value = null;
+        
+//        var_dump($type);
+        
+        if($id === null) {
+            
+            $value = get_option($key, null);            
+            
+        } else {
+            
+            if($type === null) {
+                
+                $type = OptionMetaType::POST;
+            }            
+        
+//            var_dump($type->toValue());
+            
+            switch($type) {
+    
+                case OptionMetaType::TERM: {
+                    
+                    $value = get_term_meta($id, $key, true);
+                    
+//                    echo "<pre>";
+//                    var_dump($id);
+//                    var_dump($key);
+//                    var_dump($value);
+//                    echo "</pre>";                    
+                    
+                    break;
+                }
+
+                case OptionMetaType::USER: {
+                    
+                    $value = get_user_meta($id, $key, true);
+                    break;
+                }         
+                
+                case OptionMetaType::COMMENT: {
+                    
+                    $value = get_comment_meta($id, $key, true);
+                    break;
+                }                    
+                
+                case OptionMetaType::POST: {
+                    
+                    $value = get_post_meta($id, $key, true);
+                    break;
+                }                
+            }            
+        }
+
+        if ($value === null || ($value !== null && $value === '')) {
+            
+            return $default;
+        }
+
+        if ($raw === true) {
+            
+            return $value;
+        }
+
+        $tmp = @unserialize($value);
+        
+        if($tmp !== false) {
+            
+            return $tmp;
+        }
+        
+        return false;
+    }
+
+    public static function setOption(string $key, /* mixed */ $value = null, int $id = null, OptionMetaType $type = null, bool $raw = false, bool $autoLoad = false): bool {
+
+        if ($raw === false /* && $value !== null */) {
+               
+            $value = @serialize($value);
+            
+        } else {
+            
+            $value = ($value === null ? '' : $value);
+        }
+        
+        //($id === null ? update_option($key, $value, $autoLoad) : ($term ?  : ));
+        
+        
+        if($id === null) {
+            
+            return update_option($key, $value, $autoLoad);            
+            
+        } else {
+            
+            if($type === null) {
+                
+                $type = OptionMetaType::POST;
+            }               
+                    
+            switch($type) {
+    
+                case OptionMetaType::TERM: {
+                    
+                    return update_term_meta($id, $key, $value);
+                }
+
+                case OptionMetaType::USER: {
+                    
+                    return update_user_meta($id, $key, $value);                    
+                }          
+                
+                case OptionMetaType::COMMENT: {
+                    
+                    return update_comment_meta($id, $key, $value); 
+                }                    
+                                
+                
+                case OptionMetaType::POST: {
+                    
+                    return update_post_meta($id, $key, $value);                    
+                }                
+            }            
+        }   
+        
+        return false;
+    }           
+    
+    public static function hasOption(string $key, int $id = null, OptionMetaType $type = null): bool {
+
+        $tmp = null;
+        
+        if($type === null) {
+
+            $type = OptionMetaType::POST;
+        }        
+        
+        switch($type) {
+
+            case OptionMetaType::TERM: {
+
+                $tmp = 'term';
+                break;
+            }
+
+            case OptionMetaType::USER: {
+
+                $tmp = 'user';
+                break;
+            }          
+
+            case OptionMetaType::COMMENT: {
+
+                $tmp = 'comment';
+                break;
+            }                      
+
+            case OptionMetaType::POST: {
+
+                $tmp = 'post';
+                break;
+            }                
+        }
+
+        return static::_hasOption($key, $tmp, $id);
+    }
+
+    public static function removeOption(string $key, int $id = null, OptionMetaType $type = null): bool {
+
+        if($id === null) {
+            
+            return delete_option($key);            
+        }
+            
+        if($type === null) {
+
+            $type = OptionMetaType::POST;
+        }               
+
+        switch($type) {
+
+            case OptionMetaType::TERM: {
+
+                return delete_term_meta($id, $key);
+            }
+
+            case OptionMetaType::USER: {
+
+                return delete_user_meta($id, $key);                    
+            }          
+
+            case OptionMetaType::POST: {
+
+                return delete_post_meta($id, $key);
+            }                
+            
+            case OptionMetaType::COMMENT: {
+
+                return delete_comment_meta($id, $key);
+            }              
+        }            
+
+    }         
+    
+    public static function getRawOption(string $key, /* mixed */ $default = null, int $id = null, OptionMetaType $type = null) /* mixed */ {
+        
+        return static::getOption($key, $default, $id, $type, true);
+    }
+    
+    public static function setRawOption(string $key, /* mixed */ $value = null, int $id = null, OptionMetaType $type = null, bool $autoLoad = false): bool {
+        
+        return static::setOption($key, $value, $id, $type, true, $autoLoad);
+    }
     
 }

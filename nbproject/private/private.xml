@@ -13,7 +13,7 @@
             <url>source/classes/ion/WordPress/Helper/HelperContext.php</url>
             <bookmark id="3">
                 <name/>
-                <line>89</line>
+                <line>83</line>
                 <key/>
             </bookmark>
         </file>
@@ -45,10 +45,8 @@
             <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/source/classes/ion/WordPress/Helper/HelperContext.php</file>
         </group>
         <group name="ION">
-            <file>file:/D:/prj/dev/ion/php/wordpress-helper/index.php</file>
-            <file>file:/D:/prj/dev/ion/php/wordpress-helper/build.xml</file>
-            <file>file:/D:/prj/dev/ion/php/wordpress-helper/composer.json</file>
-            <file>file:/D:/prj/dev/ion/php/wordpress-helper/version.json</file>
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/index.php</file>
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/autoload.php</file>
         </group>
     </open-files>
 </project-private>

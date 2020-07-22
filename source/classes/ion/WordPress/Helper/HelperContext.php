@@ -429,7 +429,7 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
 
     public function invokeInitializeOperation(): void {
         
-        foreach($this->getChildren()->getValues() as $childContext) {
+        foreach(array_values($this->getChildren()) as $childContext) {
             
             $childContext->invokeInitializeOperation();
         }             

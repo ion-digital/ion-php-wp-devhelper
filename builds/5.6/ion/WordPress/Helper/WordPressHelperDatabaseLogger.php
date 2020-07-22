@@ -8,7 +8,6 @@ use ion\WordPress\WordPressHelper as WP;
 use ion\PhpHelper as PHP;
 use ion\WordPress\Helper\Constants;
 use Monolog\Logger;
-//use \ion\Types\StringObject;
 
 class WordPressHelperDatabaseLogger extends WordPressHelperLogger
 {
@@ -148,14 +147,7 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
         $lines = [];
         $values = [];
         foreach ($this->getEntries(null) as $entry) {
-            $values = [
-                'slug' => "'" . $this->getSlug() . "'",
-                'time' => "'" . strftime('%F %T', $entry['time']) . "'",
-                'level' => "'" . $entry['level'] . "'",
-                'message' => "'" . str_replace('\'', '\\\'', $entry['message']) . "'",
-                //(new StringObject($entry['message']))->replace('\'', '\\\'')->toString() . "'",
-                'context' => "'" . serialize($entry['context']) . "'",
-            ];
+            $values = ['slug' => "'" . $this->getSlug() . "'", 'time' => "'" . strftime('%F %T', $entry['time']) . "'", 'level' => "'" . $entry['level'] . "'", 'message' => "'" . str_replace('\'', '\\\'', $entry['message']) . "'", 'context' => "'" . serialize($entry['context']) . "'"];
             $lines[] = "(" . implode(", ", array_values($values)) . ")";
         }
         if (count($lines) > 0) {

@@ -10,7 +10,6 @@ use \ion\WordPress\WordPressHelper as WP;
 use \ion\PhpHelper as PHP;
 use \ion\WordPress\Helper\Constants;
 use \Monolog\Logger;
-//use \ion\Types\StringObject;
 
 class WordPressHelperDatabaseLogger extends WordPressHelperLogger
 {
@@ -148,7 +147,7 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
                 'slug' => "'" . $this->getSlug() . "'",
                 'time' => "'" . strftime('%F %T', $entry['time']) . "'",
                 'level' => "'" . $entry['level'] . "'",
-                'message' => "'" . str_replace('\'', '\\\'', $entry['message']) . "'",//(new StringObject($entry['message']))->replace('\'', '\\\'')->toString() . "'",
+                'message' => "'" . str_replace('\'', '\\\'', $entry['message']) . "'",
                 'context' => "'" . serialize($entry['context']) . "'"
             ];
 

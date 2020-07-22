@@ -11,8 +11,6 @@ namespace ion\WordPress\Helper\Wrappers;
  * @author Justus
  */
 
-use \ion\Types\Arrays\IVector;
-use \ion\Types\Arrays\IMap;
 use \ion\WordPress\Helper\IWordPressTaxonomy;
 use \WP_Term;
 

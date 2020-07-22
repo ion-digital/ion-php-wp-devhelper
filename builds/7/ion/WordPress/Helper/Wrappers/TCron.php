@@ -11,20 +11,12 @@ use \WP_Post;
 use \ion\WordPress\IWordPressHelper;
 use \ion\WordPress\WordPressHelper as WP;
 use \ion\WordPress\Helper\WordPressHelperException;
-use \ion\Types\Arrays\IMap;
-use \ion\Types\Arrays\Map;
-use \ion\Types\Arrays\IVector;
-use \ion\Types\Arrays\Vector;
 use \ion\WordPress\Helper\Tools;
 use \ion\WordPress\Helper\Constants;
 use \ion\PhpHelper as PHP;
 use \ion\Package;
-use \ion\System\File;
-use \ion\System\Path;
-use \ion\System\FileMode;
 use \ion\ISemVer;
 use \ion\SemVer;
-use \ion\Types\StringObject;
 
 
 /**

@@ -12,7 +12,6 @@ namespace ion\WordPress\Helper;
  */
 
 use \ion\ISemVer;
-use \ion\Types\Arrays\IVector;
 use \ion\WordPress\Helper\IWordPressHelperLog;
 
 interface IHelperContext {
@@ -62,7 +61,7 @@ interface IHelperContext {
     
     function getParent(): ?self;
     
-    function getChildren(): IVector;
+    function getChildren(): array;
     
     
     function getInitializeOperation() : ?callable;

@@ -699,7 +699,7 @@ HTML;
             $wpBlurbUri = Constants::WORDPRESS_SITE;
             $wpDevBlurb = Constants::AUTHOR_SITE;
             
-            echo '<span>Powered by <a href="'. $wpBlurbUri . '" target="_blank">WordPress</a> <strong>' . $wordPressVersion . '</strong></span> | <span>Fueled by <a href="' . $wpHelperBlurbUri . '" target="_blank">WP Devhelper</a> <strong>' . $helperVersion . '</strong></span> | <span>Need Custom WordPress Solutions? <a href="' . $wpDevBlurb . '" target="_blank">Custom WordPress Development</a></span> | <span>Server time: ' . $serverTime . '</span> | <span>WordPress time: ' . $wordPressTime . '</span> | <span>Peak memory usage: ' . $mem . '</span>';
+            echo '<span>Powered by <a href="'. $wpBlurbUri . '" target="_blank">WordPress</a> <strong>' . $wordPressVersion . '</strong></span> | <span>Fueled by <a href="' . $wpHelperBlurbUri . '" target="_blank">WP Dev/helper</a> <strong>' . $helperVersion . '</strong></span> | <span>Need Custom WordPress Solutions? <a href="' . $wpDevBlurb . '" target="_blank">Custom WordPress Development</a></span> | <span>Server time: ' . $serverTime . '</span> | <span>WordPress time: ' . $wordPressTime . '</span> | <span>Peak memory usage: ' . $mem . '</span>';
         });
 
         add_action('init', function() use ($context, $wpHelperSettings) {
@@ -785,7 +785,7 @@ HTML;
                         ->addSubMenuPage('Settings', static::getSettingsView($context), 'wp-devhelper-settings')
                         ->addSubMenuPage('State', static::getStateView($context), 'wp-devhelper-state')
                             ->addSubMenuPageTab('WordPress', static::getWordPressStateView($context), 'wp-devhelper-wpstate' /* , 'debugging', 'Debugging' */)
-                            ->addSubMenuPageTab('CRON', static::getCronStateView($context), 'wp-devhelper-cron' /* , 'debugging', 'Debugging' */)
+                            ->addSubMenuPageTab('Cron', static::getCronStateView($context), 'wp-devhelper-cron' /* , 'debugging', 'Debugging' */)
                             ->addSubMenuPageTab('PHP Info', static::getPhpInfoView($context), 'wp-devhelper-phpinfo' /* , 'debugging', 'Debugging' */);
 
                 if(defined(Constants::WP_CONFIG_DEBUG_LOG) && constant(Constants::WP_CONFIG_DEBUG_LOG) === true && !PHP::isEmpty(@ini_get('error_log'))) {

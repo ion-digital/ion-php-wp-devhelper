@@ -24,8 +24,6 @@ use ion\WordPress\Helper\Wrappers\IShortCodes;
 use ion\WordPress\Helper\Wrappers\ITaxonomies;
 use ion\WordPress\Helper\Wrappers\IWidgets;
 use ion\ISemVer;
-use ion\Types\Arrays\IMap;
-use ion\Types\Arrays\IVector;
 use ion\WordPress\Helper\IHelperContext;
 
 interface IWordPressHelper extends IActions, IAdmin, ICommon, ICron, IDatabase, IFilters, ITemplate, ILogging, IOptions, IPaths, IPosts, IRewrites, IShortCodes, ITaxonomies, IWidgets
