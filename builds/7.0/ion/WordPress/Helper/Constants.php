@@ -68,20 +68,20 @@ final class Constants
     const WORDPRESS_SITE = "https://www.wordpress.org";
     const QUICK_404_OPTION = 'wp-helper-quick-404';
     const ABOUT_CONTENT = <<<TEXT
-<h2>WP Devhelper</h2>
+<h2>WP Dev/helper</h2>
 <p>            
-<strong>WP Devhelper</strong> is a library of functions that theme and plug-in developers can use
+<strong>WP Dev/helper</strong> is a library of functions that theme and plug-in developers can use
 to provide a consistent experience to their users, by abstracting as much of the standard WordPress
 functionality, hooks and settings as possible - resulting in a much simpler and less time-consuming 
 way to develop with WordPress.
 </p>
 <p>
-<strong>WP Devhelper</strong> helps developers to stop worrying about WordPress-specific implementation 
+<strong>WP Dev/helper</strong> helps developers to stop worrying about WordPress-specific implementation 
 details and gotchas - and to get on with the business of building something awesome!
 </p>
 <h2>Why is it here?</h2>
 <p>
-<strong>WP Devhelper</strong> can function as:            
+<strong>WP Dev/helper</strong> can function as:            
 </p>
 <ul>
 <li>an included PHP library (as <em>part</em> of a theme or plug-in that is installed),</li>
@@ -95,10 +95,10 @@ To find out where it is installed and what contexts (instances of plug-ins and t
 Are you busy expanding {site-name} - or are you looking at building a new WordPress site?
 </p>
 <p>
-If you're interested in additional plug-ins or a custom theme, we may have already built what you need - and if not, we can definitely build it for you!
+If you're interested in additional plugins or a custom theme, we can build it for you!
 </p>
 <p>    
-Find your WordPress solution at <a href="{maintainer-link}" target="_blank">WP Solved</a>!
+To find your WordPress solution, <a href="{maintainer-link}" target="_blank">click here</a>!
 </p>
 
 TEXT;

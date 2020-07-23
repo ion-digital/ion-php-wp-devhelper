@@ -429,7 +429,7 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
 
     public function invokeInitializeOperation(): void {
         
-        foreach($this->getChildren()->getValues() as $childContext) {
+        foreach(array_values($this->getChildren()) as $childContext) {
             
             $childContext->invokeInitializeOperation();
         }             
@@ -450,7 +450,7 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
     
     public function invokeActivateOperation(): void {
         
-        foreach($this->getChildren()->getValues() as $childContext) {
+        foreach(array_values($this->getChildren()) as $childContext) {
             
             $childContext->invokeActivateOperation();
         }        
@@ -488,7 +488,7 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
 //        echo "{$this->contextName}:". static::OPTION_ACTIVATION_VERSION . '<br />';
 //        var_dump(static::hasOption("{$this->contextName}:". static::OPTION_ACTIVATION_VERSION));        
         
-        foreach($this->getChildren()->getValues() as $childContext) {
+        foreach(array_values($this->getChildren()) as $childContext) {
             
             $childContext->invokeDeactivateOperation();
         }        
@@ -526,7 +526,7 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
     public function invokeUninstallOperation(): void {
         
         
-        foreach($this->getChildren()->getValues() as $childContext) {
+        foreach(array_values($this->getChildren()) as $childContext) {
             
             $childContext->invokeUninstallOperation();
         }        
@@ -579,7 +579,7 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
                 $call($this);
             }           
 
-            foreach($this->getChildren()->getValues() as $childContext) {
+            foreach(array_values($this->getChildren()) as $childContext) {
 
                 $childContext->invokeFinalizeOperation();
             }           
@@ -721,6 +721,12 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
         
         return $this->children;
     }        
+    
+    public function addChild(IHelperContext $child): void {
+        
+        $this->children[] = $child;
+        return;
+    }
 
     
 //    /* abstract */ protected function initialize(): void {

@@ -81,7 +81,7 @@ interface IAdminFormHelper
      * @return mixed
      */
     
-    function process($metaId = null, OptionMetaType $metaType = null);
+    function process($metaId = null, $metaType = null);
     
     /**
      * method

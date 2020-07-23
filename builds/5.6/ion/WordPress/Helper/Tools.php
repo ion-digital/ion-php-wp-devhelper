@@ -555,7 +555,7 @@ HTML;
             $wpHelperBlurbUri = Constants::HELPER_SITE;
             $wpBlurbUri = Constants::WORDPRESS_SITE;
             $wpDevBlurb = Constants::AUTHOR_SITE;
-            echo '<span>Powered by <a href="' . $wpBlurbUri . '" target="_blank">WordPress</a> <strong>' . $wordPressVersion . '</strong></span> | <span>Fueled by <a href="' . $wpHelperBlurbUri . '" target="_blank">WP Devhelper</a> <strong>' . $helperVersion . '</strong></span> | <span>Need Custom WordPress Solutions? <a href="' . $wpDevBlurb . '" target="_blank">Custom WordPress Development</a></span> | <span>Server time: ' . $serverTime . '</span> | <span>WordPress time: ' . $wordPressTime . '</span> | <span>Peak memory usage: ' . $mem . '</span>';
+            echo '<span>Powered by <a href="' . $wpBlurbUri . '" target="_blank">WordPress</a> <strong>' . $wordPressVersion . '</strong></span> | <span>Fueled by <a href="' . $wpHelperBlurbUri . '" target="_blank">WP Dev/helper</a> <strong>' . $helperVersion . '</strong></span> | <span>Need Custom WordPress Solutions? <a href="' . $wpDevBlurb . '" target="_blank">Custom WordPress Development</a></span> | <span>Server time: ' . $serverTime . '</span> | <span>WordPress time: ' . $wordPressTime . '</span> | <span>Peak memory usage: ' . $mem . '</span>';
         });
         add_action('init', function () use($context, $wpHelperSettings) {
             if (!WP::hasOption(Constants::TOOLS_HIDDEN_OPTION) || !WP::hasOption(Constants::TOOLS_FULLY_HIDDEN_OPTION)) {
@@ -605,7 +605,7 @@ HTML;
                     $icon = 'data:image/svg+xml;base64,';
                     $icon .= base64_encode(file_get_contents($iconDir));
                 }
-                $page = WP::addPlugInAdminMenuPage('About', static::getAboutView($context), 'Helper', 'wp-devhelper-about', $icon, null)->addSubMenuPage('About', static::getAboutView($context), 'wp-devhelper-about')->addSubMenuPage('Settings', static::getSettingsView($context), 'wp-devhelper-settings')->addSubMenuPage('State', static::getStateView($context), 'wp-devhelper-state')->addSubMenuPageTab('WordPress', static::getWordPressStateView($context), 'wp-devhelper-wpstate')->addSubMenuPageTab('CRON', static::getCronStateView($context), 'wp-devhelper-cron')->addSubMenuPageTab('PHP Info', static::getPhpInfoView($context), 'wp-devhelper-phpinfo');
+                $page = WP::addPlugInAdminMenuPage('About', static::getAboutView($context), 'Helper', 'wp-devhelper-about', $icon, null)->addSubMenuPage('About', static::getAboutView($context), 'wp-devhelper-about')->addSubMenuPage('Settings', static::getSettingsView($context), 'wp-devhelper-settings')->addSubMenuPage('State', static::getStateView($context), 'wp-devhelper-state')->addSubMenuPageTab('WordPress', static::getWordPressStateView($context), 'wp-devhelper-wpstate')->addSubMenuPageTab('Cron', static::getCronStateView($context), 'wp-devhelper-cron')->addSubMenuPageTab('PHP Info', static::getPhpInfoView($context), 'wp-devhelper-phpinfo');
                 if (defined(Constants::WP_CONFIG_DEBUG_LOG) && constant(Constants::WP_CONFIG_DEBUG_LOG) === true && !PHP::isEmpty(@ini_get('error_log'))) {
                     $page = $page->addSubMenuPageTab('PHP Error Log', static::getPhpErrorLogView($context), 'wp-devhelper-phperrors');
                 }

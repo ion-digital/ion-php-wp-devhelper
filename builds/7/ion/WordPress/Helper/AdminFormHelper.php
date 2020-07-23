@@ -340,19 +340,19 @@ TEMPLATE;
         
         if($isPost) {
             
-            $metaType = OptionMetaType::POST();
+            $metaType = OptionMetaType::POST;
             $metaId = PHP::filterInput('post', [INPUT_GET], FILTER_SANITIZE_NUMBER_INT);
         }
         
         if($isTerm) {
             
-            $metaType = OptionMetaType::TERM();
+            $metaType = OptionMetaType::TERM;
             $metaId = PHP::filterInput('tag_ID', [INPUT_GET], FILTER_SANITIZE_NUMBER_INT);
         }
 
         if($isUser) {
             
-            $metaType = OptionMetaType::USER();
+            $metaType = OptionMetaType::USER;
             $metaId = PHP::filterInput('user_id', [INPUT_GET], FILTER_SANITIZE_NUMBER_INT);
             
             if($metaId === null) {
@@ -363,7 +363,7 @@ TEMPLATE;
         
         if($isComment) {
             
-            $metaType = OptionMetaType::COMMENT();
+            $metaType = OptionMetaType::COMMENT;
             
             //TODO
         }         
@@ -706,7 +706,7 @@ TEMPLATE;
 
         if($optionName !== null) {
             
-            return $this->read(function(/* string */ $record = null, string $key = null, int $metaId = null, OptionMetaType $type = null) use ($self, $optionName) {
+            return $this->read(function(/* string */ $record = null, string $key = null, int $metaId = null, int $type = null) use ($self, $optionName) {
 
                         $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());                    
 
@@ -732,7 +732,7 @@ TEMPLATE;
                     });
         }
         
-        return $this->read(function(/* string */ $record = null, string $key = null, int $metaId = null, OptionMetaType $type = null) use ($self) {
+        return $this->read(function(/* string */ $record = null, string $key = null, int $metaId = null, int $type = null) use ($self) {
         
             $result = null;
             
@@ -742,7 +742,7 @@ TEMPLATE;
                     
                     $key = $field['name'];                                    
                     
-                    $result[$key] = WP::getOption(($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key, null, $metaId, $type, $this->getRawOptionOperations());
+                    $result[$key] = WP::getOption(($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key, null, $metaId, new OptionMetaType($type), $this->getRawOptionOperations());
                 }
             }            
             
@@ -758,7 +758,7 @@ TEMPLATE;
 
         if($optionName !== null) {
             
-            return $this->update(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, OptionMetaType $type = null) use ($self, $optionName) {
+            return $this->update(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, int $type = null) use ($self, $optionName) {
 
                         $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
 
@@ -797,7 +797,7 @@ TEMPLATE;
         
 
         
-        return $this->update(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, OptionMetaType $type = null) use ($self) {
+        return $this->update(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, int $type = null) use ($self) {
             
             $options = [];
             
@@ -825,7 +825,7 @@ TEMPLATE;
 
         if($optionName !== null) {
                     
-            return $this->create(function (array $values, string $key = null, int $metaId = null, OptionMetaType $type = null) use ($optionName) {
+            return $this->create(function (array $values, string $key = null, int $metaId = null, int $type = null) use ($optionName) {
 
                         $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
 
@@ -842,7 +842,7 @@ TEMPLATE;
                     });
         }
         
-        return $this->create(function (array $values, string $key = null, int $metaId = null, OptionMetaType $type = null) use ($optionName) {
+        return $this->create(function (array $values, string $key = null, int $metaId = null, int $type = null) use ($optionName) {
            
             $options = [];              
             
@@ -863,7 +863,7 @@ TEMPLATE;
         return $this;
     }   
     
-   public function process(int $metaId = null, OptionMetaType $metaType = null) {
+   public function process(int $metaId = null, int $metaType = null) {
        
         if ($this->processed === false) {
 

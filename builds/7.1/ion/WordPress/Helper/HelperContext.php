@@ -522,7 +522,7 @@ final class HelperContext implements IHelperContext
     
     public function invokeInitializeOperation() : void
     {
-        foreach ($this->getChildren()->getValues() as $childContext) {
+        foreach (array_values($this->getChildren()) as $childContext) {
             $childContext->invokeInitializeOperation();
         }
         if ($this->hasInitializeOperation() === false) {
@@ -543,7 +543,7 @@ final class HelperContext implements IHelperContext
     
     public function invokeActivateOperation() : void
     {
-        foreach ($this->getChildren()->getValues() as $childContext) {
+        foreach (array_values($this->getChildren()) as $childContext) {
             $childContext->invokeActivateOperation();
         }
         if ($this->getActivationVersion() === null) {
@@ -574,7 +574,7 @@ final class HelperContext implements IHelperContext
     {
         //        echo "{$this->contextName}:". static::OPTION_ACTIVATION_VERSION . '<br />';
         //        var_dump(static::hasOption("{$this->contextName}:". static::OPTION_ACTIVATION_VERSION));
-        foreach ($this->getChildren()->getValues() as $childContext) {
+        foreach (array_values($this->getChildren()) as $childContext) {
             $childContext->invokeDeactivateOperation();
         }
         if (WP::hasOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_VERSION)) {
@@ -605,7 +605,7 @@ final class HelperContext implements IHelperContext
     
     public function invokeUninstallOperation() : void
     {
-        foreach ($this->getChildren()->getValues() as $childContext) {
+        foreach (array_values($this->getChildren()) as $childContext) {
             $childContext->invokeUninstallOperation();
         }
         if ($this->hasUninstallOperation() === false) {
@@ -645,7 +645,7 @@ final class HelperContext implements IHelperContext
             if ($call !== null) {
                 $call($this);
             }
-            foreach ($this->getChildren()->getValues() as $childContext) {
+            foreach (array_values($this->getChildren()) as $childContext) {
                 $childContext->invokeFinalizeOperation();
             }
         }, 0);
@@ -796,6 +796,19 @@ final class HelperContext implements IHelperContext
     public function getChildren() : array
     {
         return $this->children;
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return void
+     */
+    
+    public function addChild(IHelperContext $child) : void
+    {
+        $this->children[] = $child;
+        return;
     }
     
     //    /* abstract */ protected function initialize(): void {

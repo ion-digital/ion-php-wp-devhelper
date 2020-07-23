@@ -29,7 +29,7 @@ interface IAdminFormHelper {
     
     function processAndRender(bool $echo = true, int $post = null): string;
     
-    function process(int $metaId = null, OptionMetaType $metaType = null);
+    function process(int $metaId = null, int $metaType = null);
 
     function render(bool $echo = true): string;
     

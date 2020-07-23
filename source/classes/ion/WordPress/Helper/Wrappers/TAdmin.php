@@ -604,7 +604,7 @@ trait TAdmin {
 
             foreach (static::$forms as $form) {
 
-                $form->process($postId, OptionMetaType::POST());
+                $form->process($postId, OptionMetaType::POST);
             }
 
         });            

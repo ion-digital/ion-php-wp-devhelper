@@ -408,12 +408,12 @@ trait TOptions {
             
             if($type === null) {
                 
-                $type = OptionMetaType::POST;
+                $type = new OptionMetaType(OptionMetaType::POST);
             }            
         
 //            var_dump($type->toValue());
             
-            switch($type) {
+            switch($type->toValue()) {
     
                 case OptionMetaType::TERM: {
                     
@@ -490,10 +490,10 @@ trait TOptions {
             
             if($type === null) {
                 
-                $type = OptionMetaType::POST;
+                $type = new OptionMetaType(OptionMetaType::POST);
             }               
                     
-            switch($type) {
+            switch($type->toValue()) {
     
                 case OptionMetaType::TERM: {
                     
@@ -527,10 +527,10 @@ trait TOptions {
         
         if($type === null) {
 
-            $type = OptionMetaType::POST;
+            $type = new OptionMetaType(OptionMetaType::POST);
         }        
         
-        switch($type) {
+        switch($type->toValue()) {
 
             case OptionMetaType::TERM: {
 
@@ -569,10 +569,10 @@ trait TOptions {
             
         if($type === null) {
 
-            $type = OptionMetaType::POST;
+            $type = new OptionMetaType(OptionMetaType::POST);
         }               
 
-        switch($type) {
+        switch($type->toValue()) {
 
             case OptionMetaType::TERM: {
 

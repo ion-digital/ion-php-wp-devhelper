@@ -411,7 +411,7 @@ trait TAdmin
         static::registerWrapperAction('pre_post_update', function ($postId, array $data = []) {
             //                die('initialize_TAdmin');
             foreach (static::$forms as $form) {
-                $form->process($postId, OptionMetaType::POST());
+                $form->process($postId, OptionMetaType::POST);
             }
         });
     }
