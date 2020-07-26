@@ -345,12 +345,12 @@ trait TAdmin
                     });
                     add_action('edited_' . $term, function ($termId) {
                         foreach (static::$forms as $form) {
-                            $form->process($termId, OptionMetaType::TERM());
+                            $form->process($termId, new OptionMetaType(OptionMetaType::TERM));
                         }
                     });
                     add_action('create_' . $term, function ($termId) {
                         foreach (static::$forms as $form) {
-                            $form->process($termId, OptionMetaType::TERM());
+                            $form->process($termId, new OptionMetaType(OptionMetaType::TERM));
                         }
                     });
                     //                        add_action('delete_' . $term, function(int $termId) {
@@ -387,7 +387,7 @@ trait TAdmin
                     });
                     add_action('edit_user_profile_update', function ($userId) {
                         foreach (static::$forms as $form) {
-                            $form->process($userId, OptionMetaType::USER());
+                            $form->process($userId, new OptionMetaType(OptionMetaType::USER));
                         }
                     });
                 }
@@ -398,7 +398,7 @@ trait TAdmin
                     });
                     add_action('personal_options_update', function ($userId) {
                         foreach (static::$forms as $form) {
-                            $form->process($userId, OptionMetaType::USER());
+                            $form->process($userId, new OptionMetaType(OptionMetaType::USER));
                         }
                     });
                 }
@@ -411,7 +411,7 @@ trait TAdmin
         static::registerWrapperAction('pre_post_update', function ($postId, array $data = []) {
             //                die('initialize_TAdmin');
             foreach (static::$forms as $form) {
-                $form->process($postId, OptionMetaType::POST);
+                $form->process($postId, new OptionMetaType(OptionMetaType::POST));
             }
         });
     }

@@ -508,7 +508,7 @@ trait TAdmin {
 
                         foreach (static::$forms as $form) {
 
-                            $form->process($termId, OptionMetaType::TERM());
+                            $form->process($termId, new OptionMetaType(OptionMetaType::TERM));
                         }
                     });
 
@@ -516,7 +516,7 @@ trait TAdmin {
 
                         foreach (static::$forms as $form) {
 
-                            $form->process($termId, OptionMetaType::TERM());
+                            $form->process($termId, new OptionMetaType(OptionMetaType::TERM));
                         }
                     });
 
@@ -566,7 +566,7 @@ trait TAdmin {
 
                         foreach (static::$forms as $form) {
 
-                            $form->process($userId, OptionMetaType::USER());
+                            $form->process($userId, new OptionMetaType(OptionMetaType::USER));
                         }
                     });                        
                 }
@@ -585,7 +585,7 @@ trait TAdmin {
 
                         foreach (static::$forms as $form) {
 
-                            $form->process($userId, OptionMetaType::USER());
+                            $form->process($userId, new OptionMetaType(OptionMetaType::USER));
                         }
                     });                        
                 }
@@ -604,7 +604,7 @@ trait TAdmin {
 
             foreach (static::$forms as $form) {
 
-                $form->process($postId, OptionMetaType::POST);
+                $form->process($postId, new OptionMetaType(OptionMetaType::POST));
             }
 
         });            
