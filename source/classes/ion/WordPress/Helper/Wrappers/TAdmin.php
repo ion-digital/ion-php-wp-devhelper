@@ -294,6 +294,8 @@ trait TAdmin {
                         
                         $postHooks[] = $hookName;
                     }
+                    
+//                    var_Dump($form->getId());
                 }          
                 
 
@@ -1012,14 +1014,7 @@ TEMPLATE;
 
     public static function addAdminForm(string $title, string $id = null, string $action = null, int $columns = 1, bool $hideKey = true): IAdminFormHelper {
 
-        foreach(static::$forms as $form) {
-            
-            if($id == $form->getId()) {
-                
-                //TODO: This causes some weird behaviour at the moment... but should really be here to prevent duplicate forms.
-                //throw new WordPressHelperException("Form IDs must be unique - form '{$id}' is already registered.");
-            }
-        }
+
         
         $descriptor = [
             "id" => ($id === null ? static::slugify($title) : $id),
@@ -1035,16 +1030,18 @@ TEMPLATE;
         ];
 
         //TODO: See if the form has already been registered? If we don't, you might register a form... and nothing gets updated when you save it (and you can't figure out why - wahy).
-//        foreach(static::$forms as $tmp) {
-//            
-//            var_dump($tmp);
+        foreach(static::$forms as $form) {
+            
+//            var_dump($form);
 //            exit;
-//            
-//            if($tmp['id'] === $descriptor['id']) {
-//            
-//                throw new WordPressHelperException("Form '{$descriptor['id']}' has already been defined - please specify a different form ID.");
-//            }
-//        }
+            
+            if($form->getId() == $descriptor['id']) {
+            
+                //TODO: This causes some weird behaviour at the moment... but should really be here to prevent duplicate forms.
+                //throw new WordPressHelperException("Form '{$descriptor['id']}' has already been defined - please specify a different form ID.");
+                $descriptor['id'] = "{$descriptor['id']}-" . md5((string) rand());
+            }
+        }
         
         $form = new AdminFormHelper($descriptor);
 
