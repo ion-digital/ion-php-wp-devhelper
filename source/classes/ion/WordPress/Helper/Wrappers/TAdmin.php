@@ -26,6 +26,7 @@ use \ion\WordPress\Helper\AdminTableHelper;
 use \ion\WordPress\Helper\AdminMenuPageHelper;
 use \ion\WordPress\Helper\AdminNavMenuEditWalker;
 //use \ion\WordPress\WordPressHelper AS WP;
+use \ion\WordPress\Helper\WordPressHelperException;
 
 /**
  * Description of BackEndTables
@@ -1015,7 +1016,8 @@ TEMPLATE;
             
             if($id == $form->getId()) {
                 
-                throw new WordPressHelperException("Form IDs must be unique - form '{$id}' is already registered.");
+                //TODO: This causes some weird behaviour at the moment... but should really be here to prevent duplicate forms.
+                //throw new WordPressHelperException("Form IDs must be unique - form '{$id}' is already registered.");
             }
         }
         
