@@ -1011,6 +1011,14 @@ TEMPLATE;
 
     public static function addAdminForm(string $title, string $id = null, string $action = null, int $columns = 1, bool $hideKey = true): IAdminFormHelper {
 
+        foreach(static::$forms as $form) {
+            
+            if($id == $form->getId()) {
+                
+                throw new WordPressHelperException("Form IDs must be unique - form '{$id}' is already registered.");
+            }
+        }
+        
         $descriptor = [
             "id" => ($id === null ? static::slugify($title) : $id),
             "title" => $title,
