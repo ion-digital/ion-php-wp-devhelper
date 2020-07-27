@@ -604,9 +604,13 @@ trait TAdmin {
 
             foreach (static::$forms as $form) {
 
+                //var_Dump($form);
+                
                 $form->process($postId, new OptionMetaType(OptionMetaType::POST));
             }
-
+                        
+            die("die(): " . __FILE__ . " " . __LINE__);
+            
         });            
     }
     
@@ -1186,7 +1190,7 @@ TEMPLATE;
         $htmlTemplate = "<input type=\"number\" id=\"{id}\" name=\"{name}\" value=\"{value}\" class=\"regular-text\"{readOnly}{disabled}/>";
         $field = static::inputField('Number', $label, $htmlTemplate, $name, $value, $id, $hint, $span, $readOnly, $disabled, null, $echo);
         
-        $field['post'] = function (int $postValue = null) use ($value) {
+        $field['post'] = function (string $postValue = null) use ($value) {
             
             if($value !== null) {
                 
@@ -1687,7 +1691,7 @@ TEMPLATE;
         $field = static::inputField('DateTime', $label, $htmlTemplate, $name, null, $id, $hint, $span, $readOnly, $disabled, null, $echo);
         
         
-        $field['post'] = function (/* string */ $postValue = null) {
+        $field['post'] = function (string $postValue = null) {
             
             return (int) strtotime($postValue);
         };

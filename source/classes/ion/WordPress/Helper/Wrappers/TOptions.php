@@ -214,7 +214,7 @@ trait TOptions {
     
     public static function getPostOption(string $name, int $metaId, /* mixed */ $default = null) /* mixed */ {
         
-        if (!static::hasPostOption($name)) {
+        if (!static::hasPostOption($name, $metaId)) {
             
             return $default;
         }
@@ -236,7 +236,7 @@ trait TOptions {
     
     public static function hasPostOption(string $name, int $metaId): bool {
         
-        return static::_hasOption($name, 'post', $id);
+        return static::_hasOption($name, 'post', $metaId);
     }
     
     public static function removePostOption(string $name, int $metaId, $value = null): bool {
@@ -247,7 +247,7 @@ trait TOptions {
     
     public static function getTermOption(string $name, int $metaId, /* mixed */ $default = null) /* mixed */ {
         
-        if (!static::hasTermOption($name)) {
+        if (!static::hasTermOption($name, $metaId)) {
             
             return $default;
         }

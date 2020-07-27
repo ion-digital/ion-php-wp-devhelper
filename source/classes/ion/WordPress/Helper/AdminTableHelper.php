@@ -272,10 +272,10 @@ class AdminTableHelper implements IAdminTableHelper {
     }
 
     
-    public function read(callable $read): IAdminTableHelper {
-        $this->readProcessor = $read;
-        return $this;
-    }
+//    public function read(callable $read): IAdminTableHelper {
+//        $this->readProcessor = $read;
+//        return $this;
+//    }
     
     public function readFromSqlTable(string $tableNameWithoutPrefix, array $where = null, string $tableNamePrefix = null): IAdminTableHelper {
         $self = $this;
@@ -333,20 +333,22 @@ SQL
     }    
     
     public function readFromSqlQuery(string $query): IAdminTableHelper {
-        return $this->read(function($record, $key) use ($query) {
+        
+        return $this->onRead(function($record, $key = null) use ($query) {
+            
             return WP::dbQuery($query);
         });
     }
     
-    public function delete(callable $delete): IAdminTableHelper {
-        $this->deleteProcessor = $delete;
-        return $this;
-    }
+//    public function delete(callable $delete): IAdminTableHelper {
+//        $this->deleteProcessor = $delete;
+//        return $this;
+//    }
     
     public function deleteFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null): IAdminTableHelper {
         $self = $this;
 
-        return $this->delete(function (array $items, $key) use ($self, $tableNameWithoutPrefix, $tableNamePrefix) {
+        return $this->onDelete(function (array $items, $key) use ($self, $tableNameWithoutPrefix, $tableNamePrefix) {
         
             global $wpdb;
 
@@ -376,7 +378,7 @@ SQL
     }
     
     public function readFromOptions(string $optionName): IAdminTableHelper {
-        return $this->read(function($record, $key) use ($optionName) {
+        return $this->onRead(function($record, $key) use ($optionName) {
             
             $records = WP::getOption($optionName);
 
@@ -390,7 +392,7 @@ SQL
     }
     
     public function deleteFromOptions(string $optionName): IAdminTableHelper {
-        return $this->delete(function(array $items, $key) use ($optionName) {
+        return $this->onDelete(function(array $items, $key) use ($optionName) {
             
             $records = WP::getOption($optionName);
 
