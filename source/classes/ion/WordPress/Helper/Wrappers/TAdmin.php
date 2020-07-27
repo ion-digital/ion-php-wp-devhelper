@@ -604,12 +604,12 @@ trait TAdmin {
 
             foreach (static::$forms as $form) {
 
-                //var_Dump($form);
+//                var_Dump($form);
                 
                 $form->process($postId, new OptionMetaType(OptionMetaType::POST));
             }
                         
-            die("die(): " . __FILE__ . " " . __LINE__);
+//            die("die(): " . __FILE__ . " " . __LINE__);
             
         });            
     }
