@@ -219,7 +219,7 @@ trait TOptions {
             return $default;
         }
         
-        $value = get_post_meta($id, $name, true);        
+        $value = get_post_meta($metaId, $name, true);        
 
         if (PHP::isEmpty($value, false, false)) {
             
@@ -252,7 +252,7 @@ trait TOptions {
             return $default;
         }
         
-        $value = get_term_meta($id, $name, true);                 
+        $value = get_term_meta($metaId, $name, true);                 
 
         if (PHP::isEmpty($value, false, false)) {
             
@@ -269,7 +269,7 @@ trait TOptions {
     
     public static function hasTermOption(string $name, int $metaId): bool {
         
-        return static::_hasOption($name, 'term', $id);
+        return static::_hasOption($name, 'term', $metaId);
     }
     
     public static function removeTermOption(string $name, int $metaId, $value = null): bool {
@@ -285,7 +285,7 @@ trait TOptions {
             return $default;
         }
                       
-        $value = get_user_meta($id, $name, true);       
+        $value = get_user_meta($metaId, $name, true);       
 
         if (PHP::isEmpty($value, false, false)) {
             
@@ -302,7 +302,7 @@ trait TOptions {
     
     public static function hasUserOption(string $name, int $metaId): bool {
         
-        return static::_hasOption($name, 'user', $id);
+        return static::_hasOption($name, 'user', $metaId);
     }
     
     public static function removeUserOption(string $name, int $metaId, $value = null): bool {
@@ -318,7 +318,7 @@ trait TOptions {
             return $default;
         }
         
-        $value = get_comment_meta($id, $name, true);        
+        $value = get_comment_meta($metaId, $name, true);        
 
         if (PHP::isEmpty($value, false, false)) {
             
@@ -335,7 +335,7 @@ trait TOptions {
     
     public static function hasCommentOption(string $name, int $metaId): bool {
         
-        return static::_hasOption($name, 'comment', $id);
+        return static::_hasOption($name, 'comment', $metaId);
     }
     
     public static function removeCommentOption(string $name, int $metaId, $value = null): bool {
