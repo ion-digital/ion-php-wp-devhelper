@@ -25,6 +25,19 @@ class AdminTableHelper implements IAdminTableHelper {
         ];
     }    
     
+    private static $detailMode = false;
+    
+    protected static function setDetailMode(bool $detailMode): void {
+        
+        self::$detailMode = $detailMode;
+        return;
+    }
+    
+    public static function inDetailMode(): bool {
+        
+        return self::$detailMode;
+    }
+    
     private $parent;
     private $columnGroup;
 //    private $rows = [];
@@ -198,14 +211,18 @@ class AdminTableHelper implements IAdminTableHelper {
         
         ob_start();                
         
+        static::setDetailMode(true);
+        
         if($this->parent['detailView'] !== null) {
             
-            $this->parent['detailView']();
+            $this->parent['detailView']();            
             
         } else {            
             echo 'TODO: generate default detail view';
             
         }
+        
+        static::setDetailMode(false);
         
         $detail = ob_get_clean(); 
         

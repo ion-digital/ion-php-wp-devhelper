@@ -92,6 +92,11 @@ interface IAdminFormHelper
     
     function render(bool $echo = true) : string;
     
+    //    function update(callable $update): self;
+    //
+    //    function create(callable $create): self;
+    //
+    //    function read(callable $read): self;
     /**
      * method
      * 
@@ -99,16 +104,7 @@ interface IAdminFormHelper
      * @return self
      */
     
-    function update(callable $update) : self;
-    
-    /**
-     * method
-     * 
-     * 
-     * @return self
-     */
-    
-    function create(callable $create) : self;
+    function onRead(callable $onRead = null) : self;
     
     /**
      * method
@@ -117,34 +113,16 @@ interface IAdminFormHelper
      * @return self
      */
     
-    function read(callable $read) : self;
+    function onCreate(callable $onCreate = null) : self;
     
     /**
      * method
      * 
      * 
-     * @return IAdminFormHelper
+     * @return self
      */
     
-    function onRead(callable $onRead = null) : IAdminFormHelper;
-    
-    /**
-     * method
-     * 
-     * 
-     * @return IAdminFormHelper
-     */
-    
-    function onCreate(callable $onCreate = null) : IAdminFormHelper;
-    
-    /**
-     * method
-     * 
-     * 
-     * @return IAdminFormHelper
-     */
-    
-    function onUpdate(callable $onUpdate = null) : IAdminFormHelper;
+    function onUpdate(callable $onUpdate = null) : self;
     
     /**
      * method

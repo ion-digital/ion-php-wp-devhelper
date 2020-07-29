@@ -27,6 +27,31 @@ class AdminTableHelper implements IAdminTableHelper
         return ["id" => (string) $id, "title" => (string) $title, "columns" => (array) $columns];
     }
     
+    private static $detailMode = false;
+    /**
+     * method
+     * 
+     * 
+     * @return void
+     */
+    
+    protected static function setDetailMode(bool $detailMode)
+    {
+        self::$detailMode = $detailMode;
+        return;
+    }
+    
+    /**
+     * method
+     * 
+     * @return bool
+     */
+    
+    public static function inDetailMode() : bool
+    {
+        return self::$detailMode;
+    }
+    
     private $parent;
     private $columnGroup;
     //    private $rows = [];
@@ -235,11 +260,13 @@ class AdminTableHelper implements IAdminTableHelper
     {
         $state = ['list' => filter_input(INPUT_GET, Constants::LIST_QUERYSTRING_PARAMETER, FILTER_DEFAULT), 'create' => filter_input(INPUT_GET, Constants::LIST_ACTION_QUERYSTRING_PARAMETER, FILTER_DEFAULT) === 'create', 'update' => filter_input(INPUT_GET, Constants::LIST_ACTION_QUERYSTRING_PARAMETER, FILTER_DEFAULT) === 'update', 'record' => filter_input(INPUT_GET, 'record', FILTER_DEFAULT)];
         ob_start();
+        static::setDetailMode(true);
         if ($this->parent['detailView'] !== null) {
             $this->parent['detailView']();
         } else {
             echo 'TODO: generate default detail view';
         }
+        static::setDetailMode(false);
         $detail = ob_get_clean();
         ob_start();
         //echo($this->parent['id'] . "<br />");
@@ -287,19 +314,10 @@ class AdminTableHelper implements IAdminTableHelper
         return $output;
     }
     
-    /**
-     * method
-     * 
-     * 
-     * @return IAdminTableHelper
-     */
-    
-    public function read(callable $read) : IAdminTableHelper
-    {
-        $this->readProcessor = $read;
-        return $this;
-    }
-    
+    //    public function read(callable $read): IAdminTableHelper {
+    //        $this->readProcessor = $read;
+    //        return $this;
+    //    }
     /**
      * method
      * 
@@ -355,24 +373,15 @@ SQL
     
     public function readFromSqlQuery(string $query) : IAdminTableHelper
     {
-        return $this->read(function ($record, $key) use($query) {
+        return $this->onRead(function ($record, $key = null) use($query) {
             return WP::dbQuery($query);
         });
     }
     
-    /**
-     * method
-     * 
-     * 
-     * @return IAdminTableHelper
-     */
-    
-    public function delete(callable $delete) : IAdminTableHelper
-    {
-        $this->deleteProcessor = $delete;
-        return $this;
-    }
-    
+    //    public function delete(callable $delete): IAdminTableHelper {
+    //        $this->deleteProcessor = $delete;
+    //        return $this;
+    //    }
     /**
      * method
      * 
@@ -383,7 +392,7 @@ SQL
     public function deleteFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null) : IAdminTableHelper
     {
         $self = $this;
-        return $this->delete(function (array $items, $key) use($self, $tableNameWithoutPrefix, $tableNamePrefix) {
+        return $this->onDelete(function (array $items, $key) use($self, $tableNameWithoutPrefix, $tableNamePrefix) {
             global $wpdb;
             $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
             if ($key !== null && count($items) > 0) {
@@ -411,7 +420,7 @@ SQL
     
     public function readFromOptions(string $optionName) : IAdminTableHelper
     {
-        return $this->read(function ($record, $key) use($optionName) {
+        return $this->onRead(function ($record, $key) use($optionName) {
             $records = WP::getOption($optionName);
             if ($records === null) {
                 $records = [];
@@ -429,7 +438,7 @@ SQL
     
     public function deleteFromOptions(string $optionName) : IAdminTableHelper
     {
-        return $this->delete(function (array $items, $key) use($optionName) {
+        return $this->onDelete(function (array $items, $key) use($optionName) {
             $records = WP::getOption($optionName);
             if ($records === null) {
                 $records = [];

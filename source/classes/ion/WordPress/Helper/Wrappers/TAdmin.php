@@ -265,11 +265,18 @@ trait TAdmin {
 
                 //echo "<pre>";
 
-                foreach (static::getTables() as $table) {
-
-                    $table->process();     
-
-                }
+//                foreach (static::getTables() as $table) {
+//
+//                    $table->process();     
+//
+//                    if($table->getDescriptor()['detailView'] !== null && is_callable($table->getDescriptor()['detailView'])) {
+//                                                
+//                        ob_start();
+//                        $table->getDescriptor()['detailView'](false);
+//                        ob_end_clean();                        
+//                    }
+//                    
+//                }
 
 //                add_action('admin_post', function() {
 //                    
@@ -1012,12 +1019,81 @@ TEMPLATE;
         return;
     }
 
-    public static function addAdminForm(string $title, string $id = null, string $action = null, int $columns = 1, bool $hideKey = true): IAdminFormHelper {
+    public static function addAdminForm(string $title, string $id, string $action = null, int $columns = 1, bool $hideKey = true): IAdminFormHelper {
 
 
+//        if($id !== null) {
+//            
+//            echo "<pre>";
+//            debug_print_backtrace();
+//            die("\n\nID used! " . PHP::getCallingClass() . " :: " . PHP::getCallingPath() . "</pre>");
+//        }
+        
+        //$tmp = md5(PHP::count(static::$forms));
+        
+        $tmp = $id;
+        
+        /*
+        if($tmp === null) {
+
+//            $lookBack = 1;
+//            
+//            if(AdminTableHelper::inDetailMode()) {
+//                
+//                $lookBack = 2;
+//            }
+            
+//            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+//            
+//            if(AdminTableHelper::inDetailMode()) {
+//                
+//                $tmp =  $trace[PHP::count($trace) - $lookBack]['file'] . '___line_' . $trace[PHP::count($trace) - $lookBack]['line']; // . '___instance_' . PHP::count(static::$forms);        
+//                
+//            } else {
+//
+//                $tmp =  $trace[PHP::count($trace) - $lookBack]['file'] . '___line_' . $trace[PHP::count($trace) - $lookBack]['line'] . '___instance_' . PHP::count(static::$forms);        
+//            }
+
+            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+            
+            $tmp =  'class__' . $trace[1]['class'] .
+                    '___function__' . $trace[1]['function'] . 
+                    '___line__' . $trace[1]['line'] .
+                    '___file__' . $trace[1]['file'];
+            
+            $tmp = str_replace(' ' , '_', $tmp);
+            $tmp = str_replace(DIRECTORY_SEPARATOR , '_', $tmp);
+            $tmp = str_replace('.' , '_', $tmp);
+            
+            if(!static::isDebugMode()) {
+                
+                $tmp = md5($tmp);
+            }
+            
+//            if(AdminTableHelper::inDetailMode()) {
+//                
+//                echo "<pre>";
+//                echo "$tmp\n\n";
+//                var_Dump($trace);
+//                die("</pre>");
+//            }
+        }
+        */
+        
+        //TODO: See if the form has already been registered? If we don't, you might register a form... and nothing gets updated when you save it (and you can't figure out why - wahy).
+        foreach(static::$forms as $form) {
+            
+//            var_dump($form);
+//            exit;
+            
+            if($form->getId() == $tmp) {
+                //TODO: This causes some weird behaviour at the moment... but should really be here to prevent duplicate forms.
+                throw new WordPressHelperException("Form '{$tmp}' has already been defined - please specify a different form ID.");
+            }
+        }        
         
         $descriptor = [
-            "id" => ($id === null ? static::slugify($title) : $id),
+            "id" => $tmp,
             "title" => $title,
             "action" => $action,
             "notices" => static::$notices,
@@ -1029,19 +1105,7 @@ TEMPLATE;
             ]
         ];
 
-        //TODO: See if the form has already been registered? If we don't, you might register a form... and nothing gets updated when you save it (and you can't figure out why - wahy).
-        foreach(static::$forms as $form) {
-            
-//            var_dump($form);
-//            exit;
-            
-            if($form->getId() == $descriptor['id']) {
-            
-                //TODO: This causes some weird behaviour at the moment... but should really be here to prevent duplicate forms.
-                //throw new WordPressHelperException("Form '{$descriptor['id']}' has already been defined - please specify a different form ID.");
-                $descriptor['id'] = "{$descriptor['id']}-" . md5((string) rand());
-            }
-        }
+
         
         $form = new AdminFormHelper($descriptor);
 

@@ -724,7 +724,8 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
     
     public function addChild(IHelperContext $child): void {
         
-        $this->children[] = $child;
+        $this->children[] = $child;        
+        $child->setParent($this);
         return;
     }
 

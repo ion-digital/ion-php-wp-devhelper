@@ -158,10 +158,10 @@ trait TOptions
     
     public static function getPostOption(string $name, int $metaId, $default = null)
     {
-        if (!static::hasPostOption($name)) {
+        if (!static::hasPostOption($name, $metaId)) {
             return $default;
         }
-        $value = get_post_meta($id, $name, true);
+        $value = get_post_meta($metaId, $name, true);
         if (PHP::isEmpty($value, false, false)) {
             return $default;
         }
@@ -189,7 +189,7 @@ trait TOptions
     
     public static function hasPostOption(string $name, int $metaId) : bool
     {
-        return static::_hasOption($name, 'post', $id);
+        return static::_hasOption($name, 'post', $metaId);
     }
     
     /**
@@ -213,10 +213,10 @@ trait TOptions
     
     public static function getTermOption(string $name, int $metaId, $default = null)
     {
-        if (!static::hasTermOption($name)) {
+        if (!static::hasTermOption($name, $metaId)) {
             return $default;
         }
-        $value = get_term_meta($id, $name, true);
+        $value = get_term_meta($metaId, $name, true);
         if (PHP::isEmpty($value, false, false)) {
             return $default;
         }
@@ -244,7 +244,7 @@ trait TOptions
     
     public static function hasTermOption(string $name, int $metaId) : bool
     {
-        return static::_hasOption($name, 'term', $id);
+        return static::_hasOption($name, 'term', $metaId);
     }
     
     /**
@@ -268,10 +268,10 @@ trait TOptions
     
     public static function getUserOption(string $name, int $metaId, $default = null)
     {
-        if (!static::hasUserOption($name)) {
+        if (!static::hasUserOption($name, $metaId)) {
             return $default;
         }
-        $value = get_user_meta($id, $name, true);
+        $value = get_user_meta($metaId, $name, true);
         if (PHP::isEmpty($value, false, false)) {
             return $default;
         }
@@ -299,7 +299,7 @@ trait TOptions
     
     public static function hasUserOption(string $name, int $metaId) : bool
     {
-        return static::_hasOption($name, 'user', $id);
+        return static::_hasOption($name, 'user', $metaId);
     }
     
     /**
@@ -326,7 +326,7 @@ trait TOptions
         if (!static::hasCommentOption($name)) {
             return $default;
         }
-        $value = get_comment_meta($id, $name, true);
+        $value = get_comment_meta($metaId, $name, true);
         if (PHP::isEmpty($value, false, false)) {
             return $default;
         }
@@ -354,7 +354,7 @@ trait TOptions
     
     public static function hasCommentOption(string $name, int $metaId) : bool
     {
-        return static::_hasOption($name, 'comment', $id);
+        return static::_hasOption($name, 'comment', $metaId);
     }
     
     /**

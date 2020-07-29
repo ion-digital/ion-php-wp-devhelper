@@ -61,7 +61,7 @@ interface IAdmin {
     
     static function addAdminMenuPage(string $title, callable $content, string $menuTitle = null, string $id = null, string $capability = null, string $iconUrl = null, int $position = null): IAdminMenuPageHelper;
     
-    static function addAdminForm(string $title, string $id = null, string $action = null, int $columns = 1, bool $hideKey = true): IAdminFormHelper;
+    static function addAdminForm(string $title, string $id, string $action = null, int $columns = 1, bool $hideKey = true): IAdminFormHelper;
 
     static function addAdminTable(string $title, string $id = null, string $singularItemName = "Item", string $pluralItemName = "Items", string $keyColumnId = null, callable $detailView = null, bool $allowNew = false, bool $allowDelete = false, bool $allowEdit = false, array $additionalActions = null, bool $ajax = false): IAdminTableHelper;
     

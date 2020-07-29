@@ -81,7 +81,7 @@ class Tools {
         
         return function () {
 
-            WP::addAdminForm("Settings")
+            WP::addAdminForm("Settings", 'wp-devhelper-tools-settings')
                     ->setOptionPrefix(null)
                     ->addGroup("General")
                     ->addField(WP::checkBoxInputField("Hidden", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Devhelper settings interface in the 'Tools' menu."))
@@ -177,7 +177,7 @@ class Tools {
                     //->addColumn(WP::textTableColumn('DEBUG_COLUMN', 'sort-key', 'sort-key'));
 
 
-            $list->read(function () {
+            $list->onRead(function () {
 
                         $rows = [];
 
@@ -260,7 +260,7 @@ class Tools {
                        
             
             
-            WP::addAdminForm("WordPress Settings")
+            WP::addAdminForm("WordPress Settings", 'wp-devhelper-edit-wordpress-settings')
                     ->setOptionPrefix(null)
                     ->addGroup("Installation", null, null, 3)
                     
@@ -296,7 +296,7 @@ class Tools {
                         ->addField(WP::checkBoxInputField('Alternate WP CRON trigger method', Constants::WP_CONFIG_ALTERNATE_CRON, null, null, "The value of the " . Constants::WP_CONFIG_ALTERNATE_CRON . " setting in the <em>wp-config.php</em>.", false, true, true))
                         ->addField(WP::textInputField('WP CRON timeout lock', Constants::WP_CONFIG_CRON_LOCK_TIMEOUT, null, null, "The value of the " . Constants::WP_CONFIG_CRON_LOCK_TIMEOUT . " setting in the <em>wp-config.php</em>.", false, false, false, true, true))
 
-                    ->read(function() {
+                    ->onRead(function() {
                         
                         $checkBoolConst = function(string $const, bool $default = null): ?bool {
                             
@@ -388,7 +388,7 @@ HTML;
                         }
                     ])
                     ->addColumn(WP::textTableColumn("Log", "name", "name"))
-                    ->read(function () {
+                    ->onRead(function () {
 
                         $rows = [];
 
@@ -446,7 +446,7 @@ JS
                     ->addColumn(WP::textTableColumn("Level", "level", "level"))
                     ->addColumn(WP::textTableColumn("Time", "time", "time"))    
                     ->addColumn(WP::textTableColumn("Message", "message", "message"))
-                    ->read(function () use ($log) {
+                    ->onRead(function () use ($log) {
 
                         $formatLevel = function($level) {
 
@@ -537,13 +537,13 @@ HTML;
 
             $valueField = WP::textInputField('Value', 'option_value', null, null, null, true);
 
-            WP::addAdminForm("Edit Option", null, null, 1, false)
+            WP::addAdminForm("Edit Option", 'wp-devhelper-edit-wordpress-option', null, 1, false)
                     ->setOptionPrefix(null)
                     ->addField(WP::textInputField('Name', 'option_name'))
                     ->addField($valueField)
                     ->addField(WP::checkBoxInputField('Auto-load', 'autoload', null, null, "If the 'Auto-load' field is modified, the option needs to be removed and recreated, and will we appended to the options table."))
                     ->readFromSqlTable('options')
-                    ->update(function ($index, $newValues, $oldValues) {
+                    ->onUpdate(function ($index, $newValues, $oldValues) {
 
                         if ($newValues['autoload'] !== $oldValues['autoload']) {
                             
@@ -552,8 +552,11 @@ HTML;
 
                         WP::setOption($index, $newValues['option_value'], null, null, true, $newValues['autoload']);
                     })
-                    ->read(function(string $index = null) {
+                    ->onRead(function(string $index = null) {
 
+//var_dump($index);
+//die("X");
+                        
                         if($index !== null) {
                         
                             $autoLoad = false;
@@ -575,7 +578,7 @@ HTML;
                             ];
                         }
                     })
-                    ->create(function ($values) {
+                    ->onCreate(function ($values) {
                         
                         WP::setOption($values['option_name'], $values['option_value'], null, null, true, $values['autoload']);
                     })
@@ -595,7 +598,7 @@ HTML;
                     ->readFromSqlTable('options', [
                         'option_name' => ['not like' => '\\_%']
                     ])
-                    ->delete(function ($items) {
+                    ->onDelete(function ($items) {
                         
                         foreach ($items as $item) {
                             
@@ -844,7 +847,7 @@ HTML;
 //                    ->addColumn(WP::textTableColumn("", "job-execute", "job-execute"));                    
 
 
-            $list->read(function () {
+            $list->onRead(function () {
 
                         $rows = [];
                         

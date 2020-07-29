@@ -33,9 +33,9 @@ class AdminFormHelper implements IAdminFormHelper
     private $group;
     private $processed;
     private $output;
-    private $readProcessor;
-    private $createProcessor;
-    private $updateProcessor;
+    //    private $readProcessor;
+    //    private $createProcessor;
+    //    private $updateProcessor;
     private $redirectProcessor;
     private $optionPrefix;
     private $foreignKeys;
@@ -59,12 +59,12 @@ class AdminFormHelper implements IAdminFormHelper
         $this->setOptionPrefix(null);
         $this->setRawOptionOperations(false);
         //TODO: Need to make this true, without impacting legacy modules
-        $this->readFromOptions(null);
-        $this->createToOptions(null);
-        $this->updateToOptions(null);
         $this->onRead(null);
         $this->onCreate(null);
         $this->onUpdate(null);
+        $this->readFromOptions(null);
+        $this->createToOptions(null);
+        $this->updateToOptions(null);
     }
     
     /**
@@ -76,12 +76,7 @@ class AdminFormHelper implements IAdminFormHelper
     
     public function onRead(callable $onRead = null)
     {
-        $this->onReadHandler = $onRead !== null ? $onRead : function (array $data = null) {
-            //            echo '<pre>';
-            //            var_Dump($data);
-            //            echo '</pre>';
-            return $data;
-        };
+        $this->onReadHandler = $onRead;
         return $this;
     }
     
@@ -94,9 +89,7 @@ class AdminFormHelper implements IAdminFormHelper
     
     public function onCreate(callable $onCreate = null)
     {
-        $this->onCreateHandler = $onCreate !== null ? $onCreate : function (array $data = null) {
-            return $data;
-        };
+        $this->onCreateHandler = $onCreate;
         return $this;
     }
     
@@ -109,51 +102,27 @@ class AdminFormHelper implements IAdminFormHelper
     
     public function onUpdate(callable $onUpdate = null)
     {
-        $this->onUpdateHandler = $onUpdate !== null ? $onUpdate : function (array $data = null) {
-            return $data;
-        };
+        $this->onUpdateHandler = $onUpdate;
         return $this;
     }
     
-    /**
-     * method
-     * 
-     * 
-     * @return ?array
-     */
-    
-    protected function doReadHandler(array $data = null)
-    {
-        $tmp = $this->onReadHandler;
-        return $tmp($data);
-    }
-    
-    /**
-     * method
-     * 
-     * 
-     * @return ?array
-     */
-    
-    protected function doCreateHandler(array $data = null)
-    {
-        $tmp = $this->onCreateHandler;
-        return $tmp($data);
-    }
-    
-    /**
-     * method
-     * 
-     * 
-     * @return ?array
-     */
-    
-    protected function doUpdateHandler(array $data = null)
-    {
-        $tmp = $this->onUpdateHandler;
-        return $tmp($data);
-    }
-    
+    //    protected function doReadHandler(array $data = null): ?array {
+    //
+    //        $tmp = $this->onReadHandler;
+    //        return $tmp($data);
+    //    }
+    //
+    //    protected function doCreateHandler(array $data = null): ?array {
+    //
+    //        $tmp = $this->onCreateHandler;
+    //        return $tmp($data);
+    //    }
+    //
+    //    protected function doUpdateHandler(array $data = null): ?array {
+    //
+    //        $tmp = $this->onUpdateHandler;
+    //        return $tmp($data);
+    //    }
     /**
      * method
      * 
@@ -424,18 +393,18 @@ TEMPLATE;
                     $formAction = '?' . Constants::LIST_ACTION_QUERYSTRING_PARAMETER . '=update';
                     if ($state['record'] !== null && $state['key'] !== null) {
                         $formAction .= '&record=' . $state['record'];
-                        $tmp = $this->readProcessor;
+                        $tmp = $this->onReadHandler;
                         if ($tmp !== null) {
                             //$data = $tmp($state['record']);
-                            $data = $this->doReadHandler($tmp($state['record'], $state['key'], $metaId, $metaType));
+                            $data = $tmp($state['record'], $state['key'], $metaId, $metaType);
                         }
                     }
                 } else {
-                    $tmp = $this->readProcessor;
+                    $tmp = $this->onReadHandler;
                     //                var_dump($state);
                     //                die('HERE');
                     if ($tmp !== null) {
-                        $data = $this->doReadHandler($tmp(null, null, $metaId, $metaType));
+                        $data = $tmp(null, null, $metaId, $metaType);
                         if ($data !== null && !PHP::isAssociativeArray($data) && PHP::isCountable($data) && count($data) > 0) {
                             if (PHP::isAssociativeArray($data[0])) {
                                 $data = $data[0];
@@ -576,45 +545,21 @@ TEMPLATE;
         return $output;
     }
     
-    /**
-     * method
-     * 
-     * 
-     * @return IAdminFormHelper
-     */
-    
-    public function update(callable $update)
-    {
-        $this->updateProcessor = $update;
-        return $this;
-    }
-    
-    /**
-     * method
-     * 
-     * 
-     * @return IAdminFormHelper
-     */
-    
-    public function create(callable $create)
-    {
-        $this->createProcessor = $create;
-        return $this;
-    }
-    
-    /**
-     * method
-     * 
-     * 
-     * @return IAdminFormHelper
-     */
-    
-    public function read(callable $read)
-    {
-        $this->readProcessor = $read;
-        return $this;
-    }
-    
+    //    public function update(callable $update): IAdminFormHelper {
+    //        $this->updateProcessor = $update;
+    //        return $this;
+    //    }
+    //
+    //
+    //    public function create(callable $create): IAdminFormHelper {
+    //        $this->createProcessor = $create;
+    //        return $this;
+    //    }
+    //
+    //    public function read(callable $read): IAdminFormHelper {
+    //        $this->readProcessor = $read;
+    //        return $this;
+    //    }
     /**
      * method
      * 
@@ -694,7 +639,7 @@ TEMPLATE;
     {
         $self = $this;
         if ($optionName !== null) {
-            return $this->read(function ($record = null, $key = null, $metaId = null, OptionMetaType $type = null) use($self, $optionName) {
+            return $this->onRead(function ($record = null, $key = null, $metaId = null, OptionMetaType $type = null) use($self, $optionName) {
                 $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                 $result = null;
                 if (PHP::isCountable($optionRecords) && count($optionRecords) > 0) {
@@ -710,7 +655,7 @@ TEMPLATE;
                 return $result;
             });
         }
-        return $this->read(function ($record = null, $key = null, $metaId = null, OptionMetaType $type = null) use($self) {
+        return $this->onRead(function ($record = null, $key = null, $metaId = null, OptionMetaType $type = null) use($self) {
             $result = null;
             foreach ($self->descriptor['groups'] as $group) {
                 foreach ($group['fields'] as $field) {
@@ -733,7 +678,7 @@ TEMPLATE;
     {
         $self = $this;
         if ($optionName !== null) {
-            return $this->update(function ($index, $newValues, $oldValues, $key = null, $metaId = null, OptionMetaType $type = null) use($self, $optionName) {
+            return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, $metaId = null, OptionMetaType $type = null) use($self, $optionName) {
                 $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                 if (count($optionRecords) > 0) {
                     if (array_key_exists((string) $index, $optionRecords) && $metaId === null || $metaId !== null) {
@@ -756,7 +701,7 @@ TEMPLATE;
                 WP::setOption($optionName, $optionRecords, $metaId, $type, $this->getRawOptionOperations());
             });
         }
-        return $this->update(function ($index, $newValues, $oldValues, $key = null, $metaId = null, OptionMetaType $type = null) use($self) {
+        return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, $metaId = null, OptionMetaType $type = null) use($self) {
             $options = [];
             foreach ($oldValues as $key => $value) {
                 $options[($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key] = $value;
@@ -781,7 +726,7 @@ TEMPLATE;
     {
         $self = $this;
         if ($optionName !== null) {
-            return $this->create(function (array $values, $key = null, $metaId = null, OptionMetaType $type = null) use($optionName) {
+            return $this->onCreate(function (array $values, $key = null, $metaId = null, OptionMetaType $type = null) use($optionName) {
                 $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                 if (array_key_exists($key, $values)) {
                     $optionRecords[$values[(string) $key]] = $values;
@@ -791,7 +736,7 @@ TEMPLATE;
                 WP::setOption($optionName, $optionRecords, $metaId, $type, $this->getRawOptionOperations());
             });
         }
-        return $this->create(function (array $values, $key = null, $metaId = null, OptionMetaType $type = null) use($optionName) {
+        return $this->onCreate(function (array $values, $key = null, $metaId = null, OptionMetaType $type = null) use($optionName) {
             $options = [];
             foreach ($values as $key => $value) {
                 $options[($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key] = $value;
@@ -853,9 +798,9 @@ TEMPLATE;
                 $newValues = [];
                 $oldValues = [];
                 $data = null;
-                if ($this->readProcessor !== null) {
-                    $tmp = $this->readProcessor;
-                    $data = $this->doReadHandler($tmp($state['record'], $state['key'], $metaId, $metaType));
+                if ($this->onReadHandler !== null) {
+                    $tmp = $this->onReadHandler;
+                    $data = $tmp($state['record'], $state['key'], $metaId, $metaType);
                     // We want the read processor to return nulls; but for updating, we only want to know which values are not null.
                     if ($data !== null && PHP::isAssociativeArray($data)) {
                         foreach ($data as $key => $value) {
@@ -922,58 +867,83 @@ TEMPLATE;
                 }
                 //echo '<pre>';
                 //
+                //var_dump($state);
                 //var_dump($data);
                 //var_dump($oldValues);
                 //var_dump($newValues);
                 //
                 //echo '</pre>';
-                //exit;
+                ////exit;
+                //                if(PHP::strStartsWith($this->descriptor['id'], 'ion-word-press')) {
+                //
+                //                    var_dump($state);
+                //                    die("X");
+                //                }
+                //                        if($metaId !== null && $state['key'] != 'ion-connect-modal-settings') {
+                //                            var_dump($_POST);
+                //                            var_dump($state);
+                //                            var_dump($this->onUpdateHandler);
+                //                            var_dump($this->onCreateHandler);
+                //                            var_dump($metaId);
+                //                            die("ZIMAR");
+                //                        }
+                //                if($metaType->toValue() == OptionMetaType::TERM) {
+                //
+                //                    var_dump($state);
+                //                    var_dump($newValues);
+                //                    var_dump($this->onUpdateHandler);
+                //                    var_dump($this->onCreateHandler);
+                //                    var_dump(PHP::isInt($metaId));
+                //
+                //                    die('xXx');
+                //
+                //                }
                 if ($state['create'] === false && $state['update'] === false) {
-                    if ($this->updateProcessor === null || $this->createProcessor === null && PHP::isInt($metaId)) {
+                    if ($this->onUpdateHandler === null || $this->onCreateHandler === null && PHP::isInt($metaId)) {
                         foreach ($newValues as $key => $value) {
                             WP::setOption($key, $value, $metaId, $metaType, $this->getRawOptionOperations());
                         }
                     } else {
+                        //                        if($metaType->toValue() == OptionMetaType::TERM) {
+                        //                        var_dump(PHP::isInt($metaId));
+                        //                        var_dump($oldValues);
+                        //                        var_dump($newValues);
+                        //                        die('xXx');
+                        //                        }
                         if (PHP::isInt($metaId) && (PHP::isCountable($oldValues) && count($oldValues) === 0)) {
-                            $tmp = $this->createProcessor;
-                            $tmp($this->doCreateHandler($newValues), $state['key'], $metaId, $metaType);
+                            $tmp = $this->onCreateHandler;
+                            $tmp($newValues, $state['key'], $metaId, $metaType);
                         } else {
-                            //                            if($this->descriptor['id'] == 'settings') {
-                            //
-                            //echo '<pre>';
-                            //
-                            //var_dump($data);
-                            //var_dump($oldValues);
-                            //var_dump($newValues);
-                            //
-                            //echo '</pre>';
-                            //exit;
-                            //                                exit;
-                            //                            }
-                            $tmp = $this->updateProcessor;
-                            $tmp($state['record'], $this->doUpdateHandler($newValues), $oldValues, $state['key'], $metaId, $metaType);
+                            $tmp = $this->onUpdateHandler;
+                            $tmp($state['record'], $newValues, $oldValues, $state['key'], $metaId, $metaType);
                         }
                     }
                 } else {
                     if ($state['create'] === true && $state['update'] === false) {
                         // List Edit Form
-                        if ($this->createProcessor === null) {
+                        if ($this->onCreateHandler === null) {
                             //TODO: Need a default handler here
                         } else {
-                            $tmp = $this->createProcessor;
-                            $tmp($this->doCreateHandler($newValues), $state['key']);
+                            $tmp = $this->onCreateHandler;
+                            $tmp($newValues, $state['key']);
                         }
                     } else {
                         if ($state['create'] === false && $state['update'] === true) {
-                            if ($this->updateProcessor === null) {
+                            if ($this->onUpdateHandler === null) {
                                 //TODO: Need a default handler here
                             } else {
-                                $tmp = $this->updateProcessor;
-                                $tmp($state['record'], $this->doUpdateHandler($newValues), $oldValues, $state['key'], $metaId);
+                                $tmp = $this->onUpdateHandler;
+                                $tmp($state['record'], $newValues, $oldValues, $state['key'], $metaId);
                             }
                         }
                     }
                 }
+                //                if($metaId !== null) {
+                //
+                //                    var_dump($_POST);
+                //                    var_dump($state);
+                //                    die("ZZZ");
+                //                }
                 if ($this->redirectProcessor !== null) {
                     $tmp = $this->redirectProcessor;
                     $tmp($newValues);
@@ -1026,7 +996,7 @@ TEMPLATE;
     
     public function readFromSqlQuery($query)
     {
-        return $this->read(function ($record = null) use($query) {
+        return $this->onRead(function ($record = null) use($query) {
             $post = filter_input(INPUT_GET, 'post', FILTER_DEFAULT);
             $state = ['record' => filter_input(INPUT_GET, 'record', FILTER_DEFAULT), 'key' => filter_input(INPUT_GET, 'key', FILTER_DEFAULT), 'form' => filter_input(INPUT_GET, 'form', FILTER_DEFAULT)];
             $postBack = filter_input(INPUT_POST, "__postBack_" . $this->descriptor["id"]);
@@ -1112,7 +1082,7 @@ SQL
     public function updateToSqlTable($tableNameWithoutPrefix, $tableNamePrefix = null, $recordField = null, $recordId = null)
     {
         $self = $this;
-        return $this->update(function ($index, $newValues, $oldValues, $key, $metaId = null) use($self, $tableNameWithoutPrefix, $tableNamePrefix, $recordField, $recordId) {
+        return $this->onUpdate(function ($index, $newValues, $oldValues, $key, $metaId = null) use($self, $tableNameWithoutPrefix, $tableNamePrefix, $recordField, $recordId) {
             global $wpdb;
             $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
             $metaId = filter_input(INPUT_GET, 'post', FILTER_DEFAULT);
@@ -1136,7 +1106,8 @@ SQL
             }
             foreach ($this->foreignKeys as $key => $value) {
                 if (!in_array('`' . $key . '`', $updates)) {
-                    $updates[] = '`' . $key . '` = ' . $value;
+                    $updates[] = '`' . $key . "` = %d";
+                    $newValues[$key] = $value;
                 }
             }
             $updateString = join(', ', $updates);
@@ -1146,17 +1117,22 @@ SQL
                     throw new WordPressHelperException("If a record ID is specified ({$recordId}), a record field must be specified as well.");
                 }
                 $whereString = " WHERE `{$recordField}` = {$wpdb->esc_like($recordId)}";
+                //                        unset($newValues[$recordField]);
             } else {
                 if ($state['key'] !== null && $index !== null) {
                     $whereString = ' WHERE CAST(`' . $state['key'] . '` AS CHAR(255)) LIKE (\'' . $wpdb->esc_like($index) . '\')';
                     if (!PHP::isEmpty($metaId) && $postField !== null) {
                         $whereString .= " AND `{$postField}` = {$wpdb->esc_like($state['record'])}";
                     }
+                    //                            unset($newValues[$state['key']]);
                 }
             }
             $sql = "UPDATE `{$table}` SET {$updateString}{$whereString}";
-            //                    var_dump($sql);
-            //                    exit;
+            //                    echo "<h1>{$this->getId()}</h1>";
+            //                    var_dump($recordField);
+            //                    var_dump($newValues);
+            //                    var_dump(array_values($newValues));
+            //                    die("<pre>$sql</pre>");
             WP::dbQuery($sql, array_filter(array_values($newValues), function ($v) {
                 if ($v === null) {
                     return false;
@@ -1175,7 +1151,7 @@ SQL
     
     public function createToSqlTable($tableNameWithoutPrefix, $tableNamePrefix = null)
     {
-        return $this->create(function ($values, $key, $metaId = null) use($tableNameWithoutPrefix, $tableNamePrefix) {
+        return $this->onCreate(function ($values, $key, $metaId = null) use($tableNameWithoutPrefix, $tableNamePrefix) {
             global $wpdb;
             $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
             $columns = [];

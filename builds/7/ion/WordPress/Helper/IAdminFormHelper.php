@@ -33,17 +33,17 @@ interface IAdminFormHelper {
 
     function render(bool $echo = true): string;
     
-    function update(callable $update): self;
+//    function update(callable $update): self;
+//    
+//    function create(callable $create): self;
+//    
+//    function read(callable $read): self;
     
-    function create(callable $create): self;
+    function onRead(callable $onRead = null): self;
     
-    function read(callable $read): self;
-    
-    function onRead(callable $onRead = null): IAdminFormHelper;
-    
-    function onCreate(callable $onCreate = null): IAdminFormHelper;
+    function onCreate(callable $onCreate = null): self;
 
-    function onUpdate(callable $onUpdate = null): IAdminFormHelper;
+    function onUpdate(callable $onUpdate = null): self;
     
     function readFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null, string $recordField = null, int $recordId = null): self;
     

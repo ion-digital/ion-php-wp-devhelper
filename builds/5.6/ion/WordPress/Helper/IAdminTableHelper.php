@@ -55,15 +55,7 @@ interface IAdminTableHelper
     
     function render($echo = true);
     
-    /**
-     * method
-     * 
-     * 
-     * @return IAdminTableHelper
-     */
-    
-    function read(callable $read);
-    
+    //    function read(callable $read): IAdminTableHelper;
     /**
      * method
      * 
@@ -82,15 +74,7 @@ interface IAdminTableHelper
     
     function readFromSqlQuery($query);
     
-    /**
-     * method
-     * 
-     * 
-     * @return IAdminTableHelper
-     */
-    
-    function delete(callable $delete);
-    
+    //    function delete(callable $delete): IAdminTableHelper;
     /**
      * method
      * 

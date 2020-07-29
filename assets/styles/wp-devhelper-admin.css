@@ -462,3 +462,8 @@ div.wrap.tabbed h1 {
     
     margin: 10px 8px; 
 }
+
+/*table.wp-list-table tbody#the-list tr td.package-name span {
+    
+    white-space: nowrap;
+}*/

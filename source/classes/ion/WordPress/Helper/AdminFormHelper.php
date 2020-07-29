@@ -1031,11 +1031,11 @@ TEMPLATE;
 //echo '</pre>';
 ////exit;                           
                 
-                if(PHP::strStartsWith($this->descriptor['id'], 'ion-word-press')) {
-                    
-                    var_dump($state);
-                    die("X");
-                }
+//                if(PHP::strStartsWith($this->descriptor['id'], 'ion-word-press')) {
+//                    
+//                    var_dump($state);
+//                    die("X");
+//                }
                 
 //                        if($metaId !== null && $state['key'] != 'ion-connect-modal-settings') {
 //                            var_dump($_POST);
@@ -1045,6 +1045,18 @@ TEMPLATE;
 //                            var_dump($metaId);
 //                            die("ZIMAR");
 //                        }    
+                
+//                if($metaType->toValue() == OptionMetaType::TERM) {
+//                    
+//                    var_dump($state);
+//                    var_dump($newValues);
+//                    var_dump($this->onUpdateHandler);
+//                    var_dump($this->onCreateHandler);
+//                    var_dump(PHP::isInt($metaId));
+//                    
+//                    die('xXx');
+//                    
+//                }
                 
                 if ($state['create'] === false && $state['update'] === false) {
                     
@@ -1060,7 +1072,12 @@ TEMPLATE;
 
                     } else {
                                 
-                        
+//                        if($metaType->toValue() == OptionMetaType::TERM) {
+//                        var_dump(PHP::isInt($metaId));
+//                        var_dump($oldValues);
+//                        var_dump($newValues);
+//                        die('xXx');
+//                        }
                         
                         if(PHP::isInt($metaId) && (PHP::isCountable($oldValues) && count($oldValues) === 0)) {
                             
@@ -1331,7 +1348,9 @@ SQL
 
                         if(!in_array('`' . $key . '`', $updates)) {
 
-                            $updates[] = '`' . $key . '` = ' . $value;
+                            $updates[] = '`' . $key . "` = %d";
+                            
+                            $newValues[$key] = $value;
                         }            
                     }                    
 
@@ -1348,6 +1367,8 @@ SQL
 
                         $whereString = " WHERE `{$recordField}` = {$wpdb->esc_like($recordId)}";
 
+//                        unset($newValues[$recordField]);
+                        
                     } else {                    
                     
                         if ($state['key'] !== null && $index !== null) {
@@ -1357,13 +1378,20 @@ SQL
 
                                 $whereString .= " AND `{$postField}` = {$wpdb->esc_like($state['record'])}";
                             }                        
+                            
+//                            unset($newValues[$state['key']]);
                         }
                     }
         
                     $sql = "UPDATE `$table` SET $updateString$whereString";
-                    
-//                    var_dump($sql);
-//                    exit;
+
+
+//                    echo "<h1>{$this->getId()}</h1>";
+//                    var_dump($recordField);
+//                    var_dump($newValues);
+//                    var_dump(array_values($newValues));
+//                    die("<pre>$sql</pre>");
+
                     
                     WP::dbQuery($sql, array_filter(array_values($newValues), function($v) { 
                         

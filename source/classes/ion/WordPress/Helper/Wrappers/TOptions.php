@@ -280,7 +280,7 @@ trait TOptions {
 
     public static function getUserOption(string $name, int $metaId, /* mixed */ $default = null) /* mixed */ {
         
-        if (!static::hasUserOption($name)) {
+        if (!static::hasUserOption($name, $metaId)) {
             
             return $default;
         }

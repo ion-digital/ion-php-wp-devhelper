@@ -808,6 +808,7 @@ final class HelperContext implements IHelperContext
     public function addChild(IHelperContext $child) : void
     {
         $this->children[] = $child;
+        $child->setParent($this);
         return;
     }
     

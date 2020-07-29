@@ -81,7 +81,7 @@ class Tools {
         
         return function () {
 
-            WP::addAdminForm("Settings")
+            WP::addAdminForm("Settings", 'wp-devhelper-tools-settings')
                     ->setOptionPrefix(null)
                     ->addGroup("General")
                     ->addField(WP::checkBoxInputField("Hidden", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Devhelper settings interface in the 'Tools' menu."))
@@ -260,7 +260,7 @@ class Tools {
                        
             
             
-            WP::addAdminForm("WordPress Settings")
+            WP::addAdminForm("WordPress Settings", 'wp-devhelper-edit-wordpress-settings')
                     ->setOptionPrefix(null)
                     ->addGroup("Installation", null, null, 3)
                     
@@ -537,7 +537,7 @@ HTML;
 
             $valueField = WP::textInputField('Value', 'option_value', null, null, null, true);
 
-            WP::addAdminForm("Edit Option", null, null, 1, false)
+            WP::addAdminForm("Edit Option", 'wp-devhelper-edit-wordpress-option', null, 1, false)
                     ->setOptionPrefix(null)
                     ->addField(WP::textInputField('Name', 'option_name'))
                     ->addField($valueField)

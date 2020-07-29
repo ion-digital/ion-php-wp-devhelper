@@ -217,7 +217,7 @@ interface IAdmin
      * @return IAdminFormHelper
      */
     
-    static function addAdminForm($title, $id = null, $action = null, $columns = 1, $hideKey = true);
+    static function addAdminForm($title, $id, $action = null, $columns = 1, $hideKey = true);
     
     /**
      * method
