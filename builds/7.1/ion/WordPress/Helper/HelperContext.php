@@ -522,6 +522,9 @@ final class HelperContext implements IHelperContext
     
     public function invokeInitializeOperation() : void
     {
+        if ($this->isInitialized()) {
+            return;
+        }
         foreach (array_values($this->getChildren()) as $childContext) {
             $childContext->invokeInitializeOperation();
         }
@@ -533,6 +536,8 @@ final class HelperContext implements IHelperContext
         if ($call !== null) {
             $call($this);
         }
+        $this->initialized = true;
+        return;
     }
     
     /**
@@ -632,16 +637,19 @@ final class HelperContext implements IHelperContext
             return;
         }
         $this->finalized = true;
-        $this->invokeInitializeOperation();
+        add_action('after_setup_theme', function () {
+            // NOTE: This needs to fire before 'init'
+            $this->invokeInitializeOperation();
+        });
         $call = $this->getFinalizeOperation();
         if ($call !== null) {
             $this->finalize = $call;
         }
         if ($this->hasFinalizeOperation() === false) {
             //            throw new WordPressHelperException('No finalize operation to invoke.');
-            return;
         }
-        add_action('after_setup_theme', function () use($call) {
+        add_action('wp_loaded', function () use($call) {
+            // NOTE: 'wp' doesn't seem to fire for admin screens
             if ($call !== null) {
                 $call($this);
             }

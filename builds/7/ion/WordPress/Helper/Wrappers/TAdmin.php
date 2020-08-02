@@ -2025,7 +2025,7 @@ JS
    
     public static function getCurrentAdminObjectType(): ?string {
         
-        if(!WP::isAdmin()) {
+        if(!static::isAdmin()) {
             
             return null;
         }
@@ -2063,7 +2063,7 @@ JS
    
     public static function getCurrentAdminObjectId(): ?int {
                 
-        if(!WP::isAdmin()) {
+        if(!static::isAdmin()) {
             
             return null;
         }        
@@ -2100,7 +2100,7 @@ JS
     
     public static function getCurrentAdminObject(): ?object {
                 
-        if(!WP::isAdmin()) {
+        if(!static::isAdmin()) {
             
             return null;
         }        

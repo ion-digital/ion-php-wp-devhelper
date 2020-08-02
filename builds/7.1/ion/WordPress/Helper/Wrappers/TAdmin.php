@@ -1638,7 +1638,7 @@ JS
     
     public static function getCurrentAdminObjectType() : ?string
     {
-        if (!WP::isAdmin()) {
+        if (!static::isAdmin()) {
             return null;
         }
         global $pagenow;
@@ -1668,7 +1668,7 @@ JS
     
     public static function getCurrentAdminObjectId() : ?int
     {
-        if (!WP::isAdmin()) {
+        if (!static::isAdmin()) {
             return null;
         }
         if (static::getCurrentAdminObjectType() == WP_Post::class) {
@@ -1698,7 +1698,7 @@ JS
     
     public static function getCurrentAdminObject()
     {
-        if (!WP::isAdmin()) {
+        if (!static::isAdmin()) {
             return null;
         }
         if (static::getCurrentAdminObjectId() === null) {

@@ -480,7 +480,7 @@ trait TTemplate
     
     public static function getCurrentTemplateObjectId(bool $ignoreTheLoop = false) : ?int
     {
-        if (WP::isAdmin()) {
+        if (static::isAdmin()) {
             return null;
         }
         if (in_the_loop() && !$ignoreTheLoop) {
@@ -501,7 +501,7 @@ trait TTemplate
     
     public static function getCurrentTemplateObjectType(bool $ignoreTheLoop = false) : ?string
     {
-        if (WP::isAdmin()) {
+        if (static::isAdmin()) {
             return null;
         }
         if (static::getCurrentTemplateObjectId($ignoreTheLoop) === null) {
@@ -522,7 +522,7 @@ trait TTemplate
     
     public static function getCurrentTemplateObject(bool $ignoreTheLoop = false)
     {
-        if (WP::isAdmin()) {
+        if (static::isAdmin()) {
             return null;
         }
         if (static::getCurrentTemplateObjectId($ignoreTheLoop) === null) {
