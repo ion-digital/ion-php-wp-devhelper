@@ -406,7 +406,7 @@ trait TOptions
     
     public static function hasCustomizationOption(string $name) : bool
     {
-        return static::getCustomizationOption($name) !== null;
+        return PHP::isEmpty(get_theme_mod($name)) !== null;
     }
     
     /**
