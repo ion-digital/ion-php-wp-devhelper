@@ -135,144 +135,147 @@ final class WordPressHelper implements IWordPressHelper {
     
     private static function initializeHelper(IHelperContext $context, array $wpHelperSettings, string $helperDir = null): void {
         
-        if (static::$helperInitialized === false) {   
+        if (static::$helperInitialized) {   
             
-            static::$helperUri = null;
-            static::$helperDir = null;
-            
-            if(static::$settings === []) {
-                
-                static::$settings = $wpHelperSettings;
-            } 
-            
-            $helperDirs = [];
-            
-            if($helperDir === null) {
+            return;
+        }
+        
+        static::$helperUri = null;
+        static::$helperDir = null;
 
-                $helperDirs = [
-                    '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..',
-                    '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..',
-                    '..' . DIRECTORY_SEPARATOR . '..',
-                    '..',
-                    '.',
+        if(static::$settings === []) {
 
-                    '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'wp-devhelper',
-                    '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'wp-devhelper',
-                    '..' . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'wp-devhelper',                
-                    '..' . DIRECTORY_SEPARATOR . 'includes',
-                    
-                    'vendor' . DIRECTORY_SEPARATOR . 'wp-devhelper',
-                    'includes' . DIRECTORY_SEPARATOR . 'wp-devhelper',
-                    'include' . DIRECTORY_SEPARATOR . 'wp-devhelper',                
-                    'includes',
-                    'include'                     
-                ];
-                
-                foreach($helperDirs as &$helperDir) {
-                    
-                    $helperDir = realpath(__DIR__ . DIRECTORY_SEPARATOR . $helperDir . DIRECTORY_SEPARATOR);
-                    
-                    if(!empty($helperDir)) {
-                        
-                        $helperDir .= DIRECTORY_SEPARATOR;
-                    }
+            static::$settings = $wpHelperSettings;
+        } 
+
+        $helperDirs = [];
+
+        if($helperDir === null) {
+
+            $helperDirs = [
+                '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..',
+                '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..',
+                '..' . DIRECTORY_SEPARATOR . '..',
+                '..',
+                '.',
+
+                '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'wp-devhelper',
+                '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'wp-devhelper',
+                '..' . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'wp-devhelper',                
+                '..' . DIRECTORY_SEPARATOR . 'includes',
+
+                'vendor' . DIRECTORY_SEPARATOR . 'wp-devhelper',
+                'includes' . DIRECTORY_SEPARATOR . 'wp-devhelper',
+                'include' . DIRECTORY_SEPARATOR . 'wp-devhelper',                
+                'includes',
+                'include'                     
+            ];
+
+            foreach($helperDirs as &$helperDir) {
+
+                $helperDir = realpath(__DIR__ . DIRECTORY_SEPARATOR . $helperDir . DIRECTORY_SEPARATOR);
+
+                if(!empty($helperDir)) {
+
+                    $helperDir .= DIRECTORY_SEPARATOR;
                 }
-                
+            }
+
+        } else {
+
+            $helperDirs[] = DIRECTORY_SEPARATOR . trim($helperDir, '/\\') . DIRECTORY_SEPARATOR;
+        }
+
+
+        foreach($helperDirs as $dir) {
+
+            $path = $dir . DIRECTORY_SEPARATOR . 'composer.json';
+
+            if(!empty($path) && file_exists($path)) {
+
+                $composerJson = json_decode(file_get_contents($path));
+
+                if($composerJson->name === 'ion/wp-devhelper') {
+
+                    static::$helperDir = $dir;
+                    break;                    
+                }
+            }   
+        }         
+
+        if(static::$helperDir === null) {
+
+            throw new WordPressHelperException('Could not determine helper directory (I looked in: ' . "\n\n" . join("\n", $helperDirs) . "\n\n" . ')');
+        }
+
+        static::$helperDir = realpath(static::$helperDir);
+        static::$helperDir = DIRECTORY_SEPARATOR . trim(static::$helperDir, '/\\') . DIRECTORY_SEPARATOR;
+
+        if (strpos(static::$helperDir, DIRECTORY_SEPARATOR . static::getContentDirectory())) {
+            static::$helperUri = get_site_url() . substr(static::$helperDir, strpos(static::$helperDir, DIRECTORY_SEPARATOR . static::getContentDirectory()));
+        } 
+
+        if(static::$helperUri === null) {
+
+            throw new WordPressHelperException('Could not determine helper URI.');
+        }     
+
+        if(static::isAdmin()) {
+
+            static::addSystemAdminMenuPage('index.php');
+            static::addSystemAdminMenuPage('edit.php');
+            static::addSystemAdminMenuPage('upload.php');
+            static::addSystemAdminMenuPage('edit-comments.php');
+            static::addSystemAdminMenuPage('themes.php');
+            static::addSystemAdminMenuPage('plugins.php');
+            static::addSystemAdminMenuPage('edit.php?post_type=page');
+            static::addSystemAdminMenuPage('users.php');
+            static::addSystemAdminMenuPage('tools.php');
+            static::addSystemAdminMenuPage('options-general.php');
+            static::addSystemAdminMenuPage('settings.php');                
+
+            if(!Tools::isDisabled() && static::getSettingsValue($wpHelperSettings, 'no-tools') === false) {
+
+                static::$tools = new Tools($context, $wpHelperSettings);
+
             } else {
-                
-                $helperDirs[] = DIRECTORY_SEPARATOR . trim($helperDir, '/\\') . DIRECTORY_SEPARATOR;
-            }
 
-            
-            foreach($helperDirs as $dir) {
-                
-                $path = $dir . DIRECTORY_SEPARATOR . 'composer.json';
-                
-                if(!empty($path) && file_exists($path)) {
+                Tools::addEnableMenuItem();
+            }                    
+        }          
 
-                    $composerJson = json_decode(file_get_contents($path));
+        //if(defined(Constants::WP_CONFIG_DEBUG) && constant(Constants::WP_CONFIG_DEBUG) === true && WP::getOption(Constants::QUICK_404_OPTION, false) === true) {
 
-                    if($composerJson->name === 'ion/wp-devhelper') {
-                        
-                        static::$helperDir = $dir;
-                        break;                    
-                    }
-                }   
-            }         
+            static::addAction("template_redirect", function($template) {
 
-            if(static::$helperDir === null) {
-                
-                throw new WordPressHelperException('Could not determine helper directory (I looked in: ' . "\n\n" . join("\n", $helperDirs) . "\n\n" . ')');
-            }
+                if(is_404() && !PHP::toBool(PHP::filterInput('wp-devhelper-disable-quick-404', [ INPUT_GET ], FILTER_DEFAULT /* FILTER_VALIDATE_BOOLEAN */))) {
 
-            static::$helperDir = realpath(static::$helperDir);
-            static::$helperDir = DIRECTORY_SEPARATOR . trim(static::$helperDir, '/\\') . DIRECTORY_SEPARATOR;
-            
-            if (strpos(static::$helperDir, DIRECTORY_SEPARATOR . static::getContentDirectory())) {
-                static::$helperUri = get_site_url() . substr(static::$helperDir, strpos(static::$helperDir, DIRECTORY_SEPARATOR . static::getContentDirectory()));
-            } 
+                    $wpHelperPath = Constants::HELPER_SITE;
+                    $wpHelperSettingsPath = static::getAdminUrl('admin', 'wp-devhelper-settings');
 
-            if(static::$helperUri === null) {
-                
-                throw new WordPressHelperException('Could not determine helper URI.');
-            }     
-            
-            if(static::isAdmin()) {
-                
-                static::addSystemAdminMenuPage('index.php');
-                static::addSystemAdminMenuPage('edit.php');
-                static::addSystemAdminMenuPage('upload.php');
-                static::addSystemAdminMenuPage('edit-comments.php');
-                static::addSystemAdminMenuPage('themes.php');
-                static::addSystemAdminMenuPage('plugins.php');
-                static::addSystemAdminMenuPage('edit.php?post_type=page');
-                static::addSystemAdminMenuPage('users.php');
-                static::addSystemAdminMenuPage('tools.php');
-                static::addSystemAdminMenuPage('options-general.php');
-                static::addSystemAdminMenuPage('settings.php');                
-                
-                if(!Tools::isDisabled() && static::getSettingsValue($wpHelperSettings, 'no-tools') === false) {
+                    $req = PHP::getServerRequestUri();
 
-                    static::$tools = new Tools($context, $wpHelperSettings);
+                    $unblockedUri = $req . (strpos($req, '?') ? '&' : '?') . "wp-devhelper-disable-quick-404=true";
 
-                } else {
+                    wp_die(
+                        "This is a replacement 404 page generated by <a target=\"_blank\" href=\"{$wpHelperPath}\">WP Devhelper</a> <br /><br /> To disable: either set <strong>WP_DEBUG</strong> to <em>false</em> or <a target=\"_blank\" href=\"{$wpHelperSettingsPath}\">go to the settings page</a>. <br /><br /> To see the original template, please <a href=\"$unblockedUri\">click here</a>.",
+                        "404 Not Found",
+                        [ 'response' => 404, 'exit' => true ]
+                    );
 
-                    Tools::addEnableMenuItem();
-                }                    
-            }          
-            
-            //if(defined(Constants::WP_CONFIG_DEBUG) && constant(Constants::WP_CONFIG_DEBUG) === true && WP::getOption(Constants::QUICK_404_OPTION, false) === true) {
+                    return;
+                }
 
-                static::addAction("template_redirect", function($template) {
+                return $template;
+            });
+        //}
 
-                    if(is_404() && !PHP::toBool(PHP::filterInput('wp-devhelper-disable-quick-404', [ INPUT_GET ], FILTER_DEFAULT /* FILTER_VALIDATE_BOOLEAN */))) {
 
-                        $wpHelperPath = Constants::HELPER_SITE;
-                        $wpHelperSettingsPath = static::getAdminUrl('admin', 'wp-devhelper-settings');
-
-                        $req = PHP::getServerRequestUri();
-
-                        $unblockedUri = $req . (strpos($req, '?') ? '&' : '?') . "wp-devhelper-disable-quick-404=true";
-
-                        wp_die(
-                            "This is a replacement 404 page generated by <a target=\"_blank\" href=\"{$wpHelperPath}\">WP Devhelper</a> <br /><br /> To disable: either set <strong>WP_DEBUG</strong> to <em>false</em> or <a target=\"_blank\" href=\"{$wpHelperSettingsPath}\">go to the settings page</a>. <br /><br /> To see the original template, please <a href=\"$unblockedUri\">click here</a>.",
-                            "404 Not Found",
-                            [ 'response' => 404, 'exit' => true ]
-                        );
-
-                        return;
-                    }
-                    
-                    return $template;
-                });
-            //}
-         
-            
 //            static::addAction('wp_loaded', function() {
 //               
 //                static::finalizeHelper($context);
 //            });
-  
+
 //            static::setCurrentContextCycle(Constants::CONTEXT_PLUGIN);
 //            
 //            add_action('plugins_loaded', function() {                   
@@ -281,13 +284,13 @@ final class WordPressHelper implements IWordPressHelper {
 //                
 //                static::setCurrentContextCycle(Constants::CONTEXT_THEME);                                  
 //            });       
-            
+
 //            add_action('switch_theme', function() {                
 //                
 //                static::setCurrentContextCycle(Constants::CONTEXT_THEME);                                  
 //            });                 
 
-            
+
 //            add_action('after_setup_theme', function() {
 //                
 //                foreach(static::$contexts as $ctx) {
@@ -304,7 +307,7 @@ final class WordPressHelper implements IWordPressHelper {
 //
 //                }               
 //            }, 0);
-                        
+
 //TODO - template option has been removed                        
 //        if(!is_admin()) {
 //            
@@ -324,31 +327,31 @@ final class WordPressHelper implements IWordPressHelper {
 //                }   
 //            });                     
 //        }
-            
-            //TODO: The order of these seem significant at the moment - more investigation needed.
-                
-            static::initialize_TLogging();
-            static::initialize_TDatabase();
-            static::initialize_TPaths();
-            static::initialize_TCommon();
-            static::initialize_TPosts();                
-            static::initialize_TTaxonomies(); 
-            static::initialize_TCron();
-            static::initialize_TOptions();       
-            static::initialize_TRewrites();
-            static::initialize_TWidgets();                
-            static::initialize_TTemplate();
-            static::initialize_TShortCodes();
-            static::initialize_TActions();
-            static::initialize_TFilters();                     
 
-            static::initialize_TAdmin();            
-            
-            static::invokeWrapperActions();             
-            
-            if (static::getSettingsValue(static::$settings, 'html-auto-paragraphs') === false) {
-                
-                add_filter("tiny_mce_before_init", function ($settings) {
+        //TODO: The order of these seem significant at the moment - more investigation needed.
+
+        static::initialize_TLogging();
+        static::initialize_TDatabase();
+        static::initialize_TPaths();
+        static::initialize_TCommon();
+        static::initialize_TPosts();                
+        static::initialize_TTaxonomies(); 
+        static::initialize_TCron();
+        static::initialize_TOptions();       
+        static::initialize_TRewrites();
+        static::initialize_TWidgets();                
+        static::initialize_TTemplate();
+        static::initialize_TShortCodes();
+        static::initialize_TActions();
+        static::initialize_TFilters();                     
+
+        static::initialize_TAdmin();            
+
+        static::invokeWrapperActions();             
+
+        if (static::getSettingsValue(static::$settings, 'html-auto-paragraphs') === false) {
+
+            add_filter("tiny_mce_before_init", function ($settings) {
 
 //            // Don't remove line breaks
 //            $settings['remove_linebreaks'] = false;
@@ -357,14 +360,13 @@ final class WordPressHelper implements IWordPressHelper {
 //            // Do not remove redundant BR tags
 //            $settings['remove_redundant_brs'] = false;
 
-                    $settings["extended_valid_elements"] = "*[*]";
+                $settings["extended_valid_elements"] = "*[*]";
 
-                    return $settings;
-                });
-            } 
-            
+                return $settings;
+            });
+        } 
+
             static::$helperInitialized = true;
-        }
         
     }
     

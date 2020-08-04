@@ -80,6 +80,15 @@ class Tools {
     private static function getEnableView() {
         
         return function () {
+            
+            foreach(WP::getForms() as $form) {
+                
+                if($form->getId() == 'wp-devhelper-tools-settings') {
+                    
+                    echo $form->render();
+                    return;
+                }
+            }
 
             WP::addAdminForm("Settings", 'wp-devhelper-tools-settings')
                     ->setOptionPrefix(null)
@@ -106,8 +115,22 @@ class Tools {
 
     private static function getSettingsView(IHelperContext $context) {
         
+
+        
+    
+        
         return function () use ($context) {
 
+            //FIXME: Investigate: why are forms being added twice anyway?
+            foreach(WP::getForms() as $form) {
+
+                if($form->getId() == 'wp-devhelper-settings') {
+
+                    echo $form->render();
+                    return;
+                }
+            }                
+            
             WP::addAdminForm("Settings", 'wp-devhelper-settings')
                     ->setOptionPrefix(null)
                     ->addGroup("General")
@@ -258,7 +281,16 @@ class Tools {
             
             //$errorLogPath = @ini_get(Constants::PHP_ERROR_LOG);
                        
-            
+
+            //FIXME: Investigate: why are forms being added twice anyway?
+            foreach(WP::getForms() as $form) {
+
+                if($form->getId() == 'wp-devhelper-edit-wordpress-settings') {
+
+                    echo $form->render();
+                    return;
+                }
+            } 
             
             WP::addAdminForm("WordPress Settings", 'wp-devhelper-edit-wordpress-settings')
                     ->setOptionPrefix(null)
@@ -535,6 +567,17 @@ HTML;
         
         return function () use ($context) {
 
+
+            //FIXME: Investigate: why are forms being added twice anyway?
+            foreach(WP::getForms() as $form) {
+
+                if($form->getId() == 'wp-devhelper-edit-wordpress-option') {
+
+                    echo $form->render();
+                    return;
+                }
+            } 
+            
             $valueField = WP::textInputField('Value', 'option_value', null, null, null, true);
 
             WP::addAdminForm("Edit Option", 'wp-devhelper-edit-wordpress-option', null, 1, false)
