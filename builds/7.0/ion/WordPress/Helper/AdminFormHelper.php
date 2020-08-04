@@ -371,13 +371,19 @@ TEMPLATE;
             // This is a global settings page or a list edit page
             $paged = filter_input(INPUT_GET, 'paged', FILTER_SANITIZE_NUMBER_INT);
             $listAction = filter_input(INPUT_GET, 'list-action', FILTER_DEFAULT);
-            if (!PHP::isEmpty($listAction)) {
-                // This is a list edit page
-                $postReferrer = WP::getAdminUrl('admin') . '?page=' . $page . (!PHP::isEmpty($form) ? '&form=' . $form : '') . (!PHP::isEmpty($paged) ? '&paged=' . $paged : '');
-            } else {
-                // This is a global settings page
-                $postReferrer = filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL);
-            }
+            //            if(!PHP::isEmpty($listAction)) {
+            //
+            //                // This is a list edit page
+            //
+            //                $postReferrer = WP::getAdminUrl('admin') . '?page=' . $page . (!PHP::isEmpty($form) ? '&form=' . $form : '') . (!PHP::isEmpty($paged) ? '&paged=' . $paged : '');
+            //            }
+            //            else {
+            //
+            //                // This is a global settings page
+            //
+            //                $postReferrer = filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL);
+            //            }
+            $postReferrer = WP::getAdminUrl('admin') . '?page=' . $page . (!PHP::isEmpty($form) ? '&form=' . $form : '') . (!PHP::isEmpty($paged) ? '&paged=' . $paged : '');
         } else {
             $postReferrer = filter_input(INPUT_SERVER, 'HTTP_REFERER', FILTER_SANITIZE_URL);
         }

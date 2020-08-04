@@ -307,7 +307,7 @@ TEMPLATE;
         $data = null;
                 
         $postReferrer = null;
-                       
+        
         $page = PHP::toString(filter_input(INPUT_GET, 'page', FILTER_DEFAULT));        
         $form = PHP::toString(filter_input(INPUT_GET, 'form', FILTER_DEFAULT));
 
@@ -362,8 +362,6 @@ TEMPLATE;
             //TODO
         }         
         
-
-        
         if(!PHP::isEmpty($page)) {
             
             // This is a global settings page or a list edit page
@@ -371,18 +369,20 @@ TEMPLATE;
             $paged = filter_input(INPUT_GET, 'paged', FILTER_SANITIZE_NUMBER_INT);
             $listAction = filter_input(INPUT_GET, 'list-action', FILTER_DEFAULT); 
             
-            if(!PHP::isEmpty($listAction)) {
-                
-                // This is a list edit page
-                
-                $postReferrer = WP::getAdminUrl('admin') . '?page=' . $page . (!PHP::isEmpty($form) ? '&form=' . $form : '') . (!PHP::isEmpty($paged) ? '&paged=' . $paged : '');
-            }
-            else {
-                
-                // This is a global settings page
-                
-                $postReferrer = filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL);
-            }
+//            if(!PHP::isEmpty($listAction)) {
+//                
+//                // This is a list edit page
+//                
+//                $postReferrer = WP::getAdminUrl('admin') . '?page=' . $page . (!PHP::isEmpty($form) ? '&form=' . $form : '') . (!PHP::isEmpty($paged) ? '&paged=' . $paged : '');
+//            }
+//            else {
+//                
+//                // This is a global settings page
+//                
+//                $postReferrer = filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL);
+//            }
+  
+            $postReferrer = WP::getAdminUrl('admin') . '?page=' . $page . (!PHP::isEmpty($form) ? '&form=' . $form : '') . (!PHP::isEmpty($paged) ? '&paged=' . $paged : '');
             
         } else {
             

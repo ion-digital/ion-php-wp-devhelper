@@ -104,6 +104,12 @@ class Tools
     private static function getEnableView()
     {
         return function () {
+            foreach (WP::getForms() as $form) {
+                if ($form->getId() == 'wp-devhelper-tools-settings') {
+                    echo $form->render();
+                    return;
+                }
+            }
             WP::addAdminForm("Settings", 'wp-devhelper-tools-settings')->setOptionPrefix(null)->addGroup("General")->addField(WP::checkBoxInputField("Hidden", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Devhelper settings interface in the 'Tools' menu."))->addField(WP::checkBoxInputField("Fully hidden", Constants::TOOLS_FULLY_HIDDEN_OPTION, null, null, "Fully hide the WP Devhelper settings interface. <br /><br /><strong>Be careful!</strong> You will need to be able to edit your WordPress database options table to revert this - look for the '<em>option_name</em>' with the value '<em>" . Constants::TOOLS_FULLY_HIDDEN_OPTION . "</em>' and remove the record to enable."))->redirect(function ($values) {
                 // /wordpress/wp-admin/tools.php?page=wp-devhelper-enable
                 if ($values[Constants::TOOLS_FULLY_HIDDEN_OPTION] === true && $values[Constants::TOOLS_HIDDEN_OPTION] === true) {
@@ -128,6 +134,13 @@ class Tools
     private static function getSettingsView(IHelperContext $context)
     {
         return function () use($context) {
+            //FIXME: Investigate: why are forms being added twice anyway?
+            foreach (WP::getForms() as $form) {
+                if ($form->getId() == 'wp-devhelper-settings') {
+                    echo $form->render();
+                    return;
+                }
+            }
             WP::addAdminForm("Settings", 'wp-devhelper-settings')->setOptionPrefix(null)->addGroup("General")->addField(WP::checkBoxInputField("Hide settings interface", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Devhelper settings interface (you can enable it again, by navigating to 'Tools &gt; Helper')."))->addField(WP::checkBoxInputField("HTML Auto paragraphs", Constants::TOOLS_AUTO_PARAGRAPHS_OPTION, null, null, "Enable automatic paragraph insertion for content."))->addGroup("Logging", null, null, 1)->addField(WP::checkBoxInputField("Enable logging", Constants::ENABLE_LOGGING, null, null, "Enable logging functionality."))->addField(WP::textInputField("Purge age", Constants::LOGS_PURGE_AGE, null, null, "The amount of days before archived log entries are purged (specify <em>0</em> for never)."))->addField(WP::textInputField("Max displayed log entries", Constants::MAX_DISPLAYED_LOG_ENTRIES, null, null, "The maximum amount of records to display when viewing a log (in the administration panel)."))->addGroup("Development Tools", null, null, 1)->addField(WP::checkBoxInputField("Enable quick 404 override", Constants::QUICK_404_OPTION, null, null, "Override the 404 functionality of the site to immediately display a very simple message and end the script."))->redirect(function ($values) {
                 // /wordpress/wp-admin/tools.php?page=wp-devhelper-enable
                 if ($values[Constants::TOOLS_HIDDEN_OPTION] === true) {
@@ -235,6 +248,13 @@ class Tools
         return function () use($context) {
             echo "<p>This page shows various configruation settings that are important to developers when debugging their projects.<br />More information can be found at <a target=\"_blank\" href=\"" . Constants::WP_CONFIG_DOCUMENTATION_URL . "\">the official documentation</a>.</p>";
             //$errorLogPath = @ini_get(Constants::PHP_ERROR_LOG);
+            //FIXME: Investigate: why are forms being added twice anyway?
+            foreach (WP::getForms() as $form) {
+                if ($form->getId() == 'wp-devhelper-edit-wordpress-settings') {
+                    echo $form->render();
+                    return;
+                }
+            }
             WP::addAdminForm("WordPress Settings", 'wp-devhelper-edit-wordpress-settings')->setOptionPrefix(null)->addGroup("Installation", null, null, 3)->addField(WP::textInputField("Site URI", Constants::SITE_URI, null, null, "The site root URI.", false, false, false, true, true))->addField(WP::textInputField("Site path", Constants::SITE_PATH, null, null, "The site root server path.", false, false, false, true, true))->addField(WP::textInputField("WordPress URI", Constants::WORDPRESS_URI, null, null, "The WordPress installation root URI.", false, false, false, true, true))->addField(WP::textInputField("WordPress path", Constants::WORDPRESS_PATH, null, null, "The WordPress installation root server path.", false, false, false, true, true))->addField(WP::textInputField("WordPress content URI", Constants::WORDPRESS_CONTENT_URI, null, null, "The WordPress installation content root URI.", false, false, false, true, true))->addField(WP::textInputField("WordPress content path", Constants::WORDPRESS_CONTENT_PATH, null, null, "The WordPress installation root server content path.", false, false, false, true, true))->addGroup("Debug Settings", null, null, 3)->addField(WP::checkBoxInputField('Debugging', Constants::WP_CONFIG_DEBUG, null, null, "The value of the " . Constants::WP_CONFIG_DEBUG . " setting in the <em>wp-config.php</em>.", false, true, true))->addField(WP::checkBoxInputField('Display errors (WP)', Constants::WP_CONFIG_DEBUG_DISPLAY, null, null, "The value of the " . Constants::WP_CONFIG_DEBUG_DISPLAY . " setting in the <em>wp-config.php</em>.", false, true, true))->addField(WP::checkBoxInputField('Log errors (WP)', Constants::WP_CONFIG_DEBUG_LOG, null, null, "The value of the " . Constants::WP_CONFIG_DEBUG_LOG . " setting in the <em>wp-config.php</em>.", false, true, true))->addField(WP::textInputField("Error log location", Constants::PHP_ERROR_LOG, null, null, "The location of the PHP error log (the value of <em>ini_get('" . Constants::PHP_ERROR_LOG . "')</em>).", false, false, false, true, true))->addField(WP::textInputField("Log errors (PHP)", Constants::PHP_LOG_ERRORS, null, null, "Whether PHP is currently set to log errors (the value of <em>ini_get('" . Constants::PHP_LOG_ERRORS . "')</em>).", false, false, false, true, true))->addField(WP::textInputField("Display errors (PHP)", Constants::PHP_DISPLAY_ERRORS, null, null, "Whether PHP is currently set to display errors (the value of <em>ini_get('" . Constants::PHP_DISPLAY_ERRORS . "')</em>).", false, false, false, true, true))->addField(WP::checkBoxInputField('Save <em>$wpdb</em> queries', Constants::WP_CONFIG_SAVEQUERIES, null, null, "The value of the " . Constants::WP_CONFIG_SAVEQUERIES . " setting in the <em>wp-config.php</em>.", false, true, true))->addField(WP::checkBoxInputField('Unminified internal styles/scripts', Constants::WP_CONFIG_SCRIPT_DEBUG, null, null, "The value of the " . Constants::WP_CONFIG_SCRIPT_DEBUG . " setting in the <em>wp-config.php</em>.", false, true, true))->addField(WP::checkBoxInputField('Concatenate back-end scripts', Constants::WP_CONFIG_CONCATENATE_SCRIPTS, null, null, "The value of the " . Constants::WP_CONFIG_CONCATENATE_SCRIPTS . " setting in the <em>wp-config.php</em>.", false, true, true))->addGroup("CRON Settings", null, null, 3)->addField(WP::checkBoxInputField('Trigger WP CRON manually', Constants::WP_CONFIG_DISABLE_CRON, null, null, "The value of the " . Constants::WP_CONFIG_DISABLE_CRON . " setting in the <em>wp-config.php</em>.", false, true, true))->addField(WP::checkBoxInputField('Alternate WP CRON trigger method', Constants::WP_CONFIG_ALTERNATE_CRON, null, null, "The value of the " . Constants::WP_CONFIG_ALTERNATE_CRON . " setting in the <em>wp-config.php</em>.", false, true, true))->addField(WP::textInputField('WP CRON timeout lock', Constants::WP_CONFIG_CRON_LOCK_TIMEOUT, null, null, "The value of the " . Constants::WP_CONFIG_CRON_LOCK_TIMEOUT . " setting in the <em>wp-config.php</em>.", false, false, false, true, true))->onRead(function () {
                 $checkBoolConst = function (string $const, bool $default = null) : ?bool {
                     if (defined($const)) {
@@ -428,6 +448,13 @@ HTML;
     private static function getWordPressOptionDetailView(IHelperContext $context)
     {
         return function () use($context) {
+            //FIXME: Investigate: why are forms being added twice anyway?
+            foreach (WP::getForms() as $form) {
+                if ($form->getId() == 'wp-devhelper-edit-wordpress-option') {
+                    echo $form->render();
+                    return;
+                }
+            }
             $valueField = WP::textInputField('Value', 'option_value', null, null, null, true);
             WP::addAdminForm("Edit Option", 'wp-devhelper-edit-wordpress-option', null, 1, false)->setOptionPrefix(null)->addField(WP::textInputField('Name', 'option_name'))->addField($valueField)->addField(WP::checkBoxInputField('Auto-load', 'autoload', null, null, "If the 'Auto-load' field is modified, the option needs to be removed and recreated, and will we appended to the options table."))->readFromSqlTable('options')->onUpdate(function ($index, $newValues, $oldValues) {
                 if ($newValues['autoload'] !== $oldValues['autoload']) {
