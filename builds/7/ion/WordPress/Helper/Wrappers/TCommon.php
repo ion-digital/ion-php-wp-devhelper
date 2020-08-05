@@ -170,7 +170,14 @@ JS;
 
                         foreach($fields as $field) {
 
-                            $wpMenuItem->meta[$field['name']] = static::getOption($field['name'], null, (int) $wpMenuItem->ID);    
+//                            if($wpMenuItem->ID === 17) {
+//                                echo "<pre>";
+//                                var_dump((int) $wpMenuItem->ID);
+//                                var_dump(static::getPostOption($field['name'], (int) $wpMenuItem->ID, null));
+//                                echo "</pre>";
+//                            }
+                            
+                            $wpMenuItem->meta[$field['name']] = static::getPostOption($field['name'], (int) $wpMenuItem->ID, null);    
                         }
                     }
                 }

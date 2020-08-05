@@ -71,6 +71,10 @@ trait TAdmin {
 
             //edit-menu-item-{$field['name']}                
 
+//            echo "<pre>";
+//            var_dump($_REQUEST);
+//            die('</pre>');
+            
             foreach(static::$settingsMenuFields as $menuName => $fields) {               
                                 
                 foreach($fields as $field) {
@@ -84,21 +88,21 @@ trait TAdmin {
 
                     foreach($_REQUEST["menu-item-db-id"] as $i => $v) {
 
-                        static::removeOption($field['name'], (int) $i);
+                        static::removePostOption($field['name'], (int) $i);
                     }
 
                     if(!array_key_exists($key, $_REQUEST)) {
 
                         continue;                                                        
                     }                        
-
+                    
                     if(is_array($_REQUEST[$key])) {
-
+                        
                         foreach($_REQUEST[$key] as $wpItemId => $value) {
 
                             if(!PHP::isEmpty($value)) {
-
-                                static::setOption($field['name'], $value, $wpItemId, null, true);
+                                
+                                static::setPostOption($field['name'], $wpItemId, $value, true);
                             }
                         }
                     }     

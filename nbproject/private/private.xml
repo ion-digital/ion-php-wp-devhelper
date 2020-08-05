@@ -44,6 +44,12 @@
         <group name="PHP">
             <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/source/classes/ion/WordPress/Helper/HelperContext.php</file>
         </group>
-        <group name="ION"/>
+        <group name="ION">
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/Wrappers/TAdmin.php</file>
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/Wrappers/TOptions.php</file>
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/version.json</file>
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/AdminNavMenuEditWalker.php</file>
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/NavMenuWalker.php</file>
+        </group>
     </open-files>
 </project-private>
