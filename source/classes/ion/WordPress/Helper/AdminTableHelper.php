@@ -41,43 +41,46 @@ class AdminTableHelper implements IAdminTableHelper {
     private $parent;
     private $columnGroup;
 //    private $rows = [];
-    private $readProcessor = null;
-    private $deleteProcessor = null;    
-    private $onReadHandler;
-    private $onDeleteHandler;
+//    private $readProcessor = null;
+//    private $deleteProcessor = null;    
+    private $onReadHandlers;
+    private $onDeleteHandlers;
     
     public function __construct(array &$parent) {
         $this->parent = &$parent;
         $this->columnGroup = &$parent["columnGroups"][0];
         
-        $this->onRead(null);
-        $this->onDelete(null);        
+        $this->onReadHandlers = [];
+        $this->onDeleteHandlers = [];        
+        
+//        $this->onRead(null);
+//        $this->onDelete(null);        
     }
     
     
     public function onRead(callable $onRead = null): IAdminTableHelper {
                         
-        $this->onReadHandler = ($onRead !== null ? $onRead : function(array $data = null) { return $data; });
+        $this->onReadHandlers[] = ($onRead !== null ? $onRead : function(array $data = null) { return $data; });
         return $this;
     }
     
     public function onDelete(callable $onDelete = null): IAdminTableHelper {
         
-        $this->onDeleteHandler = ($onDelete !== null ? $onDelete : function(array $data = null) { return $data; });
+        $this->onDeleteHandlers[] = ($onDelete !== null ? $onDelete : function(array $data = null) { return $data; });
         return $this;        
     }    
     
-    protected function doReadHandler(array $data = null): ?array {
-        
-        $tmp = $this->onReadHandler;
-        return $tmp($data);
-    }
-
-    protected function doDeleteHandler(array $data = null): ?array {
-        
-        $tmp = $this->onDeleteHandler;
-        return $tmp($data);
-    }    
+//    protected function doReadHandler(array $data = null): ?array {
+//        
+//        $tmp = $this->onReadHandlers;
+//        return $tmp($data);
+//    }
+//
+//    protected function doDeleteHandler(array $data = null): ?array {
+//        
+//        $tmp = $this->onDeleteHandlers;
+//        return $tmp($data);
+//    }    
     
     public function getDescriptor(): array {
         
@@ -136,30 +139,26 @@ class AdminTableHelper implements IAdminTableHelper {
             'list' => (filter_input(INPUT_GET, 'list', FILTER_DEFAULT)),
         ];   
         
+
+//        var_dump($this->parent['id']);
+//        var_Dump($state);
+//        die("X");
+
+        
+        
         if($state['delete'] === true && $this->parent['id'] === $state['list']) {
             
- 
-            if($this->deleteProcessor === null) {
+            foreach($this->onDeleteHandlers as $handler) {
 
-                //TODO: Default delete processor
+                if ($state['records'] !== null) {
 
-            } else {
+                    $handler(explode(',', $state['records']), $this->parent['key']);
 
-                $tmp = $this->deleteProcessor;
+                } else if ($state['record'] !== null) {
 
-                if($tmp !== null) {
-                    
-                    if ($state['records'] !== null) {
-
-                        $this->doDeleteHandler($tmp(explode(',', $state['records']), $this->parent['key']));
-
-                    } else if ($state['record'] !== null) {
-
-                        $this->doDeleteHandler($tmp([$state['record']], $this->parent['key']));
-                    }
-
+                    $handler([$state['record']], $this->parent['key']);
                 }
-            }            
+            }
 			
             $tmp = parse_url(PHP::getServerRequestUri());
             $scheme = (array_key_exists('scheme', $tmp) ? $tmp['scheme'] . '://' : '');
@@ -173,24 +172,28 @@ class AdminTableHelper implements IAdminTableHelper {
             if (array_key_exists('list-action', $query)) {
                 
                 while(array_key_exists('list-action', $query)) {
+                    
                     unset($query['list-action']);
                 }
 
                 while(array_key_exists('record', $query)) {
+                    
                     unset($query['record']);
                 }
 
                 while(array_key_exists('key', $query)) {
+                    
                     unset($query['key']);
                 }    
                 
                 while(array_key_exists('list', $query)) {
+                    
                     unset($query['list']);
                 }                  
             }
 
             $url = $scheme . $host . $path . (count($query) > 0 ? '?' . http_build_query($query) : '');
-
+            
             WP::redirect($url);            
             
         }
@@ -215,7 +218,7 @@ class AdminTableHelper implements IAdminTableHelper {
         
         if($this->parent['detailView'] !== null) {
             
-            $this->parent['detailView']();            
+            $this->parent['detailView'](false);            
             
         } else {            
             echo 'TODO: generate default detail view';
@@ -237,44 +240,17 @@ class AdminTableHelper implements IAdminTableHelper {
             echo $detail;
 
         } else {
-
-            $read = null;
             
-            if($this->readProcessor === null) {
+            $descriptor = $this->parent; 
+            
+            $values = [];
+            
+            foreach($this->onReadHandlers as $handler) {
                 
-                //FIXME
-                $read = function() { return []; };
-                                
-            } else {
-                
-                $read = $this->readProcessor;        
+                $values = $handler($values, $state['record'], $descriptor['key']);
             }
             
-            $descriptor = $this->parent;
-            
-//            if($state['list'] !== $this->parent['id']) {
-//                
-//                $tmp = null;
-//                
-//                foreach(WP::getTables() as $table) {
-//                    
-//                    if($table->getDescriptor()['id'] === $state['list']) {
-//                        
-//                        $tmp = $table->getDescriptor();
-//                    }
-//                }
-//                
-//                if($tmp !== null) {
-//                    
-//                    $descriptor = $tmp;
-//                }
-//            }
-            
-//            echo "<pre>";
-//            var_dump($descriptor);
-//            die("</pre>");
-            
-            $table = new WordPressTable($descriptor, $this->doReadHandler($read($state['record'], $descriptor['key'])));
+            $table = new WordPressTable($descriptor, $values);
             $table->display();
 
         }
@@ -395,9 +371,10 @@ SQL
     }
     
     public function readFromOptions(string $optionName): IAdminTableHelper {
+        
         return $this->onRead(function($record, $key) use ($optionName) {
             
-            $records = WP::getOption($optionName);
+            $records = WP::getSiteOption($optionName);
 
             if($records === null) {
                 $records = [];
@@ -409,9 +386,10 @@ SQL
     }
     
     public function deleteFromOptions(string $optionName): IAdminTableHelper {
+        
         return $this->onDelete(function(array $items, $key) use ($optionName) {
             
-            $records = WP::getOption($optionName);
+            $records = WP::getSiteOption($optionName);
 
             if($records === null) {
                 $records = [];
@@ -425,7 +403,9 @@ SQL
 
             
             foreach($items as $index) {
+                
                 if(array_key_exists((string) $index, $records)) {
+                    
                     unset($records[(string) $index]);
                 }
             }
@@ -438,7 +418,6 @@ SQL
 //            exit;            
             
             WP::setOption($optionName, $records);             
-            
         }); 
     }    
     

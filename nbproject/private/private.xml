@@ -45,11 +45,14 @@
             <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/source/classes/ion/WordPress/Helper/HelperContext.php</file>
         </group>
         <group name="ION">
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/AdminFormHelper.php</file>
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/WordPressTable.php</file>
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/HelperContext.php</file>
             <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/Wrappers/TAdmin.php</file>
             <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/Wrappers/TOptions.php</file>
-            <file>file:/D:/prj/dev/ion/php/wp-devhelper/version.json</file>
-            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/AdminNavMenuEditWalker.php</file>
-            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/NavMenuWalker.php</file>
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/IHelperContext.php</file>
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/WordPressHelper.php</file>
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/AdminTableHelper.php</file>
         </group>
     </open-files>
 </project-private>

@@ -72,7 +72,7 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
 
         $records = null;
 
-        $limit = PHP::toInt(WP::getOption(Constants::MAX_DISPLAYED_LOG_ENTRIES, null));
+        $limit = PHP::toInt(WP::getSiteOption(Constants::MAX_DISPLAYED_LOG_ENTRIES, null));
 
         if(PHP::isEmpty($limit)) {
             

@@ -269,18 +269,18 @@ trait TAdmin {
 
                 //echo "<pre>";
 
-//                foreach (static::getTables() as $table) {
-//
-//                    $table->process();     
-//
-//                    if($table->getDescriptor()['detailView'] !== null && is_callable($table->getDescriptor()['detailView'])) {
-//                                                
-//                        ob_start();
-//                        $table->getDescriptor()['detailView'](false);
-//                        ob_end_clean();                        
-//                    }
-//                    
-//                }
+                foreach (static::getTables() as $table) {
+
+                    $table->process();     
+
+                    if($table->getDescriptor()['detailView'] !== null && is_callable($table->getDescriptor()['detailView'])) {
+                                                
+                        ob_start();
+                        $table->getDescriptor()['detailView'](false);
+                        ob_end_clean();                        
+                    }
+                    
+                }
 
 //                add_action('admin_post', function() {
 //                    
@@ -1023,81 +1023,37 @@ TEMPLATE;
         return;
     }
 
+//    private static $calls = [];    
+    
     public static function addAdminForm(string $title, string $id, string $action = null, int $columns = 1, bool $hideKey = true): IAdminFormHelper {
 
+//        self::$calls[$id][] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
-//        if($id !== null) {
-//            
-//            echo "<pre>";
-//            debug_print_backtrace();
-//            die("\n\nID used! " . PHP::getCallingClass() . " :: " . PHP::getCallingPath() . "</pre>");
-//        }
-        
-        //$tmp = md5(PHP::count(static::$forms));
-        
-        $tmp = $id;
-        
-        /*
-        if($tmp === null) {
-
-//            $lookBack = 1;
-//            
-//            if(AdminTableHelper::inDetailMode()) {
-//                
-//                $lookBack = 2;
-//            }
-            
-//            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-//            
-//            if(AdminTableHelper::inDetailMode()) {
-//                
-//                $tmp =  $trace[PHP::count($trace) - $lookBack]['file'] . '___line_' . $trace[PHP::count($trace) - $lookBack]['line']; // . '___instance_' . PHP::count(static::$forms);        
-//                
-//            } else {
-//
-//                $tmp =  $trace[PHP::count($trace) - $lookBack]['file'] . '___line_' . $trace[PHP::count($trace) - $lookBack]['line'] . '___instance_' . PHP::count(static::$forms);        
-//            }
-
-            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-            
-            $tmp =  'class__' . $trace[1]['class'] .
-                    '___function__' . $trace[1]['function'] . 
-                    '___line__' . $trace[1]['line'] .
-                    '___file__' . $trace[1]['file'];
-            
-            $tmp = str_replace(' ' , '_', $tmp);
-            $tmp = str_replace(DIRECTORY_SEPARATOR , '_', $tmp);
-            $tmp = str_replace('.' , '_', $tmp);
-            
-            if(!static::isDebugMode()) {
-                
-                $tmp = md5($tmp);
-            }
-            
-//            if(AdminTableHelper::inDetailMode()) {
-//                
-//                echo "<pre>";
-//                echo "$tmp\n\n";
-//                var_Dump($trace);
-//                die("</pre>");
-//            }
-        }
-        */
-        
         //TODO: See if the form has already been registered? If we don't, you might register a form... and nothing gets updated when you save it (and you can't figure out why - wahy).
         foreach(static::$forms as $form) {
             
 //            var_dump($form);
 //            exit;
             
-            if($form->getId() == $tmp) {
-                //TODO: This causes some weird behaviour at the moment... but should really be here to prevent duplicate forms.
-                throw new WordPressHelperException("Form '{$tmp}' has already been defined - please specify a different form ID.");
+            if($form->getId() == $id) {
+                
+                
+                
+//                echo "<pre>";
+//                foreach(static::$calls as $call => $trace) {
+//                    
+//                    echo "[$call] -> [" . PHP::count($trace) . "]\n";
+//                }
+//                echo "</pre>";
+                
+                  //FIXME: This causes some weird behaviour at the moment... but should really be here to prevent duplicate forms.                
+//                throw new WordPressHelperException("Form '{$id}' has already been defined - please specify a different form ID.");                
+                return $form;
             }
         }        
         
         $descriptor = [
-            "id" => $tmp,
+            "id" => $id,
             "title" => $title,
             "action" => $action,
             "notices" => static::$notices,
@@ -1821,7 +1777,19 @@ TEMPLATE;
         return $field;
     }
 
-    public static function button(string $label, string $id = null, string $hint = null, IAdminFormHelper $form = null, bool $span = false, bool $disabled = false, string $javaScript = null, bool $echo = true): array {
+    public static function button(
+            
+        string $label,
+        string $id = null,
+        string $hint = null,
+        IAdminFormHelper $form = null,
+        bool $span = false,
+        bool $disabled = false,
+        string $javaScript = null,
+        bool $ajaxCall = false,
+        bool $echo = true
+            
+    ): array {
 
         $id = ($id !== null) ? $id : static::slugify($label) . '-field';
 
@@ -1838,7 +1806,8 @@ TEMPLATE;
             "formId" => ($form === null ? null : $form->getId())
         ];
 
-        $button["html"] = function ($value = null, $keyName = null, $keyValue = null, string $nameOverride = null) use ($button, $form, $javaScript, $id) {
+        $button["html"] = function ($value = null, $keyName = null, $keyValue = null, string $nameOverride = null)
+            use ($button, $form, $javaScript, $id, $ajaxCall) {
 
             // The following values are NOT applied to the field array - they are temporarily modified here
 
@@ -1865,9 +1834,10 @@ TEMPLATE;
             }
 
             $htmlTemplate .= '>{label}</button>';
-
-            return PHP::strReplaceAll([ "\t", "\n", '  ' /* two spaces */ ], ' ', static::applyTemplate($htmlTemplate, 
-                array_merge($button, [ '__onClick' => <<<JS
+            
+            if($ajaxCall) {
+                
+                $javaScript = <<<JS
 if(\$wp_helper_admin) {
                 
     \$wp_helper_admin.ajax('{$id}', 
@@ -1884,18 +1854,25 @@ if(\$wp_helper_admin) {
 else { 
     console.log('\$wp_helper_admin not defined.'); 
 }
-JS
-            ])));
+JS;
+            }
+            
+            return PHP::strReplaceAll(
+                [ "\t", "\n", '  ' /* two spaces */ ], 
+                ' ',                     
+                static::applyTemplate($htmlTemplate, array_merge($button, [ '__onClick' => PHP::strStripWhiteSpace($javaScript) ]))
+            );            
         };
 
         if ($echo === true) {
+            
             echo $button["html"]();
         }
 
         return $button;
     }
 
-    public static function notify(string $message, string $notice = "notice-info", bool $dismissable = false, bool $echo = false): string {
+    public static function notify(string $message, string $notice = "info", bool $dismissable = false, bool $echo = false): string {
 
         $s = "<div class=\"notice notice-$notice" . ($dismissable === true ? " is-dismissable" : "") . "\"><p>$message</p></div>";
 

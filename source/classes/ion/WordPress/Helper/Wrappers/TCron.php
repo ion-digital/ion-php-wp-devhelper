@@ -66,7 +66,7 @@ trait TCron {
                 
                 if(WP::hasOption('wp-helper::cron-jobs')) {
                     
-                    $snapShot = (array) WP::getOption('wp-helper::cron-jobs');
+                    $snapShot = (array) WP::getSiteOption('wp-helper::cron-jobs');
                     
                     foreach(static::$cronJobs as $jobName => $job) {
                                                                         
