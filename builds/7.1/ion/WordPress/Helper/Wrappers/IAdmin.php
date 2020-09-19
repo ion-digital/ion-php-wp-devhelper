@@ -127,7 +127,7 @@ interface IAdmin
      * @return array
      */
     
-    static function button(string $label, string $id = null, string $hint = null, IAdminFormHelper $form = null, bool $span = false, bool $disabled = false, string $javaScript = null, bool $echo = true) : array;
+    static function button(string $label, string $id = null, string $hint = null, IAdminFormHelper $form = null, bool $span = false, bool $disabled = false, string $javaScript = null, bool $ajaxCall = false, bool $echo = true) : array;
     
     /**
      * method

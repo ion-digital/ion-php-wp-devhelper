@@ -58,17 +58,23 @@ class AdminTableHelper implements IAdminTableHelper {
     }
     
     
-    public function onRead(callable $onRead = null): IAdminTableHelper {
+    public function onRead(callable $onRead): IAdminTableHelper {
                         
-        $this->onReadHandlers[] = ($onRead !== null ? $onRead : function(array $data = null) { return $data; });
+        $this->onReadHandlers[] = $onRead;
         return $this;
     }
     
-    public function onDelete(callable $onDelete = null): IAdminTableHelper {
+    public function onDelete(callable $onDelete): IAdminTableHelper {
         
-        $this->onDeleteHandlers[] = ($onDelete !== null ? $onDelete : function(array $data = null) { return $data; });
+        $this->onDeleteHandlers[] = $onDelete;
         return $this;        
     }    
+    
+    public function read(callable $read): IAdminTableHelper {
+        
+        
+        
+    }
     
 //    protected function doReadHandler(array $data = null): ?array {
 //        
@@ -327,7 +333,7 @@ SQL
     
     public function readFromSqlQuery(string $query): IAdminTableHelper {
         
-        return $this->onRead(function($record, $key = null) use ($query) {
+        return $this->read(function($record, $key = null) use ($query) {
             
             return WP::dbQuery($query);
         });
@@ -341,7 +347,7 @@ SQL
     public function deleteFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null): IAdminTableHelper {
         $self = $this;
 
-        return $this->onDelete(function (array $items, $key) use ($self, $tableNameWithoutPrefix, $tableNamePrefix) {
+        return $this->delete(function (array $items, $key) use ($self, $tableNameWithoutPrefix, $tableNamePrefix) {
         
             global $wpdb;
 
@@ -372,7 +378,7 @@ SQL
     
     public function readFromOptions(string $optionName): IAdminTableHelper {
         
-        return $this->onRead(function($record, $key) use ($optionName) {
+        return $this->read(function($record, $key) use ($optionName) {
             
             $records = WP::getSiteOption($optionName);
 
@@ -387,7 +393,7 @@ SQL
     
     public function deleteFromOptions(string $optionName): IAdminTableHelper {
         
-        return $this->onDelete(function(array $items, $key) use ($optionName) {
+        return $this->delete(function(array $items, $key) use ($optionName) {
             
             $records = WP::getSiteOption($optionName);
 

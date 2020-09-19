@@ -65,8 +65,8 @@ trait TPaths {
     }
     
     public static function getContentPath(): string {
-        
-        return rtrim(constant('WP_CONTENT_DIR'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+                
+        return rtrim((defined('WP_CONTENT_DIR') ? constant('WP_CONTENT_DIR') : ABSPATH . 'wp-content'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     
     public static function getContentUri(): string {

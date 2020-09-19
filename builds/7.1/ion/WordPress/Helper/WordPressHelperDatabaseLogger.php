@@ -92,7 +92,7 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
         $currentTimeStamp = (int) current_time('timestamp');
         $slug = $this->getSlug();
         $records = null;
-        $limit = PHP::toInt(WP::getOption(Constants::MAX_DISPLAYED_LOG_ENTRIES, null));
+        $limit = PHP::toInt(WP::getSiteOption(Constants::MAX_DISPLAYED_LOG_ENTRIES, null));
         if (PHP::isEmpty($limit)) {
             $limit = 100;
         }

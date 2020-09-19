@@ -55,10 +55,10 @@ class AdminTableHelper implements IAdminTableHelper
     private $parent;
     private $columnGroup;
     //    private $rows = [];
-    private $readProcessor = null;
-    private $deleteProcessor = null;
-    private $onReadHandler;
-    private $onDeleteHandler;
+    //    private $readProcessor = null;
+    //    private $deleteProcessor = null;
+    private $onReadHandlers;
+    private $onDeleteHandlers;
     /**
      * method
      * 
@@ -70,8 +70,10 @@ class AdminTableHelper implements IAdminTableHelper
     {
         $this->parent =& $parent;
         $this->columnGroup =& $parent["columnGroups"][0];
-        $this->onRead(null);
-        $this->onDelete(null);
+        $this->onReadHandlers = [];
+        $this->onDeleteHandlers = [];
+        //        $this->onRead(null);
+        //        $this->onDelete(null);
     }
     
     /**
@@ -81,11 +83,9 @@ class AdminTableHelper implements IAdminTableHelper
      * @return IAdminTableHelper
      */
     
-    public function onRead(callable $onRead = null) : IAdminTableHelper
+    public function onRead(callable $onRead) : IAdminTableHelper
     {
-        $this->onReadHandler = $onRead !== null ? $onRead : function (array $data = null) {
-            return $data;
-        };
+        $this->onReadHandlers[] = $onRead;
         return $this;
     }
     
@@ -96,11 +96,9 @@ class AdminTableHelper implements IAdminTableHelper
      * @return IAdminTableHelper
      */
     
-    public function onDelete(callable $onDelete = null) : IAdminTableHelper
+    public function onDelete(callable $onDelete) : IAdminTableHelper
     {
-        $this->onDeleteHandler = $onDelete !== null ? $onDelete : function (array $data = null) {
-            return $data;
-        };
+        $this->onDeleteHandlers[] = $onDelete;
         return $this;
     }
     
@@ -108,28 +106,24 @@ class AdminTableHelper implements IAdminTableHelper
      * method
      * 
      * 
-     * @return ?array
+     * @return IAdminTableHelper
      */
     
-    protected function doReadHandler(array $data = null) : ?array
+    public function read(callable $read) : IAdminTableHelper
     {
-        $tmp = $this->onReadHandler;
-        return $tmp($data);
     }
     
-    /**
-     * method
-     * 
-     * 
-     * @return ?array
-     */
-    
-    protected function doDeleteHandler(array $data = null) : ?array
-    {
-        $tmp = $this->onDeleteHandler;
-        return $tmp($data);
-    }
-    
+    //    protected function doReadHandler(array $data = null): ?array {
+    //
+    //        $tmp = $this->onReadHandlers;
+    //        return $tmp($data);
+    //    }
+    //
+    //    protected function doDeleteHandler(array $data = null): ?array {
+    //
+    //        $tmp = $this->onDeleteHandlers;
+    //        return $tmp($data);
+    //    }
     /**
      * method
      * 
@@ -209,18 +203,16 @@ class AdminTableHelper implements IAdminTableHelper
     public function process() : void
     {
         $state = ['delete' => filter_input(INPUT_GET, Constants::LIST_ACTION_QUERYSTRING_PARAMETER, FILTER_DEFAULT) === 'delete', 'record' => filter_input(INPUT_GET, 'record', FILTER_DEFAULT), 'records' => filter_input(INPUT_GET, 'records', FILTER_DEFAULT), 'list' => filter_input(INPUT_GET, 'list', FILTER_DEFAULT)];
+        //        var_dump($this->parent['id']);
+        //        var_Dump($state);
+        //        die("X");
         if ($state['delete'] === true && $this->parent['id'] === $state['list']) {
-            if ($this->deleteProcessor === null) {
-                //TODO: Default delete processor
-            } else {
-                $tmp = $this->deleteProcessor;
-                if ($tmp !== null) {
-                    if ($state['records'] !== null) {
-                        $this->doDeleteHandler($tmp(explode(',', $state['records']), $this->parent['key']));
-                    } else {
-                        if ($state['record'] !== null) {
-                            $this->doDeleteHandler($tmp([$state['record']], $this->parent['key']));
-                        }
+            foreach ($this->onDeleteHandlers as $handler) {
+                if ($state['records'] !== null) {
+                    $handler(explode(',', $state['records']), $this->parent['key']);
+                } else {
+                    if ($state['record'] !== null) {
+                        $handler([$state['record']], $this->parent['key']);
                     }
                 }
             }
@@ -262,7 +254,7 @@ class AdminTableHelper implements IAdminTableHelper
         ob_start();
         static::setDetailMode(true);
         if ($this->parent['detailView'] !== null) {
-            $this->parent['detailView']();
+            $this->parent['detailView'](false);
         } else {
             echo 'TODO: generate default detail view';
         }
@@ -274,37 +266,12 @@ class AdminTableHelper implements IAdminTableHelper
         if ($state['create'] === true || $state['update'] === true && $detail !== null && $state['list'] === $this->parent['id']) {
             echo $detail;
         } else {
-            $read = null;
-            if ($this->readProcessor === null) {
-                //FIXME
-                $read = function () {
-                    return [];
-                };
-            } else {
-                $read = $this->readProcessor;
-            }
             $descriptor = $this->parent;
-            //            if($state['list'] !== $this->parent['id']) {
-            //
-            //                $tmp = null;
-            //
-            //                foreach(WP::getTables() as $table) {
-            //
-            //                    if($table->getDescriptor()['id'] === $state['list']) {
-            //
-            //                        $tmp = $table->getDescriptor();
-            //                    }
-            //                }
-            //
-            //                if($tmp !== null) {
-            //
-            //                    $descriptor = $tmp;
-            //                }
-            //            }
-            //            echo "<pre>";
-            //            var_dump($descriptor);
-            //            die("</pre>");
-            $table = new WordPressTable($descriptor, $this->doReadHandler($read($state['record'], $descriptor['key'])));
+            $values = [];
+            foreach ($this->onReadHandlers as $handler) {
+                $values = $handler($values, $state['record'], $descriptor['key']);
+            }
+            $table = new WordPressTable($descriptor, $values);
             $table->display();
         }
         $output = ob_get_clean();
@@ -373,7 +340,7 @@ SQL
     
     public function readFromSqlQuery(string $query) : IAdminTableHelper
     {
-        return $this->onRead(function ($record, $key = null) use($query) {
+        return $this->read(function ($record, $key = null) use($query) {
             return WP::dbQuery($query);
         });
     }
@@ -392,7 +359,7 @@ SQL
     public function deleteFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null) : IAdminTableHelper
     {
         $self = $this;
-        return $this->onDelete(function (array $items, $key) use($self, $tableNameWithoutPrefix, $tableNamePrefix) {
+        return $this->delete(function (array $items, $key) use($self, $tableNameWithoutPrefix, $tableNamePrefix) {
             global $wpdb;
             $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
             if ($key !== null && count($items) > 0) {
@@ -420,8 +387,8 @@ SQL
     
     public function readFromOptions(string $optionName) : IAdminTableHelper
     {
-        return $this->onRead(function ($record, $key) use($optionName) {
-            $records = WP::getOption($optionName);
+        return $this->read(function ($record, $key) use($optionName) {
+            $records = WP::getSiteOption($optionName);
             if ($records === null) {
                 $records = [];
             }
@@ -438,8 +405,8 @@ SQL
     
     public function deleteFromOptions(string $optionName) : IAdminTableHelper
     {
-        return $this->onDelete(function (array $items, $key) use($optionName) {
-            $records = WP::getOption($optionName);
+        return $this->delete(function (array $items, $key) use($optionName) {
+            $records = WP::getSiteOption($optionName);
             if ($records === null) {
                 $records = [];
             }

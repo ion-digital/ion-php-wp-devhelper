@@ -372,6 +372,13 @@ class WordPressTable extends WP_List_Table
                 if(array_key_exists('key', $this->descriptor)) {
                     $url .= '&key=' . $this->descriptor['key'];
                 }
+                
+                $paged = PHP::toInt(PHP::filterInput('paged', [ INPUT_GET ]));
+                
+                if($paged) {
+                    
+                    $url .= "&paged={$paged}";
+                }
             }
 
             if(!PHP::isEmpty(WP::getCurrentAdminPage())) {

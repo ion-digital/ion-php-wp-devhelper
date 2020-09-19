@@ -733,7 +733,7 @@ final class HelperContext implements IHelperContext
         if ($this->activationTimeStamp !== null) {
             return $this->activationTimeStamp;
         }
-        $this->activationTimeStamp = PHP::toInt(WP::getOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_TIMESTAMP, PHP::toInt(current_time('timestamp', 1))));
+        $this->activationTimeStamp = PHP::toInt(WP::getSiteOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_TIMESTAMP, PHP::toInt(current_time('timestamp', 1))));
         return $this->activationTimeStamp;
     }
     
@@ -759,7 +759,7 @@ final class HelperContext implements IHelperContext
         if ($this->activationVersion !== null) {
             return $this->activationVersion;
         }
-        $tmp = WP::getOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_VERSION, null);
+        $tmp = WP::getSiteOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_VERSION, null);
         if ($tmp === null) {
             return null;
         }

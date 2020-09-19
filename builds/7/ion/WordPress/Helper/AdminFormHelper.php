@@ -19,6 +19,8 @@ use \ion\WordPress\Helper\Wrappers\OptionMetaType;
 
 class AdminFormHelper implements IAdminFormHelper {
     
+    private const WP_HELPER_LEGACY = 'WP_HELPER_LEGACY';
+    
     public static function createGroupDescriptorInstance(string $title = null, string $description = null, string $id = null, int $columns = null): array {    
 
         return [
@@ -30,20 +32,21 @@ class AdminFormHelper implements IAdminFormHelper {
         ];
     }
     
-    private $raw;
+    private $useSerialization;
     private $descriptor;
     private $group;
     private $processed;
     private $output;
-//    private $readProcessor;
-//    private $createProcessor;
-//    private $updateProcessor;
+
     private $redirectProcessor;
     private $optionPrefix;
     private $foreignKeys;
-    private $onReadHandler;
-    private $onCreateHandler;
-    private $onUpdateHandler;
+    
+    private $onReadHandlers;
+    private $onCreateHandlers;
+    private $onUpdateHandlers;
+    
+    private $rendered;
     
     public function __construct(array &$descriptor) {
         $this->descriptor = &$descriptor;
@@ -52,53 +55,57 @@ class AdminFormHelper implements IAdminFormHelper {
         $this->output = null;
         $this->foreignKeys = [];        
         
+        $this->onReadHandlers = [];
+        $this->onCreateHandlers = [];
+        $this->onUpdateHandlers = [];        
+        
         $this->setOptionPrefix(null);
-        $this->setRawOptionOperations(false); //TODO: Need to make this true, without impacting legacy modules
+        $this->setUseSerialization(defined(self::WP_HELPER_LEGACY) && constant(self::WP_HELPER_LEGACY) === true ? true : false );
         
-        $this->onRead(null);
-        $this->onCreate(null);
-        $this->onUpdate(null);
+//        $this->onRead(null);
+//        $this->onCreate(null);
+//        $this->onUpdate(null);
         
-        $this->readFromOptions(null); 
-        $this->createToOptions(null);
-        $this->updateToOptions(null);
+//        $this->readFromOptions(null); 
+//        $this->createToOptions(null);
+//        $this->updateToOptions(null);
+        
+        $this->rendered = false;
     }
     
     public function onRead(callable $onRead = null): IAdminFormHelper {
-                        
-        $this->onReadHandler = $onRead;
+        
+        if($this->rendered) {
+            
+            return $this;
+        }
+        
+        $this->onReadHandlers[] = $onRead;
         return $this;
     }
     
     public function onCreate(callable $onCreate = null): IAdminFormHelper {
         
-        $this->onCreateHandler = $onCreate;
+        if($this->rendered) {
+            
+            return $this;
+        }
+        
+        $this->onCreateHandlers[] = $onCreate;
         return $this;        
     }
     
     public function onUpdate(callable $onUpdate = null): IAdminFormHelper {
                 
-        $this->onUpdateHandler = $onUpdate;
+        
+        if($this->rendered) {
+            
+            return $this;
+        }        
+        
+        $this->onUpdateHandlers[] = $onUpdate;
         return $this;        
     }    
-    
-//    protected function doReadHandler(array $data = null): ?array {
-//        
-//        $tmp = $this->onReadHandler;
-//        return $tmp($data);
-//    }
-//    
-//    protected function doCreateHandler(array $data = null): ?array {
-//        
-//        $tmp = $this->onCreateHandler;
-//        return $tmp($data);
-//    }
-//    
-//    protected function doUpdateHandler(array $data = null): ?array {
-//        
-//        $tmp = $this->onUpdateHandler;
-//        return $tmp($data);
-//    }
     
     public function getId(): string {
         return $this->descriptor['id'];
@@ -106,6 +113,11 @@ class AdminFormHelper implements IAdminFormHelper {
     
     public function addGroup(string $title = null, string $description = null, string $id = null, int $columns = null): IAdminFormHelper {
 
+        if($this->rendered) {
+            
+            return $this;
+        }
+        
         $groupDescriptor = static::createGroupDescriptorInstance($title, $description, $id, $columns);
 
         if ((count($this->descriptor["groups"]) === 1) && (count($this->descriptor["groups"][0]["fields"]) === 0 )) {
@@ -120,11 +132,22 @@ class AdminFormHelper implements IAdminFormHelper {
     }
     
     public function addField(array $fieldDescriptor): IAdminFormHelper {
+        
+        if($this->rendered) {
+            
+            return $this;
+        }
+        
         $this->group["fields"][] = $fieldDescriptor;
         return $this;
     }
     
     public function addForeignKey(string $name, int $value): IAdminFormHelper {
+        
+        if($this->rendered) {
+            
+            return $this;
+        }
         
         $this->foreignKeys[$name] = $value;
         
@@ -135,8 +158,95 @@ class AdminFormHelper implements IAdminFormHelper {
         $this->process($post);
         return $this->render($echo);
     }
+    
+    private function setOption(string $key, /* mixed */ $value = null, int $metaId = null, $type = null): void {
+    
+        if($metaId === null && $type !== null) {
+            
+            $type = OptionMetaType::POST;
+        }        
+        
+               
+        $type = (string) $type;        
+        
+        if($this->getUseSerialization()) {
+            
+            $value = ($value === null ? null : @unserialize($value));
+        }
+        
+        if($type === OptionMetaType::POST) {
 
-    private function renderRows(array &$state, /* int */ $columns, array $rows, array $data = null, int $postId = null) {
+            WP::setPostOption($key, $metaId, $value);
+            return;
+        }
+
+        if($type === OptionMetaType::TERM) {
+
+            WP::setTermOption($key, $metaId, $value);
+            return;
+        }
+
+        if($type === OptionMetaType::USER) {
+
+            WP::setUserOption($key, $metaId, $value);
+            return;
+        }
+
+        if($type === OptionMetaType::COMMENT) {
+
+            WP::setCommentOption($key, $metaId, $value);
+            return;
+        }
+
+        WP::setSiteOption($key, $value);
+        return;
+    }
+    
+    private function getOption(string $key, /* mixed */ $default = null, int $metaId = null, $type = null) { 
+        
+        if($metaId === null && $type !== null) {
+            
+            $type = OptionMetaType::POST;
+        }        
+             
+        $type = (string) $type; 
+
+        $dbValue = null;
+        
+        if($type === OptionMetaType::POST) {
+
+            $dbValue = WP::getPostOption($key, $metaId, null);
+        }
+
+        else if($type === OptionMetaType::TERM) {
+
+            $dbValue = WP::getTermOption($key, $metaId, null);
+        }
+
+        else if($type === OptionMetaType::USER) {
+
+            $dbValue = WP::getUserOption($key, $metaId, null);
+        }
+
+        else if($type === OptionMetaType::COMMENT) {
+
+            $dbValue = WP::getCommentOption($key, $metaId, null);
+        }
+        
+        else {
+            
+            $dbValue = WP::getSiteOption($key, $metaId, null);
+        }
+        
+        if($this->getUseSerialization()) {
+            
+            $dbValue = ($dbValue === null ? null : @unserialize($dbValue));
+        }                
+        
+        return $dbValue;
+    }
+
+    private function renderRows(array &$state, /* int */ $columns, array $rows, array $data = null, int $metaId = null) {
 
         $output = "";
 
@@ -208,9 +318,11 @@ TEMPLATE;
                         }
                     } else {
                         
-                        if(array_key_exists('name', $field)) {
+                        if(array_key_exists('name', $field) && !$state['create']) {
                             
-                            $dbValue = WP::getOption($field['name'], '', $postId, null, $this->getRawOptionOperations());
+//                            $dbValue = WP::getOption($field['name'], '', $metaId, null, $this->getRawOptionOperations());
+                            $dbValue = $this->getOption($field['name'], '', $metaId, null);
+                            
                         }
                     }
 
@@ -296,9 +408,12 @@ TEMPLATE;
     public function render(bool $echo = true): string {
 
         if ($this->output !== null) {
+            
             return $this->output;
         }
 
+        $this->rendered = true;
+        
 //        $title = $this->descriptor["title"];
 
         $formAction = null;
@@ -389,6 +504,8 @@ TEMPLATE;
             $postReferrer = filter_input(INPUT_SERVER, 'HTTP_REFERER', FILTER_SANITIZE_URL);            
         }
         
+//        die("HERE: {$postReferrer}");
+        
         // If we couldn't find a post referrer - keep this as a failsafe
     
         if(PHP::isEmpty($postReferrer)) {
@@ -404,32 +521,24 @@ TEMPLATE;
                 $formAction = '?' . Constants::LIST_ACTION_QUERYSTRING_PARAMETER . '=create';
                 
             } else if ($state['update'] === true) {
+                
                 $formAction = '?' . Constants::LIST_ACTION_QUERYSTRING_PARAMETER . '=update';
 
                 if ($state['record'] !== null && $state['key'] !== null) {
                     $formAction .= '&record=' . $state['record'];
 
+                    foreach($this->onReadHandlers as $handler) {
 
-                    $tmp = $this->onReadHandler;
-
-                    if($tmp !== null) {
-                        
-                        //$data = $tmp($state['record']);
-                        
-                        $data = $tmp($state['record'], $state['key'], $metaId, $metaType);
+                        $data = $handler($state['record'], $state['key'], $metaId, $metaType);
                     }
+
                 }
                 
             } else {
                     
-                $tmp = $this->onReadHandler;
+                foreach($this->onReadHandlers as $handler) {               
 
-//                var_dump($state);
-//                die('HERE');
-                
-                if($tmp !== null) {                
-
-                    $data = $tmp(null, null, $metaId, $metaType);
+                    $data = $handler(null, null, $metaId, $metaType);
                     
                     if($data !== null && !PHP::isAssociativeArray($data) && PHP::isCountable($data) && count($data) > 0) {
 
@@ -639,23 +748,6 @@ TEMPLATE;
         return $output;
     }
 
-
-//    public function update(callable $update): IAdminFormHelper {
-//        $this->updateProcessor = $update;
-//        return $this;
-//    }
-//
-//    
-//    public function create(callable $create): IAdminFormHelper {
-//        $this->createProcessor = $create;
-//        return $this;
-//    }
-//    
-//    public function read(callable $read): IAdminFormHelper {
-//        $this->readProcessor = $read;
-//        return $this;
-//    }
-    
     private static function getTypeParameter($field, /* mixed */ $value) /* : string */ {
 
         switch ($value) {
@@ -682,15 +774,15 @@ TEMPLATE;
         return $this->optionPrefix;
     }
     
-    public function setRawOptionOperations(bool $raw): IAdminFormHelper {
+    public function setUseSerialization(bool $useSerialization): IAdminFormHelper {
         
-        $this->raw = $raw;
+        $this->useSerialization = $useSerialization;
         return $this;
     }
     
-    public function getRawOptionOperations(): bool {
+    public function getUseSerialization(): bool {
         
-        return $this->raw;
+        return $this->useSerialization;
     }    
    
     
@@ -700,10 +792,12 @@ TEMPLATE;
 
         if($optionName !== null) {
             
-            return $this->onRead(function(/* string */ $record = null, string $key = null, int $metaId = null, OptionMetaType $type = null) use ($self, $optionName) {
+            return $this->onRead(function(/* string */ $record = null, string $key = null, int $metaId = null, /* string / OptionMetaType(!!) */ $type = null) use ($self, $optionName) {
 
-                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());                    
+//                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());                    
 
+                        $optionRecords = $this->getOption($optionName, [], $metaId, $type);                    
+                
                         $result = null;
 
                         if (PHP::isCountable($optionRecords) && count($optionRecords) > 0) {
@@ -726,7 +820,7 @@ TEMPLATE;
                     });
         }
         
-        return $this->onRead(function(/* string */ $record = null, string $key = null, int $metaId = null, OptionMetaType $type = null) use ($self) {
+        return $this->onRead(function(/* string */ $record = null, string $key = null, int $metaId = null,  /* string / OptionMetaType(!!) */ $type = null) use ($self) {
         
             $result = null;
             
@@ -736,13 +830,11 @@ TEMPLATE;
                     
                     $key = $field['name'];                                    
                     
-                    $result[$key] = WP::getOption(($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key, null, $metaId, $type, $this->getRawOptionOperations());
+//                    $result[$key] = WP::getOption(($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key, null, $metaId, $type, $this->getRawOptionOperations());
+                    $result[$key] = $this->getOption(($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key, null, $metaId, $type); 
                 }
             }            
-            
 
-
-            
             return $result;
         });
     }
@@ -752,46 +844,50 @@ TEMPLATE;
 
         if($optionName !== null) {
             
-            return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, OptionMetaType $type = null) use ($self, $optionName) {
+            return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, /* string / OptionMetaType(!!) */ $type = null) use ($self, $optionName) {
 
-                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
+//                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
+                        $optionRecords = $this->getOption($optionName, [], $metaId, $type);
+                
+                if (count($optionRecords) > 0) {
 
-                        if (count($optionRecords) > 0) {
+                    if ((array_key_exists((string) $index, $optionRecords) && $metaId === null) || $metaId !== null) {
 
-                            if ((array_key_exists((string) $index, $optionRecords) && $metaId === null) || $metaId !== null) {
+                        $optionRecord = [];
 
-                                $optionRecord = [];
+                        if($metaId === null) {
 
-                                if($metaId === null) {
+                            $optionRecord = $optionRecords[(string) $index];                                                   
 
-                                    $optionRecord = $optionRecords[(string) $index];                                                   
+                            foreach ($newValues as $key => $value) {
 
-                                    foreach ($newValues as $key => $value) {
-                                        $optionRecord[$key] = $value;
-                                    }         
+                                $optionRecord[$key] = $value;
+                            }         
 
-                                    $optionRecords[(string) $index] = $optionRecord;
+                            $optionRecords[(string) $index] = $optionRecord;
 
-                                } else {
+                        } else {
 
-                                    $optionRecord = [];
+                            $optionRecord = [];
 
-                                    foreach ($newValues as $key => $value) {
-                                        $optionRecord[$key] = $value;
-                                    }    
+                            foreach ($newValues as $key => $value) {
 
-                                    $optionRecords = [$optionRecord];
-                                }                            
-                            } 
-                        }
+                                $optionRecord[$key] = $value;
+                            }    
 
-                        WP::setOption($optionName, $optionRecords, $metaId, $type, $this->getRawOptionOperations());
+                            $optionRecords = [$optionRecord];
+                        }                            
+                    } 
+                }
+
+//                        WP::setOption($optionName, $optionRecords, $metaId, $type, $this->getRawOptionOperations());
+                        $this->setOption($optionName, $optionRecords, $metaId, $type);
                     });
         }
         
 
         
-        return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, OptionMetaType $type = null) use ($self) {
+        return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, /* string / OptionMetaType(!!) */ $type = null) use ($self) {
             
             $options = [];
             
@@ -807,8 +903,11 @@ TEMPLATE;
             
             foreach($options as $key => $value) {
                 
-                WP::setOption($key, $value, $metaId, $type, $this->getRawOptionOperations());
+//                WP::setOption($key, $value, $metaId, $type, $this->getRawOptionOperations());
+                $this->setOption($key, $value, $metaId, $type);
             }            
+            
+            return;
         });
     }
     
@@ -819,24 +918,27 @@ TEMPLATE;
 
         if($optionName !== null) {
                     
-            return $this->onCreate(function (array $values, string $key = null, int $metaId = null, OptionMetaType $type = null) use ($optionName) {
+            return $this->onCreate(function (array $values, string $key = null, int $metaId = null, /* string / OptionMetaType(!!) */ $type = null) use ($optionName) {
 
-                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
+//                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
+                $optionRecords = $this->getOption($optionName, [], $metaId, $type);
 
-                        if(array_key_exists($key, $values)) {
+                if(array_key_exists($key, $values)) {
 
-                            $optionRecords[$values[(string) $key]] = $values;
-                            
-                        } else {
+                    $optionRecords[$values[(string) $key]] = $values;
 
-                            $optionRecords[] = $values;
-                        }
+                } else {
 
-                        WP::setOption($optionName, $optionRecords, $metaId, $type, $this->getRawOptionOperations());
-                    });
+                    $optionRecords[] = $values;
+                }
+
+//                        WP::setOption($optionName, $optionRecords, $metaId, $type, $this->getRawOptionOperations());                        
+                $this->setOption($optionName, $optionRecords, $metaId, $type);
+                return;
+            });
         }
         
-        return $this->onCreate(function (array $values, string $key = null, int $metaId = null, OptionMetaType $type = null) use ($optionName) {
+        return $this->onCreate(function (array $values, string $key = null, int $metaId = null, /* string / OptionMetaType(!!) */ $type = null) use ($optionName) {
            
             $options = [];              
             
@@ -847,7 +949,9 @@ TEMPLATE;
 
             foreach($options as $key => $value) {
                 
-                WP::setOption($key, $value, $metaId, $type, $this->getRawOptionOperations());
+//                WP::setOption($key, $value, $metaId, $type, $this->getRawOptionOperations());
+                $this->setOption($key, $value, $metaId, $type);
+                return;
             }     
         });
     }         
@@ -915,10 +1019,9 @@ TEMPLATE;
 
                 $data = null;                                  
                 
-                if ($this->onReadHandler !== null) {
+                foreach($this->onReadHandlers as $handler) {
                     
-                    $tmp = $this->onReadHandler;
-                    $data = $tmp($state['record'], $state['key'], $metaId, $metaType);
+                    $data = $handler($state['record'], $state['key'], $metaId, $metaType);
                                         
                     // We want the read processor to return nulls; but for updating, we only want to know which values are not null.
                     if($data !== null && PHP::isAssociativeArray($data)) {
@@ -1021,54 +1124,22 @@ TEMPLATE;
                     //}            
                 }
                 
-//echo '<pre>';                
-//
-//var_dump($state);
-//var_dump($data);
-//var_dump($oldValues);
-//var_dump($newValues);
-//
-//echo '</pre>';
-////exit;                           
-                
-//                if(PHP::strStartsWith($this->descriptor['id'], 'ion-word-press')) {
-//                    
-//                    var_dump($state);
-//                    die("X");
-//                }
-                
-//                        if($metaId !== null && $state['key'] != 'ion-connect-modal-settings') {
-//                            var_dump($_POST);
-//                            var_dump($state);
-//                            var_dump($this->onUpdateHandler);
-//                            var_dump($this->onCreateHandler);
-//                            var_dump($metaId);
-//                            die("ZIMAR");
-//                        }    
-                
-//                if($metaType->toValue() == OptionMetaType::TERM) {
-//                    
-//                    var_dump($state);
-//                    var_dump($newValues);
-//                    var_dump($this->onUpdateHandler);
-//                    var_dump($this->onCreateHandler);
-//                    var_dump(PHP::isInt($metaId));
-//                    
-//                    die('xXx');
-//                    
-//                }
-                
                 if ($state['create'] === false && $state['update'] === false) {
                     
-                
-                    
-                    if ($this->onUpdateHandler === null || ($this->onCreateHandler === null && PHP::isInt($metaId))) {
 
+                    
+//                    if ($this->onUpdateHandlers === [] || ($this->onCreateHandlers === [] && PHP::isInt($metaId))) {
+                    if ($this->onUpdateHandlers === []) {
+                        
                         foreach ($newValues as $key => $value) {
                             
-                            WP::setOption($key, $value, $metaId, $metaType, $this->getRawOptionOperations());
+//                            WP::setOption($key, $value, $metaId, $metaType, $this->getRawOptionOperations());
+                            $this->setOption($key, $value, $metaId, $metaType);
                         }
-                        
+
+//                    echo "<pre>";
+//                    var_dump($newValues);
+//                die("</pre>");
 
                     } else {
                                 
@@ -1081,13 +1152,21 @@ TEMPLATE;
                         
                         if(PHP::isInt($metaId) && (PHP::isCountable($oldValues) && count($oldValues) === 0)) {
                             
-                            $tmp = $this->onCreateHandler;
-                            $tmp($newValues, $state['key'], $metaId, $metaType);
+//                            $tmp = $this->onCreateHandlers;
+                            
+                            foreach($this->onCreateHandlers as $handler) {
+                                
+                                $handler($newValues, $state['key'], $metaId, $metaType);
+                            }
                             
                         } else {
                             
-                            $tmp = $this->onUpdateHandler;
-                            $tmp($state['record'], $newValues, $oldValues, $state['key'], $metaId, $metaType);
+//                            $tmp = $this->onUpdateHandlers;
+                            
+                            foreach($this->onUpdateHandlers as $handler) {
+                                
+                                $handler($state['record'], $newValues, $oldValues, $state['key'], $metaId, $metaType);
+                            }
                         }
                     }
                     
@@ -1095,22 +1174,33 @@ TEMPLATE;
                     
                     // List Edit Form
 
-                    if ($this->onCreateHandler === null) {
+//                    if ($this->onCreateHandlers === null) {
+//
+//                        //TODO: Need a default handler here
+//                    } else {
+//                        $tmp = $this->onCreateHandlers;
+//                        $tmp($newValues, $state['key']);
+//                    }
+                    
+                    
+                    foreach($this->onCreateHandlers as $handler) {
 
-                        //TODO: Need a default handler here
-                    } else {
-                        $tmp = $this->onCreateHandler;
-                        $tmp($newValues, $state['key']);
+                        $handler($newValues, $state['key']);
                     }
                     
                 } else if ($state['create'] === false && $state['update'] === true) {
                     
-                    if ($this->onUpdateHandler === null) {
-                        //TODO: Need a default handler here
-                        
-                    } else {
-                        $tmp = $this->onUpdateHandler;
-                        $tmp($state['record'], $newValues, $oldValues, $state['key'], $metaId);
+//                    if ($this->onUpdateHandlers === null) {
+//                        //TODO: Need a default handler here
+//                        
+//                    } else {
+//                        $tmp = $this->onUpdateHandlers;
+//                        $tmp($state['record'], $newValues, $oldValues, $state['key'], $metaId);
+//                    }
+                    
+                    foreach($this->onUpdateHandlers as $handler) {
+
+                        $handler($state['record'], $newValues, $oldValues, $state['key'], $metaId);
                     }
                 }
                 
@@ -1134,6 +1224,12 @@ TEMPLATE;
                     $host = (array_key_exists('host', $tmp) ? $tmp['host'] : '');
                     $path = (array_key_exists('path', $tmp) ? $tmp['path'] : '');
 
+//                    echo "<pre>";
+//                    var_dump(filter_input(INPUT_POST, '__postReferrer', FILTER_SANITIZE_URL));
+//                    var_dump($_POST);
+//                    var_dump($tmp);
+//                    die("</pre>");
+                    
                     $query = [];
 
                     array_key_exists('query', $tmp) ? parse_str($tmp['query'], $query) : [];
@@ -1163,7 +1259,7 @@ TEMPLATE;
 
                     $url = $scheme . $host . $path . (count($query) > 0 ? '?' . http_build_query($query) : '');                   
 
-                    //die($url);
+//                    die($url);
                     
                     if($metaId === null) {
                         
@@ -1214,8 +1310,8 @@ TEMPLATE;
                         global $wpdb;
 
                         if ($state['key'] !== null) {
+                            
                             $query = "SELECT * FROM ( {$query} ) AS q WHERE CAST(`{$state['key']}` AS CHAR(255)) LIKE ('{$wpdb->esc_like($record)}')";
-
                         }
                     }
 

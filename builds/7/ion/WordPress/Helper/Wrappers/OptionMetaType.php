@@ -16,19 +16,19 @@ namespace ion\WordPress\Helper\Wrappers;
 
 class OptionMetaType {
     
-    public const POST = 1;
-    public const TERM = 2;
-    public const USER = 3;
-    public const COMMENT = 4;
+    public const POST = 'WP_Post';
+    public const TERM = 'WP_Term';
+    public const USER = 'WP_User';
+    public const COMMENT = 'WP_Comment';
     
     private $value = null;
     
-    public static function create(int $value = null): OptionMetaType {
+    public static function create(string $value = null): OptionMetaType {
         
         return new static($value);
     }
     
-    public function __construct(int $value = null) {
+    public function __construct(string $value = null) {
         
         $this->value = $value;
     }
@@ -38,7 +38,7 @@ class OptionMetaType {
         return (string) $this->value;
     }
     
-    public function toValue(): ?int {
+    public function toValue(): ?string {
         
         return $this->value;
     }

@@ -52,7 +52,7 @@ trait TCron
                 // We have a couple of CRON jobs - first check what has changed
                 WP::registerLog('cron', 'CRON');
                 if (WP::hasOption('wp-helper::cron-jobs')) {
-                    $snapShot = (array) WP::getOption('wp-helper::cron-jobs');
+                    $snapShot = (array) WP::getSiteOption('wp-helper::cron-jobs');
                     foreach (static::$cronJobs as $jobName => $job) {
                         if (!array_key_exists($jobName, $snapShot) || wp_next_scheduled($jobName) === false) {
                             // this is a new job

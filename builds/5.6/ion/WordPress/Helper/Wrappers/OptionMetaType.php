@@ -13,10 +13,10 @@ namespace ion\WordPress\Helper\Wrappers;
 
 class OptionMetaType
 {
-    const POST = 1;
-    const TERM = 2;
-    const USER = 3;
-    const COMMENT = 4;
+    const POST = 'WP_Post';
+    const TERM = 'WP_Term';
+    const USER = 'WP_User';
+    const COMMENT = 'WP_Comment';
     private $value = null;
     /**
      * method
@@ -56,7 +56,7 @@ class OptionMetaType
     /**
      * method
      * 
-     * @return ?int
+     * @return ?string
      */
     
     public function toValue()
