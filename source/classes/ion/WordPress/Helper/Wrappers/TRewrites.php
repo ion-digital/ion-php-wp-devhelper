@@ -63,6 +63,8 @@ trait TRewrites {
         //#TODO : https://premium.wpmudev.org/forums/topic/301-redirects-on-multisite/
         
         flush_rewrite_rules($hard);
+
+die("HERE");
         
         if(!is_multisite() || !$hard) {
             
