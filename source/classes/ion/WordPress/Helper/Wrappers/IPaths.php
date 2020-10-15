@@ -38,7 +38,7 @@ interface IPaths {
     
     static function getWordPressUri(): string;
     
-    static function getSitePath(): string;
+    static function getSitePath(bool $network = false): string;
     
     static function getSiteUri(): string;
     

@@ -213,6 +213,8 @@ body.wp-admin.wp-devhelper.wp-devhelper-cron #wpwrap,
 body.wp-admin.wp-devhelper.wp-devhelper-cron #wpbody,
 body.wp-admin.wp-devhelper.wp-devhelper-phpinfo #wpwrap,
 body.wp-admin.wp-devhelper.wp-devhelper-phpinfo #wpbody,
+body.wp-admin.wp-devhelper.wp-devhelper-htaccess #wpwrap,
+body.wp-admin.wp-devhelper.wp-devhelper-htaccess #wpbody,
 body.wp-admin.wp-devhelper.wp-devhelper-phperrors #wpwrap,
 body.wp-admin.wp-devhelper.wp-devhelper-phperrors #wpbody {
     height: 100%;
@@ -222,6 +224,8 @@ body.wp-admin.wp-devhelper.wp-devhelper-cron #wpbody-content div.wrap,
 body.wp-admin.wp-devhelper.wp-devhelper-cron #wpbody-content,
 body.wp-admin.wp-devhelper.wp-devhelper-phpinfo #wpbody-content div.wrap,
 body.wp-admin.wp-devhelper.wp-devhelper-phpinfo #wpbody-content,
+body.wp-admin.wp-devhelper.wp-devhelper-htaccess #wpbody-content div.wrap,
+body.wp-admin.wp-devhelper.wp-devhelper-htaccess #wpbody-content,
 body.wp-admin.wp-devhelper.wp-devhelper-phperrors #wpbody-content div.wrap,
 body.wp-admin.wp-devhelper.wp-devhelper-phperrors #wpbody-content {
     height: 70%;

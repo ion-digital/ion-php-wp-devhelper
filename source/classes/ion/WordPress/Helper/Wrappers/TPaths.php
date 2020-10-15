@@ -54,11 +54,16 @@ trait TPaths {
         return rtrim(get_site_url(), '/') . '/';
     }
     
-    public static function getSitePath(): string {
+    public static function getSitePath(bool $network = false): string {
+
+        if(is_multisite() && $network) {
+        
+            return PHP::getServerDocumentRoot();
+        }
         
         return rtrim(get_home_path(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
-    
+        
     public static function getSiteUri(): string {
         
         return rtrim(get_home_url(), '/') . '/';
