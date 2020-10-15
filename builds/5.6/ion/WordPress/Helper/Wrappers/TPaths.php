@@ -82,11 +82,15 @@ trait TPaths
     /**
      * method
      * 
+     * 
      * @return string
      */
     
-    public static function getSitePath()
+    public static function getSitePath($network = false)
     {
+        if (is_multisite() && $network) {
+            return PHP::getServerDocumentRoot();
+        }
         return rtrim(get_home_path(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     

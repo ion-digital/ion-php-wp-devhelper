@@ -268,6 +268,9 @@ class AdminTableHelper implements IAdminTableHelper
         } else {
             $descriptor = $this->parent;
             $values = [];
+            if (PHP::count($this->onReadHandlers) === 0) {
+                $this->readFromOptions($state['record']);
+            }
             foreach ($this->onReadHandlers as $handler) {
                 $values = $handler($values, $state['record'], $descriptor['key']);
             }
@@ -340,7 +343,7 @@ SQL
     
     public function readFromSqlQuery(string $query) : IAdminTableHelper
     {
-        return $this->read(function ($record, $key = null) use($query) {
+        return $this->onRead(function ($record, $key = null) use($query) {
             return WP::dbQuery($query);
         });
     }
@@ -359,7 +362,7 @@ SQL
     public function deleteFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null) : IAdminTableHelper
     {
         $self = $this;
-        return $this->delete(function (array $items, $key) use($self, $tableNameWithoutPrefix, $tableNamePrefix) {
+        return $this->onDelete(function (array $items, $key) use($self, $tableNameWithoutPrefix, $tableNamePrefix) {
             global $wpdb;
             $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
             if ($key !== null && count($items) > 0) {
@@ -387,7 +390,7 @@ SQL
     
     public function readFromOptions(string $optionName) : IAdminTableHelper
     {
-        return $this->read(function ($record, $key) use($optionName) {
+        return $this->onRead(function ($record, $key) use($optionName) {
             $records = WP::getSiteOption($optionName);
             if ($records === null) {
                 $records = [];
@@ -405,7 +408,7 @@ SQL
     
     public function deleteFromOptions(string $optionName) : IAdminTableHelper
     {
-        return $this->delete(function (array $items, $key) use($optionName) {
+        return $this->onDelete(function (array $items, $key) use($optionName) {
             $records = WP::getSiteOption($optionName);
             if ($records === null) {
                 $records = [];
@@ -426,7 +429,7 @@ SQL
             //            echo $key;
             //            echo "</pre>";
             //            exit;
-            WP::setOption($optionName, $records);
+            WP::setSiteOption($optionName, $records);
         });
     }
 

@@ -476,6 +476,29 @@ HTML;
      * @return mixed
      */
     
+    private static function getHtAccessView(IHelperContext $context)
+    {
+        return function () use($context) {
+            $ajaxUrl = WP::getAjaxUrl('wp-devhelper-htaccess');
+            $path = WP::getSitePath(is_multisite()) . '.htaccess';
+            echo <<<HTML
+<p>Path: <strong>{$path}</strong></p>
+<div class="wp-devhelper htaccess viewport-container">
+    <div class="wp-devhelper htaccess viewport">
+        <iframe src="{$ajaxUrl}"></iframe>
+    </div>
+</div>    
+HTML;
+        };
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return mixed
+     */
+    
     private static function getWordPressOptionDetailView(IHelperContext $context)
     {
         return function () use($context) {
@@ -642,6 +665,12 @@ HTML;
                     echo ob_get_clean();
                     exit(200);
                 }, true, false);
+                //wp-devhelper-htaccess
+                WP::addAjaxAction('wp-devhelper-htaccess', function () {
+                    $data = file_get_contents(WP::getSitePath(is_multisite()) . '.htaccess');
+                    echo "<html><head></head><body><pre>{$data}</pre></body></html>";
+                    exit(200);
+                }, true, false);
                 WP::addAjaxAction('wp-devhelper-run-cron-task', function () {
                     $nonce = PHP::toString(PHP::filterInput('nonce', [INPUT_GET], FILTER_DEFAULT));
                     if (!current_user_can('administrator') || !PHP::isEmpty($nonce) && !wp_verify_nonce($nonce, 'cron-task') || PHP::isEmpty($nonce)) {
@@ -703,9 +732,12 @@ HTML;
                 //die($iconDir);
                 if (file_exists($iconDir)) {
                     $icon = 'data:image/svg+xml;base64,';
-                    $icon .= base64_encode(file_get_contents($iconDir));
+                    $icon .= base64_encode(@file_get_contents($iconDir));
                 }
                 $page = WP::addPlugInAdminMenuPage('About', static::getAboutView($context), 'Helper', 'wp-devhelper-about', $icon, null)->addSubMenuPage('About', static::getAboutView($context), 'wp-devhelper-about')->addSubMenuPage('Settings', static::getSettingsView($context), 'wp-devhelper-settings')->addSubMenuPage('State', static::getStateView($context), 'wp-devhelper-state')->addSubMenuPageTab('WordPress', static::getWordPressStateView($context), 'wp-devhelper-wpstate')->addSubMenuPageTab('Cron', static::getCronStateView($context), 'wp-devhelper-cron')->addSubMenuPageTab('PHP Info', static::getPhpInfoView($context), 'wp-devhelper-phpinfo');
+                if (file_exists(WP::getSitePath(is_multisite()) . '.htaccess')) {
+                    $page = $page->addSubMenuPageTab('.htaccess', static::getHtAccessView($context), 'wp-devhelper-htaccess');
+                }
                 if (defined(Constants::WP_CONFIG_DEBUG_LOG) && constant(Constants::WP_CONFIG_DEBUG_LOG) === true && !PHP::isEmpty(@ini_get('error_log'))) {
                     $page = $page->addSubMenuPageTab('PHP Error Log', static::getPhpErrorLogView($context), 'wp-devhelper-phperrors');
                 }

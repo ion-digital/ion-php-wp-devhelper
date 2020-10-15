@@ -127,10 +127,11 @@ interface IPaths
     /**
      * method
      * 
+     * 
      * @return string
      */
     
-    static function getSitePath() : string;
+    static function getSitePath(bool $network = false) : string;
     
     /**
      * method
