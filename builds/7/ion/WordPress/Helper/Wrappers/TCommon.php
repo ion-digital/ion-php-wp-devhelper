@@ -207,7 +207,13 @@ JS;
         });
     }
     
-    private static function getUrl(string $url, array $controllers = null, array $parameters = null) {
+    private static function getUrl(
+            
+            string $url, 
+            array $controllers = null, 
+            array $parameters = null, 
+            bool $encodeParameters = true
+    ) {
         
         $output = $url;
 
@@ -222,7 +228,7 @@ JS;
 
             foreach ($parameters as $key => $value) {
                 if (!empty($value)) {
-                    $tmp[] = "$key=" . rawurlencode($value);
+                    $tmp[] = "$key=" . ($encodeParameters ? rawurlencode($value) : $value);
 
                     $pCnt++;
                 }

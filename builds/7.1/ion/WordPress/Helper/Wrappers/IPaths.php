@@ -97,7 +97,7 @@ interface IPaths
      * @return string
      */
     
-    static function getAdminUrl(string $filename, string $page = null) : string;
+    static function getAdminUrl(string $filename, string $page = null, bool $network = false) : string;
     
     /**
      * method
@@ -106,7 +106,7 @@ interface IPaths
      * @return string
      */
     
-    static function getAjaxUrl(string $name = null, array $parameters = null) : string;
+    static function getAjaxUrl(string $name = null, array $parameters = null, bool $encodeParameters = true, bool $network = false) : string;
     
     /**
      * method
@@ -119,10 +119,11 @@ interface IPaths
     /**
      * method
      * 
+     * 
      * @return string
      */
     
-    static function getWordPressUri() : string;
+    static function getWordPressUri(bool $network = false) : string;
     
     /**
      * method
@@ -136,10 +137,11 @@ interface IPaths
     /**
      * method
      * 
+     * 
      * @return string
      */
     
-    static function getSiteUri() : string;
+    static function getSiteUri(bool $network = false) : string;
     
     /**
      * method

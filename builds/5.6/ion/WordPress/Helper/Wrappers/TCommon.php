@@ -163,7 +163,7 @@ JS;
      * @return mixed
      */
     
-    private static function getUrl($url, array $controllers = null, array $parameters = null)
+    private static function getUrl($url, array $controllers = null, array $parameters = null, $encodeParameters = true)
     {
         $output = $url;
         if ($controllers !== null) {
@@ -174,7 +174,7 @@ JS;
             $tmp = [];
             foreach ($parameters as $key => $value) {
                 if (!empty($value)) {
-                    $tmp[] = "{$key}=" . rawurlencode($value);
+                    $tmp[] = "{$key}=" . ($encodeParameters ? rawurlencode($value) : $value);
                     $pCnt++;
                 }
             }

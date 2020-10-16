@@ -65,18 +65,24 @@ trait TPaths
     
     public static function getWordPressPath()
     {
+        //if(is_multisite() && $network) {
         return rtrim((string) ABSPATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        //}
     }
     
     /**
      * method
      * 
+     * 
      * @return string
      */
     
-    public static function getWordPressUri()
+    public static function getWordPressUri($network = false)
     {
-        return rtrim(get_site_url(), '/') . '/';
+        if (!is_multisite() || !$network) {
+            return rtrim(get_home_url(), '/') . '/';
+        }
+        return rtrim(static::getSiteUri(true) . str_replace(static::getSitePath(true), '', static::getWordPressPath()), '/') . '/';
     }
     
     /**
@@ -97,12 +103,16 @@ trait TPaths
     /**
      * method
      * 
+     * 
      * @return string
      */
     
-    public static function getSiteUri()
+    public static function getSiteUri($network = false)
     {
-        return rtrim(get_home_url(), '/') . '/';
+        if (!is_multisite() || !$network) {
+            return rtrim(get_site_url(), '/') . '/';
+        }
+        return rtrim(network_site_url(), '/') . '/';
     }
     
     /**
@@ -218,9 +228,15 @@ trait TPaths
      * @return string
      */
     
-    public static function getAdminUrl($filename, $page = null)
+    public static function getAdminUrl($filename, $page = null, $network = false)
     {
-        $uri = admin_url($filename . (!PHP::strEndsWith($filename, '.php') ? '.php' : ''));
+        $uri = null;
+        $ext = !PHP::strEndsWith($filename, '.php') ? '.php' : '';
+        if (!is_multisite() || !$network) {
+            $uri = admin_url($filename . $ext);
+        } else {
+            $uri = static::getWordPressUri($network) . '/wp-admin/' . $filename . $ext;
+        }
         if ($page !== null) {
             $uri .= "?page={$page}";
         }
@@ -234,11 +250,11 @@ trait TPaths
      * @return string
      */
     
-    public static function getAjaxUrl($name = null, array $parameters = null)
+    public static function getAjaxUrl($name = null, array $parameters = null, $encodeParameters = true, $network = false)
     {
-        $url = static::getAdminUrl('admin-ajax');
+        $url = static::getAdminUrl('admin-ajax', null, $network);
         if ($name === null) {
-            return static::getUrl($url);
+            return static::getUrl($url, null, [], $encodeParameters);
         }
         $tmp = [];
         $tmp['action'] = $name;
@@ -247,7 +263,7 @@ trait TPaths
                 $tmp[$key] = $value;
             }
         }
-        return static::getUrl($url, null, $tmp);
+        return static::getUrl($url, null, $tmp, $encodeParameters);
     }
     
     /**

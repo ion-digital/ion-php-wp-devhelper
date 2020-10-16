@@ -30,17 +30,17 @@ interface IPaths {
     
     static function getBackEndUri(string $path = null, int $blogId = null): string;
 
-    static function getAdminUrl(string $filename, string $page = null): string;
+    static function getAdminUrl(string $filename, string $page = null, bool $network = false): string;
     
-    static function getAjaxUrl(string $name = null, array $parameters = null): string;    
+    static function getAjaxUrl(string $name = null, array $parameters = null, bool $encodeParameters = true, bool $network = false): string;    
     
     static function getWordPressPath(): string;
     
-    static function getWordPressUri(): string;
+    static function getWordPressUri(bool $network = false): string;
     
     static function getSitePath(bool $network = false): string;
     
-    static function getSiteUri(): string;
+    static function getSiteUri(bool $network = false): string;
     
     static function getContentPath(): string;
     
