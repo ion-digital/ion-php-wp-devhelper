@@ -1777,6 +1777,62 @@ TEMPLATE;
         return $field;
     }
 
+    public static function customInputField(string $label, callable $html, callable $load, callable $post, callable $validate, string $name = null, string $value = null, string $id = null, string $hint = null, bool $span = false, bool $readOnly = false, bool $disabled = false, bool $echo = false): array {
+     
+        $name = ($name !== null) ? $name : static::slugify($label);
+        $id = ($id !== null) ? $id : static::slugify($name) . '-field';
+
+        return [
+            'type' => 'Custom',
+            "label" => $label,
+            "name" => $name,
+            "id" => $id,
+            "hint" => $hint,
+            "span" => $span,
+            'readOnly' => $readOnly,
+            'disabled' => $disabled,
+            
+            "html" => function (
+                
+                $value = null, 
+                string $keyName = null, 
+                string $keyValue = null, 
+                string $nameOverride = null, 
+                string $idOverride = null
+                
+            ) use ($html) {
+        
+                return (string) $html($value, $keyName, $keyValue, $nameOverride, $idOverride);
+            },            
+            
+            "post" => function ($postValue = null) use ($post) {
+                
+                if ($postValue === null || $postValue === '') {
+                    
+                    return $post(null);
+                }
+
+                return (string) $post($postValue);
+            },
+            "load" => function ($dbValue = null) use ($load) {
+                
+                if ($dbValue === null) {
+                    
+                    return $load(null);
+                }
+                
+                return (string) $load($dbValue);
+            },
+            "validate" => function ($value = null) use ($validate) {
+                
+                return (bool) $validate($value);
+            }
+        ];
+
+        
+    }
+    
+
     public static function button(
             
         string $label,

@@ -1377,6 +1377,34 @@ TEMPLATE;
      * @return array
      */
     
+    public static function customInputField($label, callable $html, callable $load, callable $post, callable $validate, $name = null, $value = null, $id = null, $hint = null, $span = false, $readOnly = false, $disabled = false, $echo = false)
+    {
+        $name = $name !== null ? $name : static::slugify($label);
+        $id = $id !== null ? $id : static::slugify($name) . '-field';
+        return ['type' => 'Custom', "label" => $label, "name" => $name, "id" => $id, "hint" => $hint, "span" => $span, 'readOnly' => $readOnly, 'disabled' => $disabled, "html" => function ($value = null, $keyName = null, $keyValue = null, $nameOverride = null, $idOverride = null) use($html) {
+            return (string) $html($value, $keyName, $keyValue, $nameOverride, $idOverride);
+        }, "post" => function ($postValue = null) use($post) {
+            if ($postValue === null || $postValue === '') {
+                return $post(null);
+            }
+            return (string) $post($postValue);
+        }, "load" => function ($dbValue = null) use($load) {
+            if ($dbValue === null) {
+                return $load(null);
+            }
+            return (string) $load($dbValue);
+        }, "validate" => function ($value = null) use($validate) {
+            return (bool) $validate($value);
+        }];
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return array
+     */
+    
     public static function button($label, $id = null, $hint = null, IAdminFormHelper $form = null, $span = false, $disabled = false, $javaScript = null, $ajaxCall = false, $echo = true)
     {
         $id = $id !== null ? $id : static::slugify($label) . '-field';

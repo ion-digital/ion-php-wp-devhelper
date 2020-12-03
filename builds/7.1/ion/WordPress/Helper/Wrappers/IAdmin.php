@@ -127,6 +127,15 @@ interface IAdmin
      * @return array
      */
     
+    static function customInputField(string $label, callable $html, callable $load, callable $post, callable $validate, string $name = null, string $value = null, string $id = null, string $hint = null, bool $span = false, bool $readOnly = false, bool $disabled = false, bool $echo = false) : array;
+    
+    /**
+     * method
+     * 
+     * 
+     * @return array
+     */
+    
     static function button(string $label, string $id = null, string $hint = null, IAdminFormHelper $form = null, bool $span = false, bool $disabled = false, string $javaScript = null, bool $ajaxCall = false, bool $echo = true) : array;
     
     /**
