@@ -12,7 +12,8 @@
 }
 
 p.submit,
-.wrap h2 {
+.wrap h2,
+.wrap h3 {
     clear: both;
 }
 
@@ -475,3 +476,9 @@ div.wrap.tabbed h1 {
     
     white-space: nowrap;
 }*/
+
+body.wp-admin #wpbody-content h3.title {
+    
+    border-bottom: 1px dotted rgb(204, 204, 204);
+    padding-bottom: 1rem;
+}

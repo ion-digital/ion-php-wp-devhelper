@@ -625,12 +625,28 @@ TEMPLATE;
                 $columns = $this->descriptor["columns"];
             }
 
-            if (($group["title"] !== null) && ($this->descriptor["groups"][0]["title"] !== null) && (count($this->descriptor["groups"]) > 1)) {
+            $visibleFields = 0;
+            
+            foreach($group['fields'] as $field) {
+                
+                if($field['hidden'] === true) {
+                    
+                    continue;
+                }
+                
+                $visibleFields++;
+            }
+            
+            if (($group["title"] !== null) && 
+                ($this->descriptor["groups"][0]["title"] !== null) && 
+                (PHP::count($this->descriptor["groups"]) > 1) &&
+                ($visibleFields > 0))
+            {
 
                 $groupTitle = $group["title"];
 
                 $output .= <<<TEMPLATE
-        <h2 class="title">{$groupTitle}</h2>
+        <h3 class="title">{$groupTitle}</h3>
 TEMPLATE;
             }
 
