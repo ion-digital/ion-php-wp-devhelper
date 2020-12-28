@@ -345,6 +345,7 @@ TEMPLATE;
                     }
                     $hintHtml = $hint !== null && strlen($hint) > 0 ? "" . $hint . "" : "";
                     if (!$hidden) {
+                        $p = PHP::isEmpty($hintHtml) ? "" : "<p id=\"{$id}-hint\">{$hintHtml}</p>";
                         if ($columns < 3) {
                             $output .= <<<TEMPLATE
                 <th{$scope} colspan="1">
@@ -355,7 +356,7 @@ TEMPLATE;
                 <td{$colSpan}{$spanClass}>
                     <span>
                         {$html}
-                        <p id="{$id}-hint">{$hintHtml}</p>
+                        {$p}
                     </span>
                 </td>
 TEMPLATE;
@@ -372,7 +373,7 @@ TEMPLATE;
                     </table>
                     <span>
                         {$html}
-                        <p id="{$id}-hint">{$hintHtml}</p>
+                        {$p}
                     </span>
                 </td>
 TEMPLATE;
@@ -380,7 +381,7 @@ TEMPLATE;
                     } else {
                         $output .= <<<TEMPLATE
 
-                <td{$colSpan}{$spanClass}>
+                <td{$colSpan}{$spanClass} style="display:none;">
                     {$html}
                 </td>
 TEMPLATE;

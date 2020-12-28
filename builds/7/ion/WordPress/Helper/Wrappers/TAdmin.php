@@ -1265,6 +1265,7 @@ TEMPLATE;
             'readOnly' => $readOnly,
             'disabled' => $disabled,
             "fancy" => $fancy,
+            'hidden' => false,            
             "post" => function (/* string */
             $postValue = null) {
                 return (string) $postValue;
@@ -1336,6 +1337,7 @@ TEMPLATE;
             "span" => $span,
             'readOnly' => $readOnly,
             'disabled' => $disabled,
+            'hidden' => false,            
             "post" => function (string $postValue = null) {
                 if ($postValue === null || $postValue === '') {
                     return null;
@@ -1367,6 +1369,13 @@ TEMPLATE;
                 $field['id'] = $idOverride;
             }
             
+//            if($field['id'] == 'aweber-account-id') {
+//                
+//                echo __FILE__ . " " . __LINE__ . "<br /><pre>";
+//                var_dump($values);
+//                die("</pre>");
+//            }
+            
             $optionsHtmlTemplate = "\n";
 
             if ($modifyValues !== null) {
@@ -1378,10 +1387,10 @@ TEMPLATE;
                 }
             }
 
-            if (count($values) > 0) {
-
+            if (PHP::count($values) > 0) {
 
                 foreach ($values as $key => $selectValue) {
+                    
                     if (is_array($selectValue) === true) {
 
                         $optionsHtmlTemplate .= "<optgroup label=\"$key\">\n";
@@ -1390,23 +1399,27 @@ TEMPLATE;
 
                             $tmp = '';
                             if ($valueValue !== null) {
-                                $tmp = $valueValue;
+                                
+                                $tmp = (string) $valueValue;
                             }
 
                             // NOTE: The string-only comparison below
-                            $optionsHtmlTemplate .= "<option value=\"$tmp\"" . ((string) $valueValue === (string) $value ? " selected" : "") . ">$valueKey</option>\n";
+                            $optionsHtmlTemplate .= "<option value=\"$tmp\"" . ((string) $valueValue === (string) $value || PHP::count($values) === 1 ? " selected" : "") . ">{$valueKey}</option>\n";
                         }
 
                         $optionsHtmlTemplate .= "</optgroup>\n";
+                        
                     } else {
 
                         $tmp = '';
+                        
                         if ($selectValue !== null) {
-                            $tmp = $selectValue;
+                            
+                            $tmp = (string) $selectValue;
                         }
                         
                         // NOTE: The string-only comparison below
-                        $optionsHtmlTemplate .= "<option value=\"$tmp\"" . ((string) $selectValue === (string) $value ? " selected" : "") . ">$key</option>\n";
+                        $optionsHtmlTemplate .= "<option value=\"$tmp\"" . ((string) $selectValue === (string) $value || PHP::count($values) === 1 ? " selected" : "") . ">$key</option>\n";
                     }
                 }
 
@@ -1449,6 +1462,7 @@ TEMPLATE;
             "span" => $span,
             'readOnly' => $readOnly,
             "disabled" => $disabled,
+            'hidden' => false,            
             "post" => function (/* string */ $postValue = null) {
 
                 $arrayValue = [];
@@ -1629,6 +1643,7 @@ TEMPLATE;
             "span" => $span,
             'readOnly' => $readOnly,
             'disabled' => $disabled,
+            'hidden' => false,
             "post" => function (/* string */
             $postValue = null) {
 
