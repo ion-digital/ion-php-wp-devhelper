@@ -13,6 +13,7 @@ use \ion\WordPress\Helper\Tools;
 use \ion\WordPress\Helper\Constants;
 use \ion\Logging\LogLevel;
 use \ion\PhpHelper as PHP;
+use \ion\PhpHelperException;
 use \ion\Package;
 use \ion\ISemVer;
 use \ion\SemVer;
@@ -458,21 +459,25 @@ trait TOptions {
             return $value;
         }
 
-        $tmp = @unserialize($value);
+        $tmp = null;
         
-        if($tmp !== false) {
-            
-            return $tmp;
-        }
+        try {
+
+            $tmp = PHP::unserialize($value);
+
+        } catch(PhpHelperException $ex) {
+
+            $tmp = $value;
+        }  
         
-        return false;
+        return $tmp;
     }
 
     public static function setOption(string $key, /* mixed */ $value = null, int $id = null, OptionMetaType $type = null, bool $raw = false, bool $autoLoad = false): bool {
 
         if ($raw === false /* && $value !== null */) {
                
-            $value = @serialize($value);
+            $value = PHP::serialize($value);
             
         } else {
             

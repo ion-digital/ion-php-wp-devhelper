@@ -25,6 +25,7 @@ use ion\WordPress\Helper\AdminMenuPageHelper;
 use ion\WordPress\Helper\AdminNavMenuEditWalker;
 //use \ion\WordPress\WordPressHelper AS WP;
 use ion\WordPress\Helper\WordPressHelperException;
+use ion\PhpHelperException;
 /**
  * Description of BackEndTables
  *
@@ -1129,7 +1130,11 @@ TEMPLATE;
             $arrayValue = [];
             if (!PHP::isEmpty($postValue)) {
                 if (PHP::isString($postValue)) {
-                    $arrayValue = @unserialize($postValue);
+                    try {
+                        $arrayValue = PHP::unserialize($dbValue);
+                    } catch (PhpHelperException $ex) {
+                        $arrayValue = [$postValue];
+                    }
                 } else {
                     if (PHP::isArray($postValue)) {
                         $arrayValue = $postValue;
@@ -1141,7 +1146,11 @@ TEMPLATE;
             $arrayValue = [];
             if (!PHP::isEmpty($dbValue)) {
                 if (PHP::isString($dbValue)) {
-                    $arrayValue = @unserialize($dbValue);
+                    try {
+                        $arrayValue = PHP::unserialize($dbValue);
+                    } catch (PhpHelperException $ex) {
+                        $arrayValue = [$postValue];
+                    }
                 } else {
                     if (PHP::isArray($dbValue)) {
                         $arrayValue = $dbValue;
@@ -1164,7 +1173,11 @@ TEMPLATE;
             if (!PHP::isArray($arrayValue)) {
                 $arrayValue = [];
                 if (PHP::isString($arrayValue)) {
-                    $arrayValue = @unserialize($arrayValue);
+                    try {
+                        $arrayValue = PHP::unserialize($dbValue);
+                    } catch (PhpHelperException $ex) {
+                        $arrayValue = [$postValue];
+                    }
                 }
             }
             //            echo '<pre>';

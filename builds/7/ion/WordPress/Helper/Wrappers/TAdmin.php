@@ -27,6 +27,7 @@ use \ion\WordPress\Helper\AdminMenuPageHelper;
 use \ion\WordPress\Helper\AdminNavMenuEditWalker;
 //use \ion\WordPress\WordPressHelper AS WP;
 use \ion\WordPress\Helper\WordPressHelperException;
+use \ion\PhpHelperException;
 
 /**
  * Description of BackEndTables
@@ -1471,7 +1472,14 @@ TEMPLATE;
                                         
                     if(PHP::isString($postValue)) {
 
-                        $arrayValue = @unserialize($postValue);
+                        try {
+                        
+                            $arrayValue = PHP::unserialize($dbValue);
+                            
+                        } catch(PhpHelperException $ex) {
+                            
+                            $arrayValue = [ $postValue ];
+                        }
                         
                     } else if(PHP::isArray($postValue)) {
                         
@@ -1489,7 +1497,14 @@ TEMPLATE;
                                         
                     if(PHP::isString($dbValue)) {
 
-                        $arrayValue = @unserialize($dbValue);
+                        try {
+                        
+                            $arrayValue = PHP::unserialize($dbValue);
+                            
+                        } catch(PhpHelperException $ex) {
+                            
+                            $arrayValue = [ $postValue ];
+                        }
                         
                     } else if(PHP::isArray($dbValue)) {
                         
@@ -1526,7 +1541,14 @@ TEMPLATE;
                 
                 if(PHP::isString($arrayValue)) {
                     
-                    $arrayValue = @unserialize($arrayValue);
+                    try {
+
+                        $arrayValue = PHP::unserialize($dbValue);
+
+                    } catch(PhpHelperException $ex) {
+
+                        $arrayValue = [ $postValue ];
+                    }                        
                 }
             }
             
