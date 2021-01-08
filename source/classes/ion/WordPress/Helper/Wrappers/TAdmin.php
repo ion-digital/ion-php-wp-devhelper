@@ -1474,7 +1474,7 @@ TEMPLATE;
 
                         try {
                         
-                            $arrayValue = PHP::unserialize($dbValue);
+                            $arrayValue = PHP::unserialize($postValue);
                             
                         } catch(PhpHelperException $ex) {
                             

@@ -1131,7 +1131,7 @@ TEMPLATE;
             if (!PHP::isEmpty($postValue)) {
                 if (PHP::isString($postValue)) {
                     try {
-                        $arrayValue = PHP::unserialize($dbValue);
+                        $arrayValue = PHP::unserialize($postValue);
                     } catch (PhpHelperException $ex) {
                         $arrayValue = [$postValue];
                     }
