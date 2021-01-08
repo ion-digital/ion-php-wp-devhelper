@@ -314,6 +314,11 @@ final class WordPressHelper implements IWordPressHelper
             });
         }
         static::$helperInitialized = true;
+        add_action('init', function () {
+            if (!session_id()) {
+                session_start();
+            }
+        });
     }
     
     /**

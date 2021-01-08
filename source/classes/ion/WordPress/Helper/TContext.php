@@ -52,11 +52,11 @@ trait TContext {
         self::$contextInstances[static::class] = $this;
         
         $this->package = $package;
-
+        
         $helper = WP::createContext($package->getVendor(), $package->getProject(), $package->getProjectEntry(), null, $helperSettings);
         
         $this->helperContext = $helper->getContext();
-                
+                        
         $helper
                 
         ->initialize(function(IHelperContext $context) {
