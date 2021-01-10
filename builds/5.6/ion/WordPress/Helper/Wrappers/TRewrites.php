@@ -83,7 +83,7 @@ trait TRewrites
             $endPos = PHP::toInt(strpos($data, $endTag));
             $rewrites = "{$startTag}\n\n";
             foreach ($wp_rewrite->non_wp_rules as $pattern => $target) {
-                $rewrites .= "RewriteRule {$pattern} {$target} [L]\n";
+                $rewrites .= "RewriteRule {$pattern} {$target} [QSA,L]\n";
             }
             $rewrites .= "\n{$endTag}";
             if ($startPos !== null) {
