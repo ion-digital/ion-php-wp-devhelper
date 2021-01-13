@@ -110,7 +110,7 @@ trait TPaths
     public static function getSiteUri(bool $network = false) : string
     {
         if (!is_multisite() || !$network) {
-            return rtrim(get_site_url(), '/') . '/';
+            return rtrim(get_bloginfo('url'), '/') . '/';
         }
         return rtrim(network_site_url(), '/') . '/';
     }
