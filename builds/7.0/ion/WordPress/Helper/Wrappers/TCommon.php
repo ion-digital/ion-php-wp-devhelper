@@ -402,7 +402,7 @@ JS;
             $path = $blogInfo->path;
         }
         if ($domain === null) {
-            $domain = (string) Uri::parse(WP::getSiteUri())->getHost();
+            $domain = (string) parse_url(static::getSiteUri(), PHP_URL_HOST);
         }
         if ($path === null) {
             $path = '/';
