@@ -444,7 +444,9 @@ JS;
         
         if($domain === null) {
             
-            $domain = (string) parse_url(static::getSiteUri(), PHP_URL_HOST);
+            //$domain = (string) parse_url(static::getSiteUri(), PHP_URL_HOST);
+            $domain = $blogInfo->domain;
+            
         }
         
         if($path === null) {
@@ -452,7 +454,7 @@ JS;
             $path = '/';
         }        
         
-        return setcookie($name, $value, ($expiryTimeStamp != null ? $expiryTimeStamp : 0), $path, $domain, $secure, $httpOnly);
+        return setcookie($name, $value, ($expiryTimeStamp != null ? $expiryTimeStamp : 0), $path, ".{$domain}", $secure, $httpOnly);
     }    
     
     public static function getCurrentObjectType(bool $ignoreTheLoop = false): ?string {
