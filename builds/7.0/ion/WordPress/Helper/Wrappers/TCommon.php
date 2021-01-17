@@ -402,8 +402,8 @@ JS;
             $path = $blogInfo->path;
         }
         if ($domain === null) {
-            //$domain = (string) parse_url(static::getSiteUri(), PHP_URL_HOST);
-            $domain = $blogInfo->domain;
+            $domain = (string) parse_url(static::getSiteUri(), PHP_URL_HOST);
+            //$domain = $blogInfo->domain;
         }
         if ($path === null) {
             $path = '/';
