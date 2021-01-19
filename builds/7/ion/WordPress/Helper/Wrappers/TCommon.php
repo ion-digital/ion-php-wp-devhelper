@@ -64,6 +64,10 @@ trait TCommon {
 
         static::registerWrapperAction('wp_enqueue_scripts', function() {        
 
+//            wp_enqueue_script('wp-devhelper', static::getHelperDirectory() . "assets/js/wp-devhelper.js", [], false, false);
+//            
+//            wp_add_inline_script('wp-devhelper', "alert('DEVHELPER');");
+            
             foreach (array_values(static::$scripts) as $script) {
                 if ($script["frontEnd"] === true && $script["inline"] === false) {
                     wp_enqueue_script($script["id"], $script["src"], $script["dependencies"], $script['version'], $script["addToEnd"]);
@@ -80,14 +84,39 @@ trait TCommon {
 
         static::registerWrapperAction('wp_head', function() {        
 
-            $ajaxUrl = admin_url('admin-ajax.php');
+            $ajaxUrl = static::getAjaxUrl();
+            $domain = parse_url(static::getSiteUri(true), PHP_URL_HOST);
+            $path = parse_url(static::getSiteUri(false), PHP_URL_PATH);
 
             echo <<<JS
 <script id="wp-devhelper" type="text/javascript">
 var ajaxurl;
-ajaxurl = '$ajaxUrl';
+ajaxurl = '{$ajaxUrl}'; // deprecated!
+                    
+var wpDevHelper = {};
+    
+(function () {
+          
+    this.getAjaxUrl  = function() {
+                    
+         return '{$ajaxUrl}';
+    },
+    this.getDomain = function() {
+         
+         return '{$domain}';
+    },
+    this.getPath = function() {
+         
+         return '{$path}';
+    }
+         
+}).apply(wpDevHelper);
+                    
 </script>
 JS;
+         }, 0);
+        
+        static::registerWrapperAction('wp_head', function() {        
 
             foreach (array_values(static::$scripts) as $script) {
                 if ($script["frontEnd"] === true && $script["inline"] === true && $script["addToEnd"] === false) {
@@ -101,7 +130,7 @@ JS;
                     echo "<style id=\"" . $style["id"] . "\" type=\"text/css\" media=\"" . $style["media"] . "\">\n" . $style["src"] . "\n</style>\n";
                 }
             }
-        });
+        }, 2);
 
         static::registerWrapperAction('wp_footer', function() {        
 
