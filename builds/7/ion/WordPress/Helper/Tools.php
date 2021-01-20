@@ -447,11 +447,32 @@ class Tools {
 
             $ajaxUrl = WP::getAjaxUrl('wp-devhelper-phperrors');
 
+            $lastError = error_get_last();
+            
+            
+                            $tmp = <<<TMP
+    <p><em>None!</em></p>
+TMP;
+            
+            if($lastError !== null) {
+
+                $tmp = <<<TMP
+    <p>
+        <strong>{$lastError['message']}</strong><br />
+        <em>{$lastError['file']}, line {$lastError['line']}</em>
+    </p>
+TMP;
+            }
+            
             echo <<<HTML
+<h3>Last Error</h3>
+{$tmp}
+<h3>Error Log</h3>
 <p>Log entries have been reversed to show the newest items first.</p>            
 <div class="wp-devhelper phperrors viewport-container">
+
     <div class="wp-devhelper phperrors viewport">
-        <iframe src="$ajaxUrl"></iframe>
+        <iframe src="{$ajaxUrl}"></iframe>
     </div>
 </div>    
 HTML;
@@ -985,7 +1006,7 @@ HTML;
                 
                 if(defined(Constants::WP_CONFIG_DEBUG_LOG) && constant(Constants::WP_CONFIG_DEBUG_LOG) === true && !PHP::isEmpty(@ini_get('error_log'))) {
 
-                    $page = $page->addSubMenuPageTab('PHP Error Log', static::getPhpErrorLogView($context), 'wp-devhelper-phperrors' /* , 'debugging', 'Debugging' */);
+                    $page = $page->addSubMenuPageTab('PHP Errors', static::getPhpErrorLogView($context), 'wp-devhelper-phperrors' /* , 'debugging', 'Debugging' */);
                 }
 
                 $page->addSubMenuPage('Options', static::getWordPressOptionsView($context), 'wp-wordpress-options');
