@@ -9,6 +9,7 @@ use WP_Post;
 use WP_User;
 use WP_Term;
 use WP_Comment;
+use WP_Post_Type;
 use ion\WordPress\IWordPressHelper;
 use ion\WordPress\Helper\Tools;
 use ion\WordPress\Helper\Constants;
@@ -54,7 +55,7 @@ trait TTemplate
         if ($postId === null) {
             return (bool) is_front_page();
         }
-        return PHP::toInt(static::getOption('page_on_front', false, null, null, true)) === $postId;
+        return PHP::toInt(static::getSiteOption('page_on_front', false)) === $postId;
     }
     
     /**
@@ -69,7 +70,7 @@ trait TTemplate
         if ($postId === null) {
             return (bool) is_home();
         }
-        return PHP::toInt(static::getOption('page_for_posts', false, null, null, true)) === $postId;
+        return PHP::toInt(static::getSiteOption('page_for_posts', false)) === $postId;
     }
     
     //Deprecated
@@ -464,53 +465,11 @@ trait TTemplate
     
     public static function getTotalPostCount(WP_Query $wpQuery = null) : int
     {
-        global $wp_query;
         if ($wpQuery !== null) {
-            $wp_query = $wpQuery;
+            return $wpQuery->found_posts;
         }
+        global $wp_query;
         return $wp_query->found_posts;
-    }
-    
-    /**
-     * method
-     * 
-     * 
-     * @return ?int
-     */
-    
-    public static function getCurrentTemplateObjectId(bool $ignoreTheLoop = false) : ?int
-    {
-        if (static::isAdmin()) {
-            return null;
-        }
-        if (in_the_loop() && !$ignoreTheLoop) {
-            return PHP::toInt(get_the_ID());
-        }
-        if (is_singular() || static::isPostsPage(null)) {
-            return PHP::toInt(get_queried_object_id());
-        }
-        return null;
-    }
-    
-    /**
-     * method
-     * 
-     * 
-     * @return ?string
-     */
-    
-    public static function getCurrentTemplateObjectType(bool $ignoreTheLoop = false) : ?string
-    {
-        if (static::isAdmin()) {
-            return null;
-        }
-        if (static::getCurrentTemplateObjectId($ignoreTheLoop) === null) {
-            return null;
-        }
-        if (is_singular() || static::isPostsPage(null)) {
-            return WP_Post::class;
-        }
-        return null;
     }
     
     /**
@@ -520,16 +479,61 @@ trait TTemplate
      * @return ?object
      */
     
-    public static function getCurrentTemplateObject(bool $ignoreTheLoop = false)
+    public static function getCurrentTemplateObject(bool $subject = false)
     {
         if (static::isAdmin()) {
             return null;
         }
-        if (static::getCurrentTemplateObjectId($ignoreTheLoop) === null) {
+        $obj = get_queried_object();
+        //        echo __FILE__ . "<pre>";
+        //        global $wp_query;
+        //        var_dump($wp_query);
+        //        vaR_dump($obj);
+        //        die ("</pre>");
+        if ($obj === null || $obj instanceof WP_Error) {
             return null;
         }
-        if (static::getCurrentTemplateObjectType($ignoreTheLoop) == WP_Post::class) {
-            return PHP::toNull(get_post(static::getCurrentTemplateObjectId($ignoreTheLoop)));
+        if (($obj instanceof WP_Post_Type || $obj instanceof WP_Term) && in_the_loop() && !$subject) {
+            $obj = get_post(get_the_ID());
+        }
+        return $obj;
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return ?string
+     */
+    
+    public static function getCurrentTemplateObjectType(bool $subject = false) : ?string
+    {
+        $obj = static::getCurrentTemplateObject($subject);
+        if ($obj === null) {
+            return null;
+        }
+        return (string) get_class($obj);
+    }
+    
+    /**
+     * method
+     * 
+     * 
+     * @return ?int
+     */
+    
+    public static function getCurrentTemplateObjectId(bool $subject = false) : ?int
+    {
+        $obj = static::getCurrentTemplateObject($subject);
+        if ($obj === null) {
+            return null;
+        }
+        $objType = static::getCurrentTemplateObjectType($subject);
+        if ($objType === WP_Term::class) {
+            return $obj->term_id;
+        }
+        if ($objType === WP_Post::class || $objType === WP_User::class) {
+            return $obj->ID;
         }
         return null;
     }
