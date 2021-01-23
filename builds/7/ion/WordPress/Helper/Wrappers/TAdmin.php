@@ -47,6 +47,7 @@ trait TAdmin {
     private static $settingsMenus = [];
     private static $pageActions = [];
     private static $currentAdminPage = null;
+    private static $optionsReadingStateCnt = 0;
     
 
     protected static function initialize_TAdmin() {
@@ -160,12 +161,124 @@ trait TAdmin {
 
 //        if(static::isAdmin()) {
             
+            global $pagenow;
+
+            if($pagenow === 'options-reading.php') {
+
+                // Replace the Home / Posts page settings with new dropdowns
+                // to allow selection of pages or custom posts.
+                
+                static::addFilter("wp_dropdown_pages", function(string $output = null) {
+
+                    $html = '';
+                    $name = null;
+                    $id = null;
+                    
+                    if(static::$optionsReadingStateCnt === 1) {
+                    
+                        $name = "page_for_posts";
+                        $id = $name;
+                        
+                        static::$optionsReadingStateCnt++;
+                    }
+
+                    if(static::$optionsReadingStateCnt === 0) {
+                    
+                        $name = "page_on_front";
+                        $id = $name;
+                        
+                        static::$optionsReadingStateCnt++;
+                    }
+
+                    if(static::$optionsReadingStateCnt <= 2) {
+
+                        $postTypes = array_merge(
+
+                            get_post_types([
+
+                                'public' => true,
+                                'publicly_queryable' => true,
+                                'show_ui' => true,
+                                '_builtin' => false,
+                                'hierarchical' => true
+
+                            ], 'objects'),
+                                
+                            get_post_types([
+
+                                'public' => true,
+                                'publicly_queryable' => true,
+                                'show_ui' => true,
+                                '_builtin' => false,
+                                'hierarchical' => false
+
+                            ], 'objects')                               
+                        );
+                        
+                        $items = [];
+                        
+                        $pages = [];
+                        
+                        foreach(get_pages() as $page) {
+                            
+                            $pages[$page->post_title] = $page->ID;
+                        }
+                        
+                        $items['Pages'] = $pages;
+                        
+                        foreach($postTypes as $postType) {
+                            
+                            $postTypeLabel = "{$postType->label}";
+                            
+                            $items[$postTypeLabel] = []; 
+                            
+                            $posts = get_posts([ 'post_type' => $postType->name ]);
+                            
+                            foreach($posts as $post) {
+
+                                 $items[$postTypeLabel][$post->post_title] = $post->ID;
+                            }
+                        }
+
+                        $html .= "<option value=\"0\">— Select —</option>";
+                        
+                        foreach($items as $postTypeLabel => $posts) {
+
+                            $html .= "<optgroup label=\"{$postTypeLabel}\">\n";
+
+                            foreach($posts as $postLabel => $postId) {                              
+                                
+                                $selected = '';
+                                
+                                if(static::isFrontPage($postId) && $name === 'page_on_front') {
+                                    
+                                    $selected = ' selected';
+                                }
+
+                                if(static::isPostsPage($postId) && $name === 'page_for_posts') {
+                                    
+                                    $selected = ' selected';
+                                }
+                                
+                                $html .= "\t<option class=\"level-0\" value=\"{$postId}\"{$selected}>{$postTypeLabel} &gt; {$postLabel}</option>\n";
+                                
+                            }
+
+                            $html .= "</optgroup>\n";
+                        }
+                        
+                        $html = "<select id=\"{$id}\" name=\"{$name}\">\n{$html}</select>\n";                   
+                        
+                    }
+
+                    return $html;
+                });
+
+            }
         
             static::registerWrapperAction('admin_init', function() {
 
                 // Run through each settings menu and metabox to trigger any registrations of forms, etc.
-
-                
                 
                 foreach (static::$settingsMenus as $settingsMenu) {
 
@@ -174,6 +287,7 @@ trait TAdmin {
                     if ($settingsMenu['render'] === true) {
 
                         if ($settingsMenu['content'] !== null && is_callable($settingsMenu['content'])) {
+                            
                             ob_start();
                             $settingsMenu['content'](false);
                             ob_end_clean();
