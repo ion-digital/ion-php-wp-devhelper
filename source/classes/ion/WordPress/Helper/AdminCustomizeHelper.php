@@ -149,5 +149,31 @@ class AdminCustomizeHelper implements IAdminCustomizeHelper {
         ];        
         
         return $this;
-    }        
+    }     
+    
+//    public function addIntegerSetting(
+//            
+//            string $label,
+//            string $key,            
+//            bool $default = null,
+//            int $priority = null,
+//            string $transport = 'refresh'
+//            
+//        ): IAdminCustomizeHelper {
+//
+//        $this->descriptor[$key] = [
+//            
+//            'label' => $label,
+//            'key' => $key,
+//            'default'=> $default,
+//            'transport' => $transport,
+//            'type' => 'text',
+//            'multiLine' => null,
+//            'options' => null,
+//            'priority' => $priority
+//            
+//        ];        
+//        
+//        return $this;
+//    }        
 }
