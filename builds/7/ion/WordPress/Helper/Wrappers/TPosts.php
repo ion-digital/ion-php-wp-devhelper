@@ -35,17 +35,19 @@ trait TPosts {
             
             foreach(static::$customPostTypes as $postTypeSlug => $taxonomy) {
 
+                $publicQueryable = ($taxonomy['publiclyQueryable'] === null ? false : $taxonomy['publiclyQueryable']);
+                
                 $args = [
                     'label' => $taxonomy['pluralLabel'],                             
                     'labels' => $taxonomy['labels'],                             
                     'description' => $taxonomy['description'],
                     'public' => ($taxonomy['public'] === null ? true : $taxonomy['public']),
                     'exclude_from_search' => ($taxonomy['excludeFromSearch'] === null ? false : $taxonomy['excludeFromSearch']),
-                    'publicly_queryable' => ($taxonomy['publiclyQueryable'] === null ? false : $taxonomy['publiclyQueryable']),
+                    'publicly_queryable' => $publicQueryable,
                     'show_ui' => ($taxonomy['showUi'] === null ? true : $taxonomy['showUi']),
                     'show_in_nav_menus' => ($taxonomy['showInNavMenus'] === null ? true : $taxonomy['showInNavMenus']),
                     'show_in_menu' => ($taxonomy['showInMenu'] === null ? true : $taxonomy['showInMenu']),
-                    'show_in_admin_bar' => ($taxonomy['showInAdminBar'] ? false : $taxonomy['showInAdminBar']),
+                    'show_in_admin_bar' => ($taxonomy['showInAdminBar'] ? ($publicQueryable ? true : false) : $taxonomy['showInAdminBar']),
                     'menu_position' => ($taxonomy['menuPosition'] === null ? 25 : $taxonomy['menuPosition']),
                     'menu_icon' => $taxonomy['menuIcon'],
                     'capability_type' => (PHP::isEmpty($taxonomy['singleCapabilityType']) ? (array) [ 'post', 'posts' ] : (PHP::isEmpty($taxonomy['pluralCapabilityType']) ? $taxonomy['singleCapabilityType'] : (array) [ $taxonomy['singleCapabilityType'], $taxonomy['pluralCapabilityType'] ])),                             
@@ -159,12 +161,15 @@ trait TPosts {
             ];
 
         } else {
-            if(!$labels->hasKey('name')) {
-                $labels->set('name', $pluralLabel);
+            
+            if(!array_key_exists('name', $labels)) {
+                
+                $labels['name'] = $pluralLabel;
             }
             
-            if(!$labels->hasKey('singular_name')) {
-                $labels->set('singular_name', $singularLabel);
+            if(!array_key_exists('singular_name', $labels)) {
+                
+                $labels['singular_name'] = $singularLabel;
             }
         }
            
