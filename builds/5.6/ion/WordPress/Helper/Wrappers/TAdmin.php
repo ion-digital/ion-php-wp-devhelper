@@ -1204,7 +1204,7 @@ TEMPLATE;
                     try {
                         $arrayValue = PHP::unserialize($dbValue);
                     } catch (PhpHelperException $ex) {
-                        $arrayValue = [$postValue];
+                        $arrayValue = [$dbValue];
                     }
                 } else {
                     if (PHP::isArray($dbValue)) {
