@@ -14,7 +14,6 @@ use WP_List_Table;
 use ion\WordPress\Helper\Constants;
 use ion\WordPress\WordPressHelper as WP;
 use ion\PhpHelper as PHP;
-
 class WordPressTable extends WP_List_Table
 {
     private $descriptor;
@@ -25,14 +24,12 @@ class WordPressTable extends WP_List_Table
      * 
      * @return mixed
      */
-    
     public function __construct(array &$descriptor, array $rows)
     {
         parent::__construct(array("singular" => $descriptor["singular"], "plural" => $descriptor["plural"], "ajax" => $descriptor["ajax"], 'screen' => null));
         $this->descriptor = $descriptor;
         $this->data = $rows;
     }
-    
     //protected function column_default($item, $column_name) {
     /*
      $actions = array();
@@ -122,7 +119,6 @@ class WordPressTable extends WP_List_Table
      * 
      * @return mixed
      */
-    
     public function column_cb($item)
     {
         if (array_key_exists($this->descriptor['key'], $item)) {
@@ -136,14 +132,12 @@ class WordPressTable extends WP_List_Table
         }
         return null;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     protected function column_default($item, $column_name)
     {
         $selectedColumn = null;
@@ -211,13 +205,11 @@ class WordPressTable extends WP_List_Table
         }
         return $item[$column_name];
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public function get_columns()
     {
         //$columns = ['cb' => '<input type="checkbox">'];
@@ -232,13 +224,11 @@ class WordPressTable extends WP_List_Table
         }
         return $columns;
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public function get_sortable_columns()
     {
         $columns = [];
@@ -255,25 +245,21 @@ class WordPressTable extends WP_List_Table
         }
         return $columns;
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public function get_bulk_actions()
     {
         $actions = array();
         return $actions;
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public function process_bulk_action()
     {
         if ($this->current_action() !== '') {
@@ -283,24 +269,20 @@ class WordPressTable extends WP_List_Table
             }
         }
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public function &get_data()
     {
         return $this->data;
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public function prepare_items()
     {
         $perPage = 10;
@@ -323,13 +305,11 @@ class WordPressTable extends WP_List_Table
         $this->items = array_slice($data, ($currentPage - 1) * $perPage, $perPage);
         $this->set_pagination_args(['total_items' => $totalItems, 'total_pages' => ceil($totalItems / $perPage), 'per_page' => $perPage]);
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public function display()
     {
         $this->prepare_items();
@@ -360,14 +340,12 @@ class WordPressTable extends WP_List_Table
         }
         parent::display();
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     protected function set_pagination_args($args)
     {
         $args = wp_parse_args($args, ['total_items' => 0, 'total_pages' => 0, 'per_page' => 0]);
@@ -383,5 +361,4 @@ class WordPressTable extends WP_List_Table
         //        }
         $this->_pagination_args = $args;
     }
-
 }

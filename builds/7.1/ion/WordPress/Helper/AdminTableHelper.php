@@ -12,7 +12,6 @@ use ion\PhpHelper as PHP;
  *
  * @author Justus
  */
-
 class AdminTableHelper implements IAdminTableHelper
 {
     /**
@@ -21,12 +20,10 @@ class AdminTableHelper implements IAdminTableHelper
      * 
      * @return mixed
      */
-    
     private static function createGroupDescriptorInstance($title = null, $id = null, array $columns = [])
     {
         return ["id" => (string) $id, "title" => (string) $title, "columns" => (array) $columns];
     }
-    
     private static $detailMode = false;
     /**
      * method
@@ -34,24 +31,20 @@ class AdminTableHelper implements IAdminTableHelper
      * 
      * @return void
      */
-    
     protected static function setDetailMode(bool $detailMode) : void
     {
         self::$detailMode = $detailMode;
         return;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public static function inDetailMode() : bool
     {
         return self::$detailMode;
     }
-    
     private $parent;
     private $columnGroup;
     //    private $rows = [];
@@ -65,7 +58,6 @@ class AdminTableHelper implements IAdminTableHelper
      * 
      * @return mixed
      */
-    
     public function __construct(array &$parent)
     {
         $this->parent =& $parent;
@@ -75,44 +67,37 @@ class AdminTableHelper implements IAdminTableHelper
         //        $this->onRead(null);
         //        $this->onDelete(null);
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminTableHelper
      */
-    
     public function onRead(callable $onRead) : IAdminTableHelper
     {
         $this->onReadHandlers[] = $onRead;
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminTableHelper
      */
-    
     public function onDelete(callable $onDelete) : IAdminTableHelper
     {
         $this->onDeleteHandlers[] = $onDelete;
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminTableHelper
      */
-    
     public function read(callable $read) : IAdminTableHelper
     {
     }
-    
     //    protected function doReadHandler(array $data = null): ?array {
     //
     //        $tmp = $this->onReadHandlers;
@@ -129,19 +114,16 @@ class AdminTableHelper implements IAdminTableHelper
      * 
      * @return array
      */
-    
     public function getDescriptor() : array
     {
         return $this->parent;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminTableHelper
      */
-    
     public function addColumn(array $columnDescriptor) : IAdminTableHelper
     {
         $this->columnGroup["columns"][] = $columnDescriptor;
@@ -150,14 +132,12 @@ class AdminTableHelper implements IAdminTableHelper
         }
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminTableHelper
      */
-    
     public function addColumnGroup(string $label = null, string $id = null, array $columns = []) : IAdminTableHelper
     {
         $groupDescriptor = static::createGroupDescriptorInstance($label, $id, $columns);
@@ -169,7 +149,6 @@ class AdminTableHelper implements IAdminTableHelper
         $this->columnGroup =& $this->parent["columnGroups"][count($this->parent["columnGroups"]) - 1];
         return $this;
     }
-    
     //    public function getRows() {
     //        return $this->getRows();
     //    }
@@ -187,19 +166,16 @@ class AdminTableHelper implements IAdminTableHelper
      * 
      * @return string
      */
-    
     public function processAndRender(bool $echo = true) : string
     {
         $this->process();
         return $this->render($echo);
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     public function process() : void
     {
         $state = ['delete' => filter_input(INPUT_GET, Constants::LIST_ACTION_QUERYSTRING_PARAMETER, FILTER_DEFAULT) === 'delete', 'record' => filter_input(INPUT_GET, 'record', FILTER_DEFAULT), 'records' => filter_input(INPUT_GET, 'records', FILTER_DEFAULT), 'list' => filter_input(INPUT_GET, 'list', FILTER_DEFAULT)];
@@ -240,14 +216,12 @@ class AdminTableHelper implements IAdminTableHelper
             WP::redirect($url);
         }
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public function render(bool $echo = true) : string
     {
         $state = ['list' => filter_input(INPUT_GET, Constants::LIST_QUERYSTRING_PARAMETER, FILTER_DEFAULT), 'create' => filter_input(INPUT_GET, Constants::LIST_ACTION_QUERYSTRING_PARAMETER, FILTER_DEFAULT) === 'create', 'update' => filter_input(INPUT_GET, Constants::LIST_ACTION_QUERYSTRING_PARAMETER, FILTER_DEFAULT) === 'update', 'record' => filter_input(INPUT_GET, 'record', FILTER_DEFAULT)];
@@ -283,7 +257,6 @@ class AdminTableHelper implements IAdminTableHelper
         }
         return $output;
     }
-    
     //    public function read(callable $read): IAdminTableHelper {
     //        $this->readProcessor = $read;
     //        return $this;
@@ -294,7 +267,6 @@ class AdminTableHelper implements IAdminTableHelper
      * 
      * @return IAdminTableHelper
      */
-    
     public function readFromSqlTable(string $tableNameWithoutPrefix, array $where = null, string $tableNamePrefix = null) : IAdminTableHelper
     {
         $self = $this;
@@ -333,21 +305,18 @@ SELECT {$columnsString} FROM `{$table}`{$whereString}
 SQL
 );
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminTableHelper
      */
-    
     public function readFromSqlQuery(string $query) : IAdminTableHelper
     {
         return $this->onRead(function ($record, $key = null) use($query) {
             return WP::dbQuery($query);
         });
     }
-    
     //    public function delete(callable $delete): IAdminTableHelper {
     //        $this->deleteProcessor = $delete;
     //        return $this;
@@ -358,7 +327,6 @@ SQL
      * 
      * @return IAdminTableHelper
      */
-    
     public function deleteFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null) : IAdminTableHelper
     {
         $self = $this;
@@ -380,14 +348,12 @@ SQL
             }
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminTableHelper
      */
-    
     public function readFromOptions(string $optionName) : IAdminTableHelper
     {
         return $this->onRead(function ($record, $key) use($optionName) {
@@ -398,14 +364,12 @@ SQL
             return array_values($records);
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminTableHelper
      */
-    
     public function deleteFromOptions(string $optionName) : IAdminTableHelper
     {
         return $this->onDelete(function (array $items, $key) use($optionName) {
@@ -432,5 +396,4 @@ SQL
             WP::setSiteOption($optionName, $records);
         });
     }
-
 }

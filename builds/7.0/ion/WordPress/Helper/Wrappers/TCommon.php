@@ -29,7 +29,6 @@ trait TCommon
      * 
      * @return mixed
      */
-    
     protected static function initialize_TCommon()
     {
         static::registerWrapperAction('admin_enqueue_scripts', function () {
@@ -182,14 +181,12 @@ JS;
             });
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getUrl(string $url, array $controllers = null, array $parameters = null, bool $encodeParameters = true)
     {
         $output = $url;
@@ -211,14 +208,12 @@ JS;
         }
         return $output;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function applyTemplate(string $template, array $parameters) : string
     {
         $output = $template;
@@ -244,14 +239,12 @@ JS;
         }
         return $output;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function redirect(string $url, array $parameters = null, int $status = null)
     {
         if ($status === null) {
@@ -261,14 +254,12 @@ JS;
         wp_redirect(static::getUrl($url, null, $parameters, false));
         exit($status);
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getSiteLink(array $controllers = null, array $parameters = null, bool $absolute = true) : string
     {
         $url = "/";
@@ -277,61 +268,51 @@ JS;
         }
         return static::getUrl($url, $controllers, $parameters);
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addScript(string $id, string $src, bool $backEnd = true, bool $frontEnd = false, bool $inline = false, bool $addToEnd = false, int $priority = 1, ISemVer $version = null, array $dependencies = [])
     {
         static::$scripts[$id] = ["id" => (string) $id, "src" => (string) $src, "backEnd" => (bool) $backEnd, "frontEnd" => (bool) $frontEnd, "inline" => (bool) $inline, "addToEnd" => (bool) $addToEnd, "priority" => (int) $priority, 'version' => $version === null ? static::isDebugMode() ? (string) time() : null : $version->toString(), "dependencies" => $dependencies];
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasScript(string $id) : bool
     {
         return array_key_exists($id, static::$scripts);
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addStyle(string $id, string $src, bool $backEnd = true, bool $frontEnd = false, bool $inline = false, string $media = "screen", int $priority = 1, ISemVer $version = null, array $dependencies = [])
     {
         static::$styles[$id] = ["id" => (string) $id, "src" => (string) $src, "backEnd" => (bool) $backEnd, "frontEnd" => (bool) $frontEnd, "inline" => (bool) $inline, "media" => (string) $media, "priority" => (int) $priority, 'version' => $version === null ? static::isDebugMode() ? (string) time() : null : $version->toString(), "dependencies" => $dependencies];
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasStyle(string $id) : bool
     {
         return array_key_exists($id, static::$styles);
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public static function isWordPress() : bool
     {
         if (!defined('ABSPATH')) {
@@ -339,14 +320,12 @@ JS;
         }
         return true;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function isAdmin(bool $includeLoginPage = false) : bool
     {
         if (defined('WP_HELPER_ADMIN')) {
@@ -364,38 +343,32 @@ JS;
         }
         return is_admin();
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public static function hasPermalinks() : bool
     {
         return PHP::toBool(static::getRawOption('permalink_structure') !== null);
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addImageSize(string $name, int $width = null, int $height = null, bool $crop = null, bool $selectable = null, string $caption = null)
     {
         static::$imageSizes[$name] = ['name' => $name, 'width' => $width === null ? 0 : $width, 'height' => $height === null ? 0 : $height, 'crop' => $crop === null ? false : true, 'selectable' => $selectable === null ? false : true, 'caption' => $caption];
         return;
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function exitWithCode(int $code)
     {
         status_header($code);
@@ -407,14 +380,12 @@ JS;
         }
         exit;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function setCookie(string $name, string $value, int $expiryTimeStamp = null, string $domain = null, string $path = null, bool $secure = null, bool $httpOnly = null) : bool
     {
         if ($secure === null) {
@@ -437,14 +408,12 @@ JS;
         }
         return setcookie($name, $value, $expiryTimeStamp != null ? $expiryTimeStamp : 0, $path, ".{$domain}", $secure, $httpOnly);
     }
-    
     /**
      * method
      * 
      * 
      * @return ?string
      */
-    
     public static function getCurrentObjectType(bool $ignoreTheLoop = false)
     {
         if (static::isAdmin()) {
@@ -452,14 +421,12 @@ JS;
         }
         return static::getCurrentTemplateObjectType($ignoreTheLoop);
     }
-    
     /**
      * method
      * 
      * 
      * @return ?object
      */
-    
     public static function getCurrentObject(bool $ignoreTheLoop = false)
     {
         if (static::isAdmin()) {
@@ -467,14 +434,12 @@ JS;
         }
         return static::getCurrentTemplateObject($ignoreTheLoop);
     }
-    
     /**
      * method
      * 
      * 
      * @return ?int
      */
-    
     public static function getCurrentObjectId(bool $ignoreTheLoop = false)
     {
         if (static::isAdmin()) {
@@ -482,5 +447,4 @@ JS;
         }
         return static::getCurrentTemplateObjectId($ignoreTheLoop);
     }
-
 }

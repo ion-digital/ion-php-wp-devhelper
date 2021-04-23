@@ -8,7 +8,6 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
-
 interface IWordPressPostType
 {
 }

@@ -30,7 +30,6 @@ trait TCron
      * 
      * @return mixed
      */
-    
     protected static function initialize_TCron()
     {
         static::registerWrapperAction('init', function () {
@@ -138,40 +137,34 @@ trait TCron
             }
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function addCronInterval(string $name, int $interval, string $description = null) : string
     {
         static::$cronIntervals[$name] = ['interval' => $interval, 'description' => $description];
         return $name;
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addCronJob(string $name, int $startTimeStamp, string $intervalName, callable $job) : void
     {
         static::$cronJobs[$name] = ['time' => $startTimeStamp, 'interval' => strtolower(trim($intervalName)) === 'once' ? null : $intervalName, 'job' => $job];
         return;
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function removeCronJob(string $name) : void
     {
         if (array_key_exists($name, static::$cronJobs)) {
@@ -180,13 +173,11 @@ trait TCron
         wp_clear_scheduled_hook($name);
         return;
     }
-    
     /**
      * method
      * 
      * @return array
      */
-    
     public static function getCronIntervals() : array
     {
         $result = [];
@@ -195,16 +186,13 @@ trait TCron
         }
         return $result;
     }
-    
     /**
      * method
      * 
      * @return array
      */
-    
     public static function getCronArray() : array
     {
         return _get_cron_array();
     }
-
 }

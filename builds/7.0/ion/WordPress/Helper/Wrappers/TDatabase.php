@@ -25,21 +25,18 @@ trait TDatabase
      * 
      * @return mixed
      */
-    
     protected static function initialize_TDatabase()
     {
         //        static::registerWrapperAction('init', function() {
         //
         //        });
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function dbQuery(string $sql, array $args = null, bool $indexResultByColumnName = true)
     {
         global $wpdb;
@@ -68,14 +65,12 @@ trait TDatabase
         }
         return null;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function dbDeltaTable(string $tableName, array $fields, bool $addPrefix = true)
     {
         // WordPress DB Delta:
@@ -175,7 +170,6 @@ MESSAGE
         }
         return [];
     }
-    
     //TODO
     /**
      * method
@@ -183,11 +177,9 @@ MESSAGE
      * 
      * @return mixed
      */
-    
     public static function dbCreateTable(string $tableName, array $fields, bool $throwExceptionIfExists = false, bool $addPrefix = true)
     {
     }
-    
     //TODO: See TAdminTableHelper::_readFromSqlTable for WHERE example
     /**
      * method
@@ -195,13 +187,11 @@ MESSAGE
      * 
      * @return bool
      */
-    
     public static function dbTableExists(string $tableName, bool $addPrefix = true) : bool
     {
         //FIXME
         return true;
     }
-    
     //TODO: See TAdminTableHelper::_readFromSqlTable for WHERE example
     /**
      * method
@@ -209,11 +199,9 @@ MESSAGE
      * 
      * @return array
      */
-    
     public static function dbSelect(string $tableName, array $where = null, bool $addPrefix = true) : array
     {
     }
-    
     //TODO
     /**
      * method
@@ -221,11 +209,9 @@ MESSAGE
      * 
      * @return mixed
      */
-    
     public static function dbInsert(string $tableName, array $values)
     {
     }
-    
     //TODO
     /**
      * method
@@ -233,11 +219,9 @@ MESSAGE
      * 
      * @return mixed
      */
-    
     public static function dbUpdate(string $tableName, array $values, array $where = null)
     {
     }
-    
     //TODO
     /**
      * method
@@ -245,18 +229,15 @@ MESSAGE
      * 
      * @return mixed
      */
-    
     public static function dbDelete(string $tableName, array $where)
     {
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getDbTableName(string $tableName, bool $addPrefix = true) : string
     {
         if ($addPrefix === false) {
@@ -264,17 +245,14 @@ MESSAGE
         }
         return static::getDbTablePrefix() . $tableName;
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public static function getDbTablePrefix() : string
     {
         global $wpdb;
         return $wpdb->prefix;
     }
-
 }

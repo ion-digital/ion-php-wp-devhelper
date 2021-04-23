@@ -33,7 +33,6 @@ trait TOptions
      * 
      * @return mixed
      */
-    
     protected static function initialize_TOptions()
     {
         static::registerWrapperAction('customize_register', function (WP_Customize_Manager $wpCustomize) {
@@ -69,7 +68,6 @@ trait TOptions
             }
         });
     }
-    
     // --- USE THESE INSTEAD ---
     /**
      * method
@@ -77,7 +75,6 @@ trait TOptions
      * 
      * @return bool
      */
-    
     private static function _hasOption($name, $type = null, $id = null)
     {
         global $wpdb;
@@ -94,14 +91,12 @@ trait TOptions
         }
         return false;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function getSiteOption($name, $default = null)
     {
         if (!static::hasSiteOption($name)) {
@@ -113,50 +108,42 @@ trait TOptions
         }
         return $value;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function setSiteOption($name, $value = null, $autoLoad = false)
     {
         return (bool) update_option($name, $value, $autoLoad);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasSiteOption($name)
     {
         return static::_hasOption($name);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function removeSiteOption($name)
     {
         return (bool) delete_option($name);
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function getPostOption($name, $metaId, $default = null)
     {
         if (!static::hasPostOption($name, $metaId)) {
@@ -168,50 +155,42 @@ trait TOptions
         }
         return $value;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function setPostOption($name, $metaId, $value = null, $autoLoad = false)
     {
         return (bool) update_post_meta($metaId, $name, $value);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasPostOption($name, $metaId)
     {
         return static::_hasOption($name, 'post', $metaId);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function removePostOption($name, $metaId, $value = null)
     {
         return (bool) delete_post_meta($metaId, $name, $value);
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function getTermOption($name, $metaId, $default = null)
     {
         if (!static::hasTermOption($name, $metaId)) {
@@ -223,50 +202,42 @@ trait TOptions
         }
         return $value;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function setTermOption($name, $metaId, $value = null, $autoLoad = false)
     {
         return (bool) update_term_meta($metaId, $name, $value);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasTermOption($name, $metaId)
     {
         return static::_hasOption($name, 'term', $metaId);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function removeTermOption($name, $metaId, $value = null)
     {
         return (bool) delete_term_meta($metaId, $name, $value);
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function getUserOption($name, $metaId, $default = null)
     {
         if (!static::hasUserOption($name, $metaId)) {
@@ -278,50 +249,42 @@ trait TOptions
         }
         return $value;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function setUserOption($name, $metaId, $value = null, $autoLoad = false)
     {
         return (bool) update_user_meta($metaId, $name, $value);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasUserOption($name, $metaId)
     {
         return static::_hasOption($name, 'user', $metaId);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function removeUserOption($name, $metaId, $value = null)
     {
         return (bool) delete_user_meta($metaId, $name, $value);
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function getCommentOption($name, $metaId, $default = null)
     {
         if (!static::hasCommentOption($name)) {
@@ -333,50 +296,42 @@ trait TOptions
         }
         return $value;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function setCommentOption($name, $metaId, $value = null, $autoLoad = false)
     {
         return (bool) update_comment_meta($metaId, $name, $value);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasCommentOption($name, $metaId)
     {
         return static::_hasOption($name, 'comment', $metaId);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function removeCommentOption($name, $metaId, $value = null)
     {
         return (bool) delete_comment_meta($metaId, $name, $value);
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function getCustomizationOption($name, $default = null)
     {
         if (!static::hasCustomizationOption($name)) {
@@ -384,59 +339,50 @@ trait TOptions
         }
         return get_theme_mod($name, null);
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function setCustomizationOption($name, $value = null)
     {
         set_theme_mod($name, $value);
         return;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasCustomizationOption($name)
     {
         return PHP::isEmpty(get_theme_mod($name)) !== null;
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function removeCustomizationOption($name)
     {
         remove_theme_mod($name);
         return;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminCustomizeHelper
      */
-    
     public static function addCustomizationSection($title, $slug = null, $priority = null, $textDomain = null)
     {
         $themeOption = ['slug' => $slug === null ? WP::slugify($title) : $slug, 'title' => $title, 'priority' => $priority === null ? 30 : $priority, 'textDomain' => $textDomain, 'settings' => []];
         static::$themeOptions[$themeOption['slug']] =& $themeOption;
         return new AdminCustomizeHelper($themeOption['settings']);
     }
-    
     // --- DEPRECATED ---
     /**
      * method
@@ -444,7 +390,6 @@ trait TOptions
      * 
      * @return mixed
      */
-    
     public static function getOption($key, $default = null, $id = null, OptionMetaType $type = null, $raw = false)
     {
         if (static::hasOption($key, $id, $type) === false) {
@@ -493,14 +438,12 @@ trait TOptions
         }
         return $tmp;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function setOption($key, $value = null, $id = null, OptionMetaType $type = null, $raw = false, $autoLoad = false)
     {
         if ($raw === false) {
@@ -528,14 +471,12 @@ trait TOptions
         }
         return false;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasOption($key, $id = null, OptionMetaType $type = null)
     {
         $tmp = null;
@@ -558,14 +499,12 @@ trait TOptions
         }
         return static::_hasOption($key, $tmp, $id);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function removeOption($key, $id = null, OptionMetaType $type = null)
     {
         if ($id === null) {
@@ -585,29 +524,24 @@ trait TOptions
                 return delete_comment_meta($id, $key);
         }
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function getRawOption($key, $default = null, $id = null, OptionMetaType $type = null)
     {
         return static::getOption($key, $default, $id, $type, true);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function setRawOption($key, $value = null, $id = null, OptionMetaType $type = null, $autoLoad = false)
     {
         return static::setOption($key, $value, $id, $type, true, $autoLoad);
     }
-
 }

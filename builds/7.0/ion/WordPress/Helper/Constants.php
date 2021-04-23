@@ -10,7 +10,6 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
-
 final class Constants
 {
     const WP_HELPER = 'WP_HELPER';

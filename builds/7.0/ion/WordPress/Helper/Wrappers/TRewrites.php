@@ -27,7 +27,6 @@ trait TRewrites
      * 
      * @return mixed
      */
-    
     protected static function initialize_TRewrites()
     {
         static::registerWrapperAction('init', function () {
@@ -43,26 +42,22 @@ trait TRewrites
         //            static::flushRewriteRules(true);
         //        });
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addRewriteRule(string $pattern, string $target, bool $top = false)
     {
         static::$rewrites[] = ["pattern" => $pattern, "target" => $target, "top" => $top];
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function flushRewriteRules(bool $hard = true)
     {
         //#TODO : https://premium.wpmudev.org/forums/topic/301-redirects-on-multisite/
@@ -110,5 +105,4 @@ trait TRewrites
             }
         }
     }
-
 }

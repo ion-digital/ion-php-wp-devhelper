@@ -25,7 +25,6 @@ trait TFilters
      * 
      * @return mixed
      */
-    
     protected static function initialize_TFilters()
     {
         static::registerWrapperAction('init', function () {
@@ -45,26 +44,22 @@ trait TFilters
             }
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addFilter($name, callable $function, $priority = null, $args = null, $order = null)
     {
         static::$filters[$name][] = ['function' => $function, 'priority' => $priority, 'args' => $args, 'order' => $order === null ? 0 : $order];
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function removeFilter($name, callable $function, $priority = null)
     {
         if (array_key_exists($name, static::$filters)) {
@@ -72,17 +67,14 @@ trait TFilters
         }
         remove_filter($name, $function, $priority === null ? 10 : $priority);
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addContentFilter(callable $function)
     {
         static::addFilter('the_content', $function);
     }
-
 }

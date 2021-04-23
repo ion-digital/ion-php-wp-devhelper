@@ -10,7 +10,6 @@ namespace ion\WordPress\Helper;
  * @author Justus
  */
 use WP_Term;
-
 class WordPressTerm implements IWordPressTerm
 {
     private $wpTerm;
@@ -21,33 +20,27 @@ class WordPressTerm implements IWordPressTerm
      * 
      * @return mixed
      */
-    
     public function __construct(WP_Term $wpTerm, array $children = [])
     {
         $this->wpTerm = $wpTerm;
         $this->children = $children;
     }
-    
     /**
      * method
      * 
      * @return WP_Term
      */
-    
     public function getTermObject() : WP_Term
     {
         return $this->wpTerm;
     }
-    
     /**
      * method
      * 
      * @return array
      */
-    
     public function &getChildren() : array
     {
         return $this->children;
     }
-
 }

@@ -20,7 +20,6 @@ trait TContext
      * 
      * @return ?IContext
      */
-    
     protected static function getContextInstance()
     {
         if (!array_key_exists(static::class, self::$contextInstances)) {
@@ -28,20 +27,17 @@ trait TContext
         }
         return self::$contextInstances[static::class];
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     protected static final function doUninstall()
     {
         static::getContextInstance()->uninstall();
         static::getContextInstance()->onUninstalled();
         return;
     }
-    
     private $helperContext = null;
     private $package = null;
     /**
@@ -50,7 +46,6 @@ trait TContext
      * 
      * @return void
      */
-    
     protected final function __construct_TContext(IPackage $package, array $helperSettings = null)
     {
         //        if(static::getContextInstance() === null) {
@@ -79,13 +74,11 @@ trait TContext
             return;
         });
     }
-    
     /**
      * method
      * 
      * @return IHelperContext
      */
-    
     public final function getHelperContext() : IHelperContext
     {
         if ($this->helperContext === null) {
@@ -93,13 +86,11 @@ trait TContext
         }
         return $this->helperContext;
     }
-    
     /**
      * method
      * 
      * @return IPackage
      */
-    
     public final function getPackage() : IPackage
     {
         if ($this->package === null) {
@@ -107,101 +98,82 @@ trait TContext
         }
         return $this->package;
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     protected abstract function initialize();
-    
     /**
      * method
      * 
      * @return void
      */
-    
     protected function onInitialized()
     {
         // Empty, for now...
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     protected function activate()
     {
         // Empty, for now...
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     protected function onActivated()
     {
         // Empty, for now...
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     protected function deactivate()
     {
         // Empty, for now...
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     protected function onDeactivated()
     {
         // Empty, for now...
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     protected function uninstall()
     {
         // Empty, for now...
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     protected function onUninstalled()
     {
         // Empty, for now...
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     protected function finalize()
     {
         // Empty, for now...
     }
-
 }

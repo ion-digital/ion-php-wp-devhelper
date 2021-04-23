@@ -30,7 +30,6 @@ trait TPosts
      * 
      * @return mixed
      */
-    
     protected static function initialize_TPosts()
     {
         static::registerWrapperAction('init', function () {
@@ -45,14 +44,12 @@ trait TPosts
             }
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressPostType
      */
-    
     public static function addCustomPostType(string $slug, string $pluralLabel, string $singularLabel, string $description = null, string $menuIcon = null, array $supports = null, array $taxonomies = null, callable $registerMetaBox = null, bool $hierarchical = null, bool $hasArchive = null, string $archiveSlug = null, array $labels = null, bool $public = null, bool $excludeFromSearch = null, bool $publiclyQueryable = null, bool $showUi = null, bool $showInNavMenus = null, bool $showInMenu = null, bool $showInAdminBar = null, int $menuPosition = null, string $singleCapabilityType = null, string $pluralCapabilityType = null, array $capabilities = null, bool $mapMetaCap = null, bool $rewrite = null, string $rewriteSlug = null, bool $rewriteWithFront = null, bool $rewriteFeeds = null, bool $rewritePages = null, string $rewriteEndPointMask = null, bool $enableQueryVar = null, string $queryVar = null, bool $canExport = null, bool $deleteWithUser = null, bool $showInRest = null, string $restBase = null, string $restControllerClass = null) : IWordPressPostType
     {
         if ($labels === null) {
@@ -74,14 +71,12 @@ trait TPosts
         static::$customPostTypes[$slug] = ['slug' => $slug, 'pluralLabel' => $pluralLabel, 'labels' => $labels, 'description' => $description, 'public' => $public, 'excludeFromSearch' => $excludeFromSearch, 'publiclyQueryable' => $publiclyQueryable, 'showUi' => $showUi, 'showInNavMenus' => $showInNavMenus, 'showInMenu' => $showInMenu, 'showInAdminBar' => $showInAdminBar, 'menuPosition' => $menuPosition, 'menuIcon' => $menuIcon, 'singleCapabilityType' => $singleCapabilityType, 'pluralCapabilityType' => $pluralCapabilityType, 'capabilities' => $capabilities === null ? null : $capabilities, 'mapMetaCap' => $mapMetaCap, 'hierarchical' => $hierarchical, 'supports' => $supports === null ? null : $supports, 'registerMetaBox' => $registerMetaBox, 'taxonomies' => $taxonomies === null ? null : $taxonomies, 'hasArchive' => $hasArchive, 'archiveSlug' => $archiveSlug, 'rewrite' => $rewrite, 'rewriteSlug' => $rewriteSlug, 'rewriteWithFront' => $rewriteWithFront, 'rewriteFeeds' => $rewriteFeeds, 'rewritePages' => $rewritePages, 'rewriteEndPointMask' => $rewriteEndPointMask, 'enableQueryVar' => $enableQueryVar, 'queryVar' => $queryVar, 'canExport' => $canExport, 'deleteWithUser' => $deleteWithUser, 'showInRest' => $showInRest, 'restBase' => $restBase, 'restControllerClass' => $restControllerClass];
         return new WordPressPostType($slug, static::$customPostTypes[$slug]);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function postExists(string $slug, string $postType = "post") : bool
     {
         global $wpdb;
@@ -96,19 +91,16 @@ SQL;
         }
         return false;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function pageExists(string $slug) : bool
     {
         return static::postExists($slug, 'page');
     }
-    
     //FIXME: Method not complete!!!
     /**
      * method
@@ -116,7 +108,6 @@ SQL;
      * 
      * @return array
      */
-    
     public static function getChildren(bool $depth = null, string $template = null, bool $echo = true) : array
     {
         $result = [];
@@ -141,7 +132,6 @@ SQL;
         }
         return $result;
     }
-    
     //TODO
     /**
      * method
@@ -149,7 +139,6 @@ SQL;
      * 
      * @return ?WP_Post
      */
-    
     public static function getPostParentPost(int $postId)
     {
         $post = get_post($postId);
@@ -162,14 +151,12 @@ SQL;
         }
         return get_post($post->post_parent);
     }
-    
     /**
      * method
      * 
      * 
      * @return ?WP_Term
      */
-    
     public static function getPostParentTerm(int $postId, string $taxonomy = 'category')
     {
         $post = get_post($postId);
@@ -207,14 +194,12 @@ SQL;
         }
         return $terms[0];
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function getPostParents(int $postId) : array
     {
         $terms = [];
@@ -233,5 +218,4 @@ SQL;
         //       $posts = array_reverse($posts);
         return array_merge($terms, $posts);
     }
-
 }

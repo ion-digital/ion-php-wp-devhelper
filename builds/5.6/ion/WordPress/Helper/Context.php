@@ -12,7 +12,6 @@ namespace ion\WordPress\Helper;
 use ion\WordPress\WordPressHelper as WP;
 use ion\Package;
 use ion\IPackage;
-
 abstract class Context implements IContext
 {
     use \ion\WordPress\Helper\TContext;
@@ -22,10 +21,8 @@ abstract class Context implements IContext
      * 
      * @return mixed
      */
-    
     public function __construct(IPackage $package, array $helperSettings = null)
     {
         $this->__construct_TContext($package, $helperSettings);
     }
-
 }

@@ -25,7 +25,6 @@ use ion\WordPress\Helper\Wrappers\ITaxonomies;
 use ion\WordPress\Helper\Wrappers\IWidgets;
 use ion\ISemVer;
 use ion\WordPress\Helper\IHelperContext;
-
 interface IWordPressHelper extends IActions, IAdmin, ICommon, ICron, IDatabase, IFilters, ITemplate, ILogging, IOptions, IPaths, IPosts, IRewrites, IShortCodes, ITaxonomies, IWidgets
 {
     /**
@@ -34,25 +33,19 @@ interface IWordPressHelper extends IActions, IAdmin, ICommon, ICron, IDatabase, 
      * 
      * @return self
      */
-    
     static function createContext($vendorName, $projectName, $loadPath, $helperDir = null, array $wpHelperSettings = null, ISemVer $version = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, callable $finalize = null, array $uninstall = null);
-    
     /**
      * method
      * 
      * @return array
      */
-    
     static function &getContexts();
-    
     /**
      * method
      * 
      * @return IHelperContext
      */
-    
     static function getCurrentContext();
-    
     //    static function context(): IWordPressHelper; // deprecated!
     /**
      * method
@@ -60,95 +53,73 @@ interface IWordPressHelper extends IActions, IAdmin, ICommon, ICron, IDatabase, 
      * 
      * @return IHelperContext
      */
-    
     static function getContext($slug = null);
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     static function isHelperInitialized();
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     static function isHelperFinalized();
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     static function slugify($s);
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     static function isDebugMode();
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     static function panic($errorMessage, $httpCode = null, $title = null);
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     static function hasCapability($capability, $user = null);
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     static function hasManageOptionsCapability($user = null);
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     static function hasEditThemeOptionsCapability($user = null);
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     static function hasManageNetworkCapability($user = null);
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     static function isLoggedIn();
-    
     //static function addCustomPostType(string $singularItemName, string $pluralItemName = null, bool $public = true, bool $hasArchive = false, array $labels = null, string $description = '', ): bool;
     //static function addCustomPostType(IWordPressCustomPostType $customPostType): IWordPressCustomPostType;
     /**
@@ -157,43 +128,33 @@ interface IWordPressHelper extends IActions, IAdmin, ICommon, ICron, IDatabase, 
      * 
      * @return self
      */
-    
     function initialize(callable $call = null);
-    
     /**
      * method
      * 
      * 
      * @return self
      */
-    
     function activate(callable $call = null);
-    
     /**
      * method
      * 
      * 
      * @return self
      */
-    
     function deactivate(callable $call = null);
-    
     /**
      * method
      * 
      * 
      * @return self
      */
-    
     function uninstall(array $call = null);
-    
     /**
      * method
      * 
      * 
      * @return self
      */
-    
     function finalize(callable $call = null);
-
 }

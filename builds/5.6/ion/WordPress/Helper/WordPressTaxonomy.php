@@ -9,7 +9,6 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
-
 class WordPressTaxonomy implements IWordPressTaxonomy
 {
     private $slug;
@@ -20,11 +19,9 @@ class WordPressTaxonomy implements IWordPressTaxonomy
      * 
      * @return mixed
      */
-    
     public function __construct($slug, array &$parent)
     {
         $this->slug = $slug;
         $this->parent = $parent;
     }
-
 }

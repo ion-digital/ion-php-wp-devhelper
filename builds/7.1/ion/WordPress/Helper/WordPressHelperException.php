@@ -11,7 +11,6 @@ namespace ion\WordPress\Helper;
  */
 use Exception;
 use WP_Error;
-
 class WordPressHelperException extends Exception implements IWordPressHelperException
 {
     /**
@@ -20,10 +19,8 @@ class WordPressHelperException extends Exception implements IWordPressHelperExce
      * 
      * @return mixed
      */
-    
     public function __construct(string $message = "", int $code = null, Exception $previous = null)
     {
         parent::__construct($message, $code === null ? 0 : $code, $previous);
     }
-
 }

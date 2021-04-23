@@ -26,7 +26,6 @@ trait TShortCodes
      * 
      * @return mixed
      */
-    
     protected static function initialize_TShortCodes()
     {
         static::registerWrapperAction('init', function () {
@@ -37,27 +36,23 @@ trait TShortCodes
             }
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function addShortCode(string $code, callable $action, array $defaults = [])
     {
         // https://codex.wordpress.org/Shortcode_API
         static::$shortCodes[$code] = ["action" => $action, "defaults" => $defaults];
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function doShortCode(string $code, array $attributes = null) : string
     {
         $output = "";
@@ -75,43 +70,36 @@ trait TShortCodes
         }
         return $output;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function processShortCodes(string $content) : string
     {
         $output = (string) do_shortcode($content);
         return $output;
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function removeShortCode(string $code) : void
     {
         remove_shortcode($code);
         return;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function stripShortCodes(string $input) : string
     {
         return strip_shortcodes($input);
     }
-
 }

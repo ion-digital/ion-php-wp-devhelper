@@ -13,7 +13,6 @@ use ion\WordPress\Helper\Constants;
 use ion\WordPress\WordPressHelper as WP;
 use ion\PhpHelper as PHP;
 use ion\WordPress\Helper\Wrappers\OptionMetaType;
-
 class AdminFormHelper implements IAdminFormHelper
 {
     const WP_HELPER_LEGACY = 'WP_HELPER_LEGACY';
@@ -23,12 +22,10 @@ class AdminFormHelper implements IAdminFormHelper
      * 
      * @return array
      */
-    
     public static function createGroupDescriptorInstance(string $title = null, string $description = null, string $id = null, int $columns = null) : array
     {
         return ["id" => (string) $id, "columns" => $columns, "title" => (string) $title, "description" => (string) $description, "fields" => (array) []];
     }
-    
     private $useSerialization;
     private $descriptor;
     private $group;
@@ -47,7 +44,6 @@ class AdminFormHelper implements IAdminFormHelper
      * 
      * @return mixed
      */
-    
     public function __construct(array &$descriptor)
     {
         $this->descriptor =& $descriptor;
@@ -68,14 +64,12 @@ class AdminFormHelper implements IAdminFormHelper
         //        $this->updateToOptions(null);
         $this->rendered = false;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function onRead(callable $onRead = null) : IAdminFormHelper
     {
         if ($this->rendered) {
@@ -84,14 +78,12 @@ class AdminFormHelper implements IAdminFormHelper
         $this->onReadHandlers[] = $onRead;
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function onCreate(callable $onCreate = null) : IAdminFormHelper
     {
         if ($this->rendered) {
@@ -100,14 +92,12 @@ class AdminFormHelper implements IAdminFormHelper
         $this->onCreateHandlers[] = $onCreate;
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function onUpdate(callable $onUpdate = null) : IAdminFormHelper
     {
         if ($this->rendered) {
@@ -116,25 +106,21 @@ class AdminFormHelper implements IAdminFormHelper
         $this->onUpdateHandlers[] = $onUpdate;
         return $this;
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public function getId() : string
     {
         return $this->descriptor['id'];
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function addGroup(string $title = null, string $description = null, string $id = null, int $columns = null) : IAdminFormHelper
     {
         if ($this->rendered) {
@@ -149,14 +135,12 @@ class AdminFormHelper implements IAdminFormHelper
         $this->group =& $this->descriptor["groups"][count($this->descriptor["groups"]) - 1];
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function addField(array $fieldDescriptor) : IAdminFormHelper
     {
         if ($this->rendered) {
@@ -165,14 +149,12 @@ class AdminFormHelper implements IAdminFormHelper
         $this->group["fields"][] = $fieldDescriptor;
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function addForeignKey(string $name, int $value) : IAdminFormHelper
     {
         if ($this->rendered) {
@@ -181,27 +163,23 @@ class AdminFormHelper implements IAdminFormHelper
         $this->foreignKeys[$name] = $value;
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public function processAndRender(bool $echo = true, int $post = null) : string
     {
         $this->process($post);
         return $this->render($echo);
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     private function setOption(string $key, $value = null, int $metaId = null, $type = null)
     {
         if ($metaId === null && $type !== null) {
@@ -230,14 +208,12 @@ class AdminFormHelper implements IAdminFormHelper
         WP::setSiteOption($key, $value);
         return;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private function getOption(string $key, $default = null, int $metaId = null, $type = null)
     {
         if ($metaId === null && $type !== null) {
@@ -267,14 +243,12 @@ class AdminFormHelper implements IAdminFormHelper
         }
         return $dbValue;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private function renderRows(array &$state, $columns, array $rows, array $data = null, int $metaId = null)
     {
         $output = "";
@@ -395,14 +369,12 @@ TEMPLATE;
         /* ?><!--<pre><?php print_r($rows); ?></pre>--><?php */
         return $output;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public function render(bool $echo = true) : string
     {
         if ($this->output !== null) {
@@ -543,7 +515,7 @@ TEMPLATE;
             }
             $visibleFields = 0;
             foreach ($group['fields'] as $field) {
-                if ($field['hidden'] === true) {
+                if (array_key_exists('hidden', $field) && $field['hidden'] === true) {
                     continue;
                 }
                 $visibleFields++;
@@ -632,14 +604,12 @@ TEMPLATE;
         }
         return $output;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getTypeParameter($field, $value)
     {
         switch ($value) {
@@ -652,62 +622,52 @@ TEMPLATE;
                 return '%s';
         }
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function setOptionPrefix(string $optionPrefix = null) : IAdminFormHelper
     {
         $this->optionPrefix = $optionPrefix;
         return $this;
     }
-    
     /**
      * method
      * 
      * @return ?string
      */
-    
     public function getOptionPrefix()
     {
         return $this->optionPrefix;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function setUseSerialization(bool $useSerialization) : IAdminFormHelper
     {
         $this->useSerialization = $useSerialization;
         return $this;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public function getUseSerialization() : bool
     {
         return $this->useSerialization;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function readFromOptions(string $optionName = null) : IAdminFormHelper
     {
         $self = $this;
@@ -741,14 +701,12 @@ TEMPLATE;
             return $result;
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function updateToOptions(string $optionName = null) : IAdminFormHelper
     {
         $self = $this;
@@ -793,14 +751,12 @@ TEMPLATE;
             return;
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function createToOptions(string $optionName = null) : IAdminFormHelper
     {
         $self = $this;
@@ -830,27 +786,23 @@ TEMPLATE;
             }
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function redirect(callable $redirect) : IAdminFormHelper
     {
         $this->redirectProcessor = $redirect;
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public function process(int $metaId = null, OptionMetaType $metaType = null)
     {
         if ($this->processed === false) {
@@ -1057,7 +1009,6 @@ TEMPLATE;
             $this->processed = true;
         }
     }
-    
     //TODO: Verify if the following methods are working
     /**
      * method
@@ -1065,7 +1016,6 @@ TEMPLATE;
      * 
      * @return IAdminFormHelper
      */
-    
     public function readFromSqlQuery(string $query) : IAdminFormHelper
     {
         return $this->onRead(function ($record = null) use($query) {
@@ -1088,14 +1038,12 @@ TEMPLATE;
             return [];
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function readFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null, string $recordField = null, int $recordId = null) : IAdminFormHelper
     {
         global $wpdb;
@@ -1143,14 +1091,12 @@ SELECT {$columnsString} FROM `{$table}`{$whereString} LIMIT 1
 SQL
 );
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function updateToSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null, string $recordField = null, int $recordId = null) : IAdminFormHelper
     {
         $self = $this;
@@ -1213,14 +1159,12 @@ SQL
             }));
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminFormHelper
      */
-    
     public function createToSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null) : IAdminFormHelper
     {
         return $this->onCreate(function ($values, $key, int $metaId = null) use($tableNameWithoutPrefix, $tableNamePrefix) {
@@ -1251,5 +1195,4 @@ SQL
             WP::dbQuery("INSERT INTO `{$table}` ({$insertColumnsString}) VALUES ({$insertValuesString})", array_values($values));
         });
     }
-
 }

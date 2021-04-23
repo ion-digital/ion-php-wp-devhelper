@@ -16,7 +16,6 @@ use ion\WordPress\Helper\Constants;
 use ion\Package;
 use ion\PhpHelper as PHP;
 use Parsedown;
-
 class Tools
 {
     //    public static function initialize(IWordPressHelper $context, array $wpHelperSettings = null): static {
@@ -30,7 +29,6 @@ class Tools
      * 
      * @return mixed
      */
-    
     public static function isHidden()
     {
         if (WP::hasOption(Constants::TOOLS_FULLY_HIDDEN_OPTION) === false) {
@@ -38,13 +36,11 @@ class Tools
         }
         return (bool) WP::getSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false) === true;
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public static function isDisabled()
     {
         //print_r(WP::getOption(Constants::TOOLS_HIDDEN_OPTION, false));
@@ -57,35 +53,29 @@ class Tools
         }
         return (bool) WP::getSiteOption(Constants::TOOLS_HIDDEN_OPTION, false) === true;
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public static function enable()
     {
         WP::setSiteOption(Constants::TOOLS_HIDDEN_OPTION, true);
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public static function disable()
     {
         WP::setSiteOption(Constants::TOOLS_HIDDEN_OPTION, false);
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public static function addEnableMenuItem()
     {
         //        var_dump(WP::getOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false));
@@ -94,13 +84,11 @@ class Tools
             WP::getAdminMenuPage('tools.php')->addSubMenuPage('Helper', static::getEnableView(), 'wp-devhelper-enable');
         }
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     private static function getEnableView()
     {
         return function () {
@@ -123,14 +111,12 @@ class Tools
             })->render();
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getSettingsView(IHelperContext $context)
     {
         return function () use($context) {
@@ -151,26 +137,22 @@ class Tools
             //var_dump($f->
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getStateDetailView(IHelperContext $context)
     {
         return null;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getStateView(IHelperContext $context)
     {
         return function () use($context) {
@@ -266,14 +248,12 @@ class Tools
             })->render();
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getWordPressStateView(IHelperContext $context)
     {
         return function () use($context) {
@@ -328,14 +308,12 @@ class Tools
             })->render();
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getPhpErrorLogView(IHelperContext $context)
     {
         return function () use($context) {
@@ -366,14 +344,12 @@ TMP;
 HTML;
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getLogListView(IHelperContext $context)
     {
         return function () use($context) {
@@ -388,14 +364,12 @@ HTML;
             })->render();
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getLogDetailView(IHelperContext $context, IWordPressHelperLog $log = null)
     {
         return function () use($context, $log) {
@@ -463,14 +437,12 @@ JS
             })->render();
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getPhpInfoView(IHelperContext $context)
     {
         return function () use($context) {
@@ -484,14 +456,12 @@ JS
 HTML;
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getHtAccessView(IHelperContext $context)
     {
         return function () use($context) {
@@ -507,14 +477,12 @@ HTML;
 HTML;
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getWordPressOptionDetailView(IHelperContext $context)
     {
         return function () use($context) {
@@ -554,14 +522,12 @@ HTML;
             })->render();
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getWordPressOptionsView(IHelperContext $context)
     {
         return function () use($context) {
@@ -574,14 +540,12 @@ HTML;
             })->render();
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getAboutView(IHelperContext $context)
     {
         return function () use($context) {
@@ -631,14 +595,12 @@ HTML;
 HTML;
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public function __construct(IHelperContext $context, array $wpHelperSettings = null)
     {
         //print_r(static::isDisabled());
@@ -777,14 +739,12 @@ HTML;
         });
         //WP::AddRewriteRule("/?red-i/property/([0-9]+)(/([^/]+))?/?\$", "?red-i=true&load=single&label=\$1&function=\$3");
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getCronStateView(IHelperContext $context)
     {
         return function () use($context) {
@@ -867,5 +827,4 @@ HTML;
             })->render();
         };
     }
-
 }

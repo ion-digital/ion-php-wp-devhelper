@@ -6,7 +6,6 @@ namespace ion\WordPress\Helper;
 
 use ion\Logger\Logger;
 use Psr\Log\LoggerInterface;
-
 interface IWordPressHelperLog
 {
     /**
@@ -14,34 +13,26 @@ interface IWordPressHelperLog
      *
      * @return LoggerInterface
      */
-    
     function getLogger();
-    
     /**
      * method
      * 
      * 
      * @return IWordPressHelperLog
      */
-    
     function setName($name = null);
-    
     /**
      * method
      * 
      * @return string
      */
-    
     function getName();
-    
     /**
      * method
      * 
      * @return string
      */
-    
     function getSlug();
-    
     /**
      * System is unusable.
      *
@@ -50,9 +41,7 @@ interface IWordPressHelperLog
      *
      * @return void
      */
-    
     function emergency($message, array $logContext = []);
-    
     /**
      * Action must be taken immediately.
      *
@@ -64,9 +53,7 @@ interface IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     function alert($message, array $logContext = []);
-    
     /**
      * Critical conditions.
      *
@@ -77,9 +64,7 @@ interface IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     function critical($message, array $logContext = []);
-    
     /**
      * Runtime errors that do not require immediate action but should typically
      * be logged and monitored.
@@ -89,9 +74,7 @@ interface IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     function error($message, array $logContext = []);
-    
     /**
      * Exceptional occurrences that are not errors.
      *
@@ -103,9 +86,7 @@ interface IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     function warning($message, array $logContext = []);
-    
     /**
      * Normal but significant events.
      *
@@ -114,9 +95,7 @@ interface IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     function notice($message, array $logContext = []);
-    
     /**
      * Interesting events.
      *
@@ -127,9 +106,7 @@ interface IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     function info($message, array $logContext = []);
-    
     /**
      * Detailed debug information.
      *
@@ -138,9 +115,7 @@ interface IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     function debug($message, array $logContext = []);
-    
     /**
      * Logs with an arbitrary level.
      *
@@ -150,7 +125,5 @@ interface IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     function log($level, $message, array $logContext = []);
-
 }

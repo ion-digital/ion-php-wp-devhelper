@@ -22,21 +22,18 @@ trait TLogging
      * 
      * @return mixed
      */
-    
     protected static function initialize_TLogging()
     {
         //        static::registerWrapperAction('init', function() {
         //
         //        });
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressHelperLog
      */
-    
     public static function registerLog($slug, $name = null)
     {
         $slug = static::slugify($slug);
@@ -51,14 +48,12 @@ trait TLogging
         }
         return $log;
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressHelperLog
      */
-    
     public static function log($message, $level = null, $slug = null, array $logContext = null)
     {
         $log = null;
@@ -104,16 +99,13 @@ trait TLogging
         $log->log(strtolower($levelString), $message, $logContext === null ? [] : $logContext);
         return $log;
     }
-    
     /**
      * method
      * 
      * @return array
      */
-    
     public static function getLogs()
     {
         return static::$logs;
     }
-
 }

@@ -29,7 +29,6 @@ trait TCommon
      * 
      * @return mixed
      */
-    
     protected static function initialize_TCommon()
     {
         static::registerWrapperAction('admin_enqueue_scripts', function () {
@@ -182,14 +181,12 @@ JS;
             });
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getUrl($url, array $controllers = null, array $parameters = null, $encodeParameters = true)
     {
         $output = $url;
@@ -211,14 +208,12 @@ JS;
         }
         return $output;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function applyTemplate($template, array $parameters)
     {
         $output = $template;
@@ -244,14 +239,12 @@ JS;
         }
         return $output;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function redirect($url, array $parameters = null, $status = null)
     {
         if ($status === null) {
@@ -261,14 +254,12 @@ JS;
         wp_redirect(static::getUrl($url, null, $parameters, false));
         exit($status);
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getSiteLink(array $controllers = null, array $parameters = null, $absolute = true)
     {
         $url = "/";
@@ -277,61 +268,51 @@ JS;
         }
         return static::getUrl($url, $controllers, $parameters);
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addScript($id, $src, $backEnd = true, $frontEnd = false, $inline = false, $addToEnd = false, $priority = 1, ISemVer $version = null, array $dependencies = [])
     {
         static::$scripts[$id] = ["id" => (string) $id, "src" => (string) $src, "backEnd" => (bool) $backEnd, "frontEnd" => (bool) $frontEnd, "inline" => (bool) $inline, "addToEnd" => (bool) $addToEnd, "priority" => (int) $priority, 'version' => $version === null ? static::isDebugMode() ? (string) time() : null : $version->toString(), "dependencies" => $dependencies];
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasScript($id)
     {
         return array_key_exists($id, static::$scripts);
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addStyle($id, $src, $backEnd = true, $frontEnd = false, $inline = false, $media = "screen", $priority = 1, ISemVer $version = null, array $dependencies = [])
     {
         static::$styles[$id] = ["id" => (string) $id, "src" => (string) $src, "backEnd" => (bool) $backEnd, "frontEnd" => (bool) $frontEnd, "inline" => (bool) $inline, "media" => (string) $media, "priority" => (int) $priority, 'version' => $version === null ? static::isDebugMode() ? (string) time() : null : $version->toString(), "dependencies" => $dependencies];
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasStyle($id)
     {
         return array_key_exists($id, static::$styles);
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public static function isWordPress()
     {
         if (!defined('ABSPATH')) {
@@ -339,14 +320,12 @@ JS;
         }
         return true;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function isAdmin($includeLoginPage = false)
     {
         if (defined('WP_HELPER_ADMIN')) {
@@ -364,38 +343,32 @@ JS;
         }
         return is_admin();
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public static function hasPermalinks()
     {
         return PHP::toBool(static::getRawOption('permalink_structure') !== null);
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addImageSize($name, $width = null, $height = null, $crop = null, $selectable = null, $caption = null)
     {
         static::$imageSizes[$name] = ['name' => $name, 'width' => $width === null ? 0 : $width, 'height' => $height === null ? 0 : $height, 'crop' => $crop === null ? false : true, 'selectable' => $selectable === null ? false : true, 'caption' => $caption];
         return;
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function exitWithCode($code)
     {
         status_header($code);
@@ -407,14 +380,12 @@ JS;
         }
         exit;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function setCookie($name, $value, $expiryTimeStamp = null, $domain = null, $path = null, $secure = null, $httpOnly = null)
     {
         if ($secure === null) {
@@ -437,14 +408,12 @@ JS;
         }
         return setcookie($name, $value, $expiryTimeStamp != null ? $expiryTimeStamp : 0, $path, ".{$domain}", $secure, $httpOnly);
     }
-    
     /**
      * method
      * 
      * 
      * @return ?string
      */
-    
     public static function getCurrentObjectType($ignoreTheLoop = false)
     {
         if (static::isAdmin()) {
@@ -452,14 +421,12 @@ JS;
         }
         return static::getCurrentTemplateObjectType($ignoreTheLoop);
     }
-    
     /**
      * method
      * 
      * 
      * @return ?object
      */
-    
     public static function getCurrentObject($ignoreTheLoop = false)
     {
         if (static::isAdmin()) {
@@ -467,14 +434,12 @@ JS;
         }
         return static::getCurrentTemplateObject($ignoreTheLoop);
     }
-    
     /**
      * method
      * 
      * 
      * @return ?int
      */
-    
     public static function getCurrentObjectId($ignoreTheLoop = false)
     {
         if (static::isAdmin()) {
@@ -482,5 +447,4 @@ JS;
         }
         return static::getCurrentTemplateObjectId($ignoreTheLoop);
     }
-
 }

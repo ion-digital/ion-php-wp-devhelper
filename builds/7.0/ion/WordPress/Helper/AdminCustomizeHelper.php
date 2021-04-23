@@ -9,7 +9,6 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
-
 class AdminCustomizeHelper implements IAdminCustomizeHelper
 {
     private $descriptor;
@@ -19,12 +18,10 @@ class AdminCustomizeHelper implements IAdminCustomizeHelper
      * 
      * @return mixed
      */
-    
     public function __construct(array &$descriptor)
     {
         $this->descriptor =& $descriptor;
     }
-    
     //$wpCustomize->add_section( 'ion-settings' , array(
     //
     //    'title'      => __( 'ION', 'ion-settings' ),
@@ -54,50 +51,42 @@ class AdminCustomizeHelper implements IAdminCustomizeHelper
      * 
      * @return IAdminCustomizeHelper
      */
-    
     public function addTextSetting(string $label, string $key, string $default = null, bool $multiLine = false, int $priority = null, string $transport = 'refresh') : IAdminCustomizeHelper
     {
         $this->descriptor[$key] = ['label' => $label, 'key' => $key, 'default' => $default, 'transport' => $transport, 'type' => 'text', 'multiLine' => $multiLine, 'options' => null, 'priority' => $priority];
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminCustomizeHelper
      */
-    
     public function addDropDownSetting(string $label, string $key, $default = null, array $options = [], int $priority = null, string $transport = 'refresh') : IAdminCustomizeHelper
     {
         $this->descriptor[$key] = ['label' => $label, 'key' => $key, 'default' => $default, 'transport' => $transport, 'type' => 'select', 'multiLine' => null, 'options' => $options, 'priority' => $priority];
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminCustomizeHelper
      */
-    
     public function addMediaSetting(string $label, string $key, $default = null, int $priority = null, string $transport = 'refresh') : IAdminCustomizeHelper
     {
         $this->descriptor[$key] = ['label' => $label, 'key' => $key, 'default' => $default, 'transport' => $transport, 'type' => 'media', 'multiLine' => null, 'options' => null, 'priority' => $priority];
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminCustomizeHelper
      */
-    
     public function addCheckBoxSetting(string $label, string $key, bool $default = null, int $priority = null, string $transport = 'refresh') : IAdminCustomizeHelper
     {
         $this->descriptor[$key] = ['label' => $label, 'key' => $key, 'default' => $default, 'transport' => $transport, 'type' => 'checkbox', 'multiLine' => null, 'options' => null, 'priority' => $priority];
         return $this;
     }
-
 }

@@ -633,7 +633,7 @@ TEMPLATE;
             
             foreach($group['fields'] as $field) {                
                 
-                if($field['hidden'] === true) {
+                if(array_key_exists('hidden', $field) && $field['hidden'] === true) {
                     
                     continue;
                 }

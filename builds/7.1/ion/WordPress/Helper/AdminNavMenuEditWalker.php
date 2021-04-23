@@ -19,7 +19,6 @@ use Walker_Nav_Menu;
 use Walker_Nav_Menu_Edit;
 use ion\WordPress\WordPressHelper as WP;
 use ion\PhpHelper as PHP;
-
 class AdminNavMenuEditWalker extends Walker_Nav_Menu_Edit
 {
     const OPENING_ELEMENT = '<p class="field-description description description-wide">';
@@ -31,7 +30,6 @@ class AdminNavMenuEditWalker extends Walker_Nav_Menu_Edit
      * 
      * @return mixed
      */
-    
     public function start_el(&$output, $item, $depth = 0, $args = array(), $id = 0)
     {
         parent::start_el($output, $item, $depth, $args, $id);
@@ -81,5 +79,4 @@ class AdminNavMenuEditWalker extends Walker_Nav_Menu_Edit
         }
         $output = str_replace(static::OPENING_ELEMENT, static::REPLACEMENT_ELEMENT, $output);
     }
-
 }

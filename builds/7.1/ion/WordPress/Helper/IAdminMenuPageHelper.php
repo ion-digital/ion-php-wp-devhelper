@@ -8,7 +8,6 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
-
 interface IAdminMenuPageHelper
 {
     /**
@@ -17,25 +16,19 @@ interface IAdminMenuPageHelper
      * 
      * @return mixed
      */
-    
     function __construct(array &$parent);
-    
     /**
      * method
      * 
      * 
      * @return IAdminMenuPageHelper
      */
-    
     function addSubMenuPage(string $title, callable $content, string $id = null, string $menuTitle = null, string $capability = null) : IAdminMenuPageHelper;
-    
     /**
      * method
      * 
      * 
      * @return IAdminMenuPageHelper
      */
-    
     function addSubMenuPageTab(string $title, callable $content, string $id = null, string $menuTitle = null, string $capability = null) : IAdminMenuPageHelper;
-
 }

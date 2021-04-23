@@ -10,7 +10,6 @@ namespace ion\WordPress\Helper;
  * @author Justus
  */
 use ion\WordPress\WordPressHelper;
-
 class AdminMenuPageHelper implements IAdminMenuPageHelper
 {
     /**
@@ -19,13 +18,11 @@ class AdminMenuPageHelper implements IAdminMenuPageHelper
      * 
      * @return array
      */
-    
     private static function createSubMenuPageDescriptor($title, callable &$content, $id = null, $menuTitle = null, $capability = null) : array
     {
         //WordPressHelper::registerView($content);
         return ["pageTitle" => $title, "menuTitle" => $menuTitle !== null ? $menuTitle : $title, "menuSlug" => $id !== null ? WordPressHelper::slugify($id) : ($menuTitle !== null ? WordPressHelper::slugify($menuTitle) : WordPressHelper::slugify($title)), "capability" => $capability, "content" => $content, "html" => null, "render" => true, "tabs" => []];
     }
-    
     private $parent;
     private $parentIndex;
     /**
@@ -34,7 +31,6 @@ class AdminMenuPageHelper implements IAdminMenuPageHelper
      * 
      * @return mixed
      */
-    
     public function __construct(array &$parent, int $parentIndex = null)
     {
         $this->parent =& $parent;
@@ -43,14 +39,12 @@ class AdminMenuPageHelper implements IAdminMenuPageHelper
         }
         $this->parentIndex = $parentIndex;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     private function createSubMenuPage(array &$array, $title, callable $content, $id = null, $menuTitle = null, $capability = null) : array
     {
         if ($capability === null) {
@@ -67,28 +61,24 @@ class AdminMenuPageHelper implements IAdminMenuPageHelper
         $array[] = $instance;
         return $instance;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminMenuPageHelper
      */
-    
     public function addSubMenuPage(string $title, callable $content, string $id = null, string $menuTitle = null, string $capability = null) : IAdminMenuPageHelper
     {
         $subMenus =& $this->parent[$this->parentIndex]["subMenus"];
         $this->createSubMenuPage($subMenus, $title, $content, $id, $menuTitle, $capability);
         return new static($this->parent, null);
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminMenuPageHelper
      */
-    
     public function addSubMenuPageTab(string $title, callable $content, string $id = null, string $menuTitle = null, string $capability = null) : IAdminMenuPageHelper
     {
         $menuPage =& $this->parent[$this->parentIndex];
@@ -102,5 +92,4 @@ class AdminMenuPageHelper implements IAdminMenuPageHelper
         //        }
         return new static($this->parent, null);
     }
-
 }

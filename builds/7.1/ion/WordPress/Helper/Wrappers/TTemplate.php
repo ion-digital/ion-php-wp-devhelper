@@ -33,7 +33,6 @@ trait TTemplate
      * 
      * @return mixed
      */
-    
     protected static function initialize_TTemplate()
     {
         static::registerWrapperAction('init', function () {
@@ -42,14 +41,12 @@ trait TTemplate
             }
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function isFrontPage(int $postId = null) : bool
     {
         if ($postId === null) {
@@ -57,14 +54,12 @@ trait TTemplate
         }
         return PHP::toInt(static::getSiteOption('page_on_front', false)) === $postId;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function isPostsPage(int $postId = null) : bool
     {
         if ($postId === null) {
@@ -72,25 +67,21 @@ trait TTemplate
         }
         return PHP::toInt(static::getSiteOption('page_for_posts', false)) === $postId;
     }
-    
     //Deprecated
     /**
      * method
      * 
      * @return bool
      */
-    
     public static function isBlogPage() : bool
     {
         return static::isPostsPage();
     }
-    
     /**
      * method
      * 
      * @return ?object
      */
-    
     public static function getUriObject()
     {
         $obj = get_queried_object();
@@ -99,13 +90,11 @@ trait TTemplate
         }
         return null;
     }
-    
     /**
      * method
      * 
      * @return ?int
      */
-    
     public static function getUriPostId() : ?int
     {
         $obj = static::getUriObject();
@@ -114,25 +103,21 @@ trait TTemplate
         }
         return null;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public static function isPage() : bool
     {
         return static::isPost("page");
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function isPost(string $name = null) : bool
     {
         if (is_single() && !is_page()) {
@@ -145,14 +130,12 @@ trait TTemplate
         }
         return false;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function isCategory(string $name = null) : bool
     {
         if ($name === null) {
@@ -160,25 +143,21 @@ trait TTemplate
         }
         return false;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public static function isArchive() : bool
     {
         return (bool) is_archive();
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function theLoop(callable $generator = null, int $limit = null, string $emptyText = null, bool $echo = false) : string
     {
         $cnt = 0;
@@ -218,14 +197,12 @@ trait TTemplate
         }
         return $output;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function title(bool $echo = true) : string
     {
         $output = "";
@@ -244,14 +221,12 @@ trait TTemplate
         }
         return $output;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function content(bool $echo = true) : string
     {
         $output = "";
@@ -275,7 +250,6 @@ trait TTemplate
         }
         return $output;
     }
-    
     //    public static function excerpt(bool $echo = true, string $excerptSuffix = ' ... ', int $firstSize = 110, int $size = 55) {
     //
     //    }
@@ -285,19 +259,16 @@ trait TTemplate
      * 
      * @return void
      */
-    
     public static function addMenu(string $id, string $description = null) : void
     {
         static::$menus[$id] = ["id" => $id, "description" => $description];
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function menu(string $id, string $template = null, string $menuId = null, int $depth = 0, bool $echo = false) : string
     {
         $slug = static::slugify($id);
@@ -328,14 +299,12 @@ trait TTemplate
         }
         return $output;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function siteLink(array $controllers = null, array $parameters = null, bool $absolute = true, bool $echo = true) : string
     {
         $url = static::getSiteLink($controllers, $parameters, $absolute);
@@ -344,14 +313,12 @@ trait TTemplate
         }
         return $url;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function widget(IWordPressWidget $widget, array $values = null, string $beforeWidget = null, string $afterWidget = null, string $beforeTitle = null, string $afterTitle = null, bool $echo = true) : string
     {
         $id = $widget->GetId();
@@ -364,14 +331,12 @@ trait TTemplate
         }
         return $output;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function sideBar(string $id, bool $echo = true) : string
     {
         $output = "";
@@ -387,24 +352,20 @@ trait TTemplate
         }
         return $output;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public static function isPaginated() : bool
     {
         return PHP::count(paginate_links(['type' => 'array', 'prev_next' => false, 'prev_text' => false, 'next_text' => false])) > 1;
     }
-    
     /**
      * method
      * 
      * @return int
      */
-    
     public static function getCurrentPage() : int
     {
         $pageIndex = PHP::toInt(get_query_var('paged'));
@@ -413,25 +374,21 @@ trait TTemplate
         }
         return $pageIndex;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function getPageLinks(bool $prevNext = false, string $prevText = null, string $nextText = null) : array
     {
         return paginate_links(['type' => 'array', 'prev_next' => $prevNext, 'prev_text' => $prevText === null ? __('« Previous') : $prevText, 'next_text' => $nextText === null ? __('Next »') : $nextText]);
     }
-    
     /**
      * method
      * 
      * @return array
      */
-    
     public static function getSearchTerms() : array
     {
         $terms = PHP::toString(PHP::filterInput('s', [INPUT_GET], FILTER_DEFAULT));
@@ -440,13 +397,11 @@ trait TTemplate
         }
         return [];
     }
-    
     /**
      * method
      * 
      * @return int
      */
-    
     public static function getPostsPerPage() : int
     {
         $tmp = PHP::toInt(get_option('posts_per_page'));
@@ -455,14 +410,12 @@ trait TTemplate
         }
         return $tmp;
     }
-    
     /**
      * method
      * 
      * 
      * @return int
      */
-    
     public static function getTotalPostCount(WP_Query $wpQuery = null) : int
     {
         if ($wpQuery !== null) {
@@ -471,14 +424,12 @@ trait TTemplate
         global $wp_query;
         return $wp_query->found_posts;
     }
-    
     /**
      * method
      * 
      * 
      * @return ?object
      */
-    
     public static function getCurrentTemplateObject(bool $subject = false)
     {
         if (static::isAdmin()) {
@@ -498,14 +449,12 @@ trait TTemplate
         }
         return $obj;
     }
-    
     /**
      * method
      * 
      * 
      * @return ?string
      */
-    
     public static function getCurrentTemplateObjectType(bool $subject = false) : ?string
     {
         $obj = static::getCurrentTemplateObject($subject);
@@ -514,14 +463,12 @@ trait TTemplate
         }
         return (string) get_class($obj);
     }
-    
     /**
      * method
      * 
      * 
      * @return ?int
      */
-    
     public static function getCurrentTemplateObjectId(bool $subject = false) : ?int
     {
         $obj = static::getCurrentTemplateObject($subject);
@@ -537,5 +484,4 @@ trait TTemplate
         }
         return null;
     }
-
 }

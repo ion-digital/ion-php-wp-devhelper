@@ -15,7 +15,6 @@ use ion\PhpHelper as PHP;
 use ion\ISemVer;
 use ion\Package;
 use ion\SemVer;
-
 final class HelperContext implements IHelperContext
 {
     //    use \ion\TObserver;
@@ -26,12 +25,10 @@ final class HelperContext implements IHelperContext
      * 
      * @return void
      */
-    
     public static function uninstall() : void
     {
         // empty for now!
     }
-    
     private $finalized = false;
     private $initialized = false;
     private $workingDir = null;
@@ -57,7 +54,6 @@ final class HelperContext implements IHelperContext
      * 
      * @return mixed
      */
-    
     public final function __construct(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, ISemVer $version = null, IHelperContext $parent = null)
     {
         //        $this->setParent($parent);
@@ -129,7 +125,6 @@ final class HelperContext implements IHelperContext
         }
         $this->version = $version;
     }
-    
     //    public function onAddObserved(IObservable $observable, IMap $data = null): IObserver {
     //
     //        if($observable === $this->children) {
@@ -149,12 +144,10 @@ final class HelperContext implements IHelperContext
      * 
      * @return IWordPressHelperLog
      */
-    
     public function getLog() : IWordPressHelperLog
     {
         return $this->log;
     }
-    
     //    public function initialize(callable $call = null): IWordPressHelper {
     //
     //        $this->initialize = $call;
@@ -183,34 +176,28 @@ final class HelperContext implements IHelperContext
      * 
      * @return bool
      */
-    
     public function isFinalized() : bool
     {
         return $this->finalized;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public function isInitialized() : bool
     {
         return $this->initialized;
     }
-    
     /**
      * method
      * 
      * @return int
      */
-    
     public function getId() : int
     {
         return $this->contextId;
     }
-    
     //    public function getSlug(): string {
     //
     //        return $this->contextSlug;
@@ -220,52 +207,43 @@ final class HelperContext implements IHelperContext
      * 
      * @return string
      */
-    
     public function getPackageName() : string
     {
         return $this->getVendorName() . '/' . PHP::strToDashedCase($this->getProjectName());
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public function getVendorName() : string
     {
         return $this->contextVendorName;
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public function getProjectName() : string
     {
         return $this->contextProjectName;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public function isPrimary() : bool
     {
         return (bool) $this->primary;
     }
-    
     /**
      * method
      * 
      * 
      * @return callable
      */
-    
     public function getView(string $viewSlug) : callable
     {
         return function () use($viewSlug) {
@@ -284,46 +262,38 @@ final class HelperContext implements IHelperContext
             }
         };
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public function getWorkingUri() : string
     {
         return $this->workingUri;
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public function getWorkingDirectory() : string
     {
         return $this->workingDir;
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public function getLoadPath() : string
     {
         return $this->loadPath;
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public function getViewDirectory() : string
     {
         $dirs = ['views/', 'source/views/', 'includes/views/'];
@@ -335,7 +305,6 @@ final class HelperContext implements IHelperContext
         }
         return $this->getWorkingDirectory();
     }
-    
     //    protected function getMainOperation() /* : ?callable */ {
     //        return $this->_getMainOperation();
     //    }
@@ -344,182 +313,151 @@ final class HelperContext implements IHelperContext
      * 
      * @return ?callable
      */
-    
     public function getInitializeOperation() : ?callable
     {
         return $this->initialize;
     }
-    
     /**
      * method
      * 
      * @return ?callable
      */
-    
     public function getActivateOperation() : ?callable
     {
         return $this->activate;
     }
-    
     /**
      * method
      * 
      * @return ?callable
      */
-    
     public function getDeactivateOperation() : ?callable
     {
         return $this->deactivate;
     }
-    
     /**
      * method
      * 
      * @return ?array
      */
-    
     public function getUninstallOperation() : ?array
     {
         return $this->uninstall;
     }
-    
     /**
      * method
      * 
      * @return ?callable
      */
-    
     public function getFinalizeOperation() : ?callable
     {
         return $this->finalize;
     }
-    
     /**
      * method
      * 
      * 
      * @return IHelperContext
      */
-    
     public function setInitializeOperation(callable $operation = null) : IHelperContext
     {
         $this->initialize = $operation;
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IHelperContext
      */
-    
     public function setActivateOperation(callable $operation = null) : IHelperContext
     {
         $this->activate = $operation;
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IHelperContext
      */
-    
     public function setDeactivateOperation(callable $operation = null) : IHelperContext
     {
         $this->deactivate = $operation;
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IHelperContext
      */
-    
     public function setUninstallOperation(array $operation = null) : IHelperContext
     {
         $this->uninstall = $operation;
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return ?IHelperContext
      */
-    
     public function setFinalizeOperation(callable $operation = null) : ?IHelperContext
     {
         $this->finalize = $operation;
         return $this;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public function hasInitializeOperation() : bool
     {
         return $this->getInitializeOperation() !== null;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public function hasActivateOperation() : bool
     {
         return $this->getActivateOperation() !== null;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public function hasDeactivateOperation() : bool
     {
         return $this->getDeactivateOperation() !== null;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public function hasUninstallOperation() : bool
     {
         return $this->getUninstallOperation() !== null;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public function hasFinalizeOperation() : bool
     {
         return $this->getFinalizeOperation() !== null;
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     public function invokeInitializeOperation() : void
     {
         if ($this->isInitialized()) {
@@ -539,13 +477,11 @@ final class HelperContext implements IHelperContext
         $this->initialized = true;
         return;
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     public function invokeActivateOperation() : void
     {
         foreach (array_values($this->getChildren()) as $childContext) {
@@ -568,13 +504,11 @@ final class HelperContext implements IHelperContext
             $call($this);
         }
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     public function invokeDeactivateOperation() : void
     {
         //        echo "{$this->contextName}:". static::OPTION_ACTIVATION_VERSION . '<br />';
@@ -601,13 +535,11 @@ final class HelperContext implements IHelperContext
             $call($this);
         }
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     public function invokeUninstallOperation() : void
     {
         foreach (array_values($this->getChildren()) as $childContext) {
@@ -622,13 +554,11 @@ final class HelperContext implements IHelperContext
             call_user_func($call);
         }
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     public function invokeFinalizeOperation() : void
     {
         //        die('finalize');
@@ -710,24 +640,20 @@ final class HelperContext implements IHelperContext
         //            });
         //        }
     }
-    
     /**
      * method
      * 
      * @return int
      */
-    
     public function getType() : int
     {
         return (int) $this->contextType;
     }
-    
     /**
      * method
      * 
      * @return ?int
      */
-    
     public function getActivationTimeStamp() : ?int
     {
         if ($this->activationTimeStamp !== null) {
@@ -736,24 +662,20 @@ final class HelperContext implements IHelperContext
         $this->activationTimeStamp = PHP::toInt(WP::getSiteOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_TIMESTAMP, PHP::toInt(current_time('timestamp', 1))));
         return $this->activationTimeStamp;
     }
-    
     /**
      * method
      * 
      * @return ?ISemVer
      */
-    
     public function getVersion() : ?ISemVer
     {
         return $this->version;
     }
-    
     /**
      * method
      * 
      * @return ?ISemVer
      */
-    
     public function getActivationVersion() : ?ISemVer
     {
         if ($this->activationVersion !== null) {
@@ -770,56 +692,47 @@ final class HelperContext implements IHelperContext
         $this->activationVersion = SemVer::parse($tmp);
         return $this->activationVersion;
     }
-    
     /**
      * method
      * 
      * 
      * @return IHelperContext
      */
-    
     public function setParent(IHelperContext $context = null) : IHelperContext
     {
         $this->parent = $context;
         return $this;
     }
-    
     /**
      * method
      * 
      * @return ?IHelperContext
      */
-    
     public function getParent() : ?IHelperContext
     {
         return $this->parent;
     }
-    
     /**
      * method
      * 
      * @return array
      */
-    
     public function getChildren() : array
     {
         return $this->children;
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public function addChild(IHelperContext $child) : void
     {
         $this->children[] = $child;
         $child->setParent($this);
         return;
     }
-    
     //    /* abstract */ protected function initialize(): void {
     //
     //        // empty for now!
@@ -845,7 +758,6 @@ final class HelperContext implements IHelperContext
      * 
      * @return array
      */
-    
     public function getTemplates(bool $flat = true, bool $themeOnly = false, bool $labels = false, string $nullItem = null, string $relativePath = null) : array
     {
         $wpTemplates = get_page_templates();
@@ -899,14 +811,12 @@ final class HelperContext implements IHelperContext
         }
         return $templates;
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public function templateExists(string $name) : bool
     {
         $result = locate_template($name);
@@ -915,7 +825,6 @@ final class HelperContext implements IHelperContext
         }
         return true;
     }
-    
     //TODO: Kill this method - there is a better way to do this and its caused enough trouble!!!
     /**
      * method
@@ -923,7 +832,6 @@ final class HelperContext implements IHelperContext
      * 
      * @return string
      */
-    
     public function template(string $name, bool $echo = false) : string
     {
         if (substr_compare($name, '.php', -strlen('.php')) !== 0) {
@@ -942,5 +850,4 @@ final class HelperContext implements IHelperContext
         }
         return $output;
     }
-
 }

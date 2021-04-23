@@ -49,7 +49,6 @@ trait TAdmin
      * 
      * @return mixed
      */
-    
     protected static function initialize_TAdmin()
     {
         if (!static::isAdmin()) {
@@ -483,58 +482,48 @@ trait TAdmin
             //            die("die(): " . __FILE__ . " " . __LINE__);
         });
     }
-    
     /**
      * method
      * 
      * @return array
      */
-    
     public static function getForms() : array
     {
         return static::$forms;
     }
-    
     /**
      * method
      * 
      * @return array
      */
-    
     public static function getTables() : array
     {
         return static::$tables;
     }
-    
     /**
      * method
      * 
      * @return array
      */
-    
     public static function getMenuFields() : array
     {
         return static::$settingsMenuFields;
     }
-    
     /**
      * method
      * 
      * @return array
      */
-    
     public static function getPageActions() : array
     {
         return static::$pageActions;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     protected static function tableColumn(string $type, string $label, string $htmlCellTemplate, callable $inputField, string $name = null, string $id = null, bool $sortable = true, callable $load = null) : array
     {
         $name = $name !== null ? $name : static::slugify($label);
@@ -551,14 +540,12 @@ trait TAdmin
         };
         return $column;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function textTableColumn(string $label, string $name = null, string $id = null, bool $sortable = true) : array
     {
         $htmlCellTemplate = "<span>{value}</span>";
@@ -570,14 +557,12 @@ trait TAdmin
             return $value;
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function checkBoxTableColumn(string $label, string $name = null, string $id = null, bool $sortable = true) : array
     {
         $htmlCellTemplate = '<input type="checkbox" disabled value="{value}" {checked}/>';
@@ -596,14 +581,12 @@ trait TAdmin
         };
         return $column;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function referenceTableColumn(string $label, array $values, string $name = null, string $id = null, bool $sortable = true) : array
     {
         $htmlCellTemplate = "<span>{value}</span>";
@@ -623,14 +606,12 @@ trait TAdmin
             return $tmp[(string) $value];
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function getAdminMenuPage($id)
     {
         $index = 0;
@@ -645,14 +626,12 @@ trait TAdmin
         }
         return new AdminMenuPageHelper(static::$settingsMenus, $index);
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function renderSubMenuPage(array &$settingsMenuDescriptor)
     {
         return function () use($settingsMenuDescriptor) {
@@ -754,21 +733,18 @@ TEMPLATE;
 TEMPLATE;
         };
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminMenuPageHelper
      */
-    
     public static function addAdminMenuPage(string $title, callable $content, string $menuTitle = null, string $id = null, string $capability = null, string $iconUrl = null, int $position = null) : IAdminMenuPageHelper
     {
         //static::registerView($content);
         static::$settingsMenus[] = ["pageTitle" => $title, "menuTitle" => $menuTitle !== null ? $menuTitle : $title, "menuSlug" => $id !== null ? $id : ($menuTitle !== null ? WordPressHelper::slugify($menuTitle) : WordPressHelper::slugify($title)), "capability" => $capability !== null ? $capability : Constants::DEFAULT_CAPABILITY, "content" => $content, "html" => null, "iconUrl" => $iconUrl, "position" => $position, "system" => false, "render" => true, "subMenus" => []];
         return new AdminMenuPageHelper(static::$settingsMenus, null);
     }
-    
     //    public static function getDashboardBackEndMenuPage(): IAdminMenuPageHelper {
     //        return $this->getAdminMenuPage('index.php');
     //    }
@@ -822,37 +798,31 @@ TEMPLATE;
      * 
      * @return IAdminMenuPageHelper
      */
-    
     public static function addPlugInAdminMenuPage(string $title, callable $content, string $menuTitle = null, string $id = null, string $iconUrl = null, int $position = null) : IAdminMenuPageHelper
     {
         return static::addAdminMenuPage($title, $content, $menuTitle, $id, Constants::DEFAULT_PLUGIN_CAPABILITY, $iconUrl, $position);
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminMenuPageHelper
      */
-    
     public static function addThemeAdminMenuPage(string $title, callable $content, string $menuTitle = null, string $id = null, string $iconUrl = null, int $position = null) : IAdminMenuPageHelper
     {
         return static::addAdminMenuPage($title, $content, $menuTitle, $id, Constants::DEFAULT_THEME_CAPABILITY, $iconUrl, $position);
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addPostAdminMetaBox(string $title, callable $content, string $id, string $context = "advanced", string $priority = "high")
     {
         static::addAdminMetaBox($id, $title, $content, ["post"], $context, $priority);
         return;
     }
-    
     //    private static $calls = [];
     /**
      * method
@@ -860,7 +830,6 @@ TEMPLATE;
      * 
      * @return IAdminFormHelper
      */
-    
     public static function addAdminForm(string $title, string $id, string $action = null, int $columns = 1, bool $hideKey = true) : IAdminFormHelper
     {
         //        self::$calls[$id][] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
@@ -891,14 +860,12 @@ TEMPLATE;
         //exit;
         return $form;
     }
-    
     /**
      * method
      * 
      * 
      * @return IAdminTableHelper
      */
-    
     public static function addAdminTable(string $title, string $id = null, string $singularItemName = "Item", string $pluralItemName = "Items", string $keyColumnId = null, callable $detailView = null, bool $allowNew = false, bool $allowDelete = false, bool $allowEdit = false, array $additionalActions = null, bool $ajax = false) : IAdminTableHelper
     {
         $id = $id !== null ? $id : static::slugify($title);
@@ -907,14 +874,12 @@ TEMPLATE;
         static::$tables[] = $table;
         return $table;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     protected static function inputField(string $type, string $label, string $htmlTemplate, string $name = null, string $value = null, string $id = null, string $hint = null, bool $span = false, bool $readOnly = false, bool $disabled = false, callable $validator = null, bool $echo = false) : array
     {
         $name = $name !== null ? $name : static::slugify($label);
@@ -963,14 +928,12 @@ TEMPLATE;
         }
         return $field;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function hiddenInputField(string $name, string $value = null, string $id = null, bool $echo = false) : array
     {
         $htmlTemplate = "<input type=\"hidden\" id=\"{id}\" name=\"{name}\" value=\"{value}\"/>";
@@ -1008,14 +971,12 @@ TEMPLATE;
         };
         return $field;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function numberInputField(string $label, string $name = null, float $value = null, string $id = null, string $hint = null, bool $span = false, bool $readOnly = false, bool $disabled = false, bool $echo = false) : array
     {
         $htmlTemplate = "<input type=\"number\" id=\"{id}\" name=\"{name}\" value=\"{value}\" class=\"regular-text\"{readOnly}{disabled}/>";
@@ -1034,14 +995,12 @@ TEMPLATE;
         };
         return $field;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function textInputField(string $label, string $name = null, string $value = null, string $id = null, string $hint = null, bool $multiLine = false, bool $fancy = false, bool $span = false, bool $readOnly = false, bool $disabled = false, bool $echo = false) : array
     {
         if ($multiLine === false) {
@@ -1084,14 +1043,12 @@ TEMPLATE;
         }
         return $field;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function dropDownListInputField(string $label, array $values, string $name = null, string $value = null, string $id = null, string $hint = null, string $emptyMessage = null, callable $modifyValues = null, bool $span = false, bool $readOnly = false, bool $disabled = false, bool $echo = false) : array
     {
         $name = $name !== null ? $name : static::slugify($label);
@@ -1169,14 +1126,12 @@ TEMPLATE;
         }
         return $field;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function listInputField(string $label, array $values, string $name = null, array $value = null, string $id = null, string $hint = null, string $emptyMessage = null, callable $modifyValues = null, bool $span = false, bool $readOnly = false, bool $disabled = false, bool $echo = false) : array
     {
         $name = $name !== null ? $name : static::slugify($label);
@@ -1275,14 +1230,12 @@ TEMPLATE;
         }
         return $field;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function colourPickerInputField(string $label, string $name = null, string $value = null, string $id = null, string $hint = null, bool $span = false, bool $readOnly = false, bool $disabled = false, bool $echo = false) : array
     {
         // http://www.eyecon.ro/colorpicker/
@@ -1312,14 +1265,12 @@ TEMPLATE;
 TEMPLATE;
         return static::inputField('ColourPicker', $label, $htmlTemplate, $name, $value, $id, $hint, $span, $readOnly, $disabled, $echo);
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function checkBoxInputField(string $label, string $name = null, bool $value = null, string $id = null, string $hint = null, bool $span = false, bool $readOnly = false, bool $disabled = false, bool $echo = false) : array
     {
         $name = $name !== null ? $name : static::slugify($label);
@@ -1355,14 +1306,12 @@ TEMPLATE;
         }
         return $field;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function dateTimeInputField(string $label, string $name = null, string $value = null, string $id = null, string $hint = null, bool $datePicker = true, bool $timePicker = true, bool $span = false, bool $readOnly = false, bool $disabled = false, bool $echo = false) : array
     {
         // https://xdsoft.net/jqplugins/datetimepicker/
@@ -1417,40 +1366,34 @@ TEMPLATE;
         };
         return $field;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function dateInputField(string $label, string $name = null, string $value = null, string $id = null, string $hint = null, bool $span = false, bool $readOnly = false, bool $disabled = false, bool $echo = false) : array
     {
         $field = static::dateTimeInputField($label, $name, $value, $id, $hint, true, false, $span, $readOnly, $disabled, $echo);
         return $field;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function timeInputField(string $label, string $name = null, string $value = null, string $id = null, string $hint = null, bool $span = false, bool $readOnly = false, bool $disabled = false, bool $echo = false) : array
     {
         $field = static::dateTimeInputField($label, $name, $value, $id, $hint, false, true, $span, $readOnly, $disabled, $echo);
         return $field;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function customInputField(string $label, callable $html, callable $load, callable $post, callable $validate, string $name = null, string $value = null, string $id = null, string $hint = null, bool $span = false, bool $readOnly = false, bool $disabled = false, bool $echo = false) : array
     {
         $name = $name !== null ? $name : static::slugify($label);
@@ -1471,14 +1414,12 @@ TEMPLATE;
             return (bool) $validate($value);
         }];
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function button(string $label, string $id = null, string $hint = null, IAdminFormHelper $form = null, bool $span = false, bool $disabled = false, string $javaScript = null, bool $ajaxCall = false, bool $echo = true) : array
     {
         $id = $id !== null ? $id : static::slugify($label) . '-field';
@@ -1526,14 +1467,12 @@ JS;
         }
         return $button;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function notify(string $message, string $notice = "info", bool $dismissable = false, bool $echo = false) : string
     {
         $s = "<div class=\"notice notice-{$notice}" . ($dismissable === true ? " is-dismissable" : "") . "\"><p>{$message}</p></div>";
@@ -1546,110 +1485,92 @@ JS;
         //        });
         return $s;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function notifyError(string $message, bool $echo = false) : string
     {
         return static::notify($message, "error", false, $echo);
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function notifyInfo(string $message, bool $echo = false) : string
     {
         return static::notify($message, "info", true, $echo);
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function notifySuccess(string $message, bool $echo = false) : string
     {
         return static::notify($message, "success", true, $echo);
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function notifyWarning(string $message, bool $echo = false) : string
     {
         return static::notify($message, "warning", true, $echo);
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addAdminMetaBox(string $id, string $title, callable $content, array $screen = ['post'], string $context = 'advanced', string $priority = 'default')
     {
         static::$settingsMetaBoxes[] = ["id" => $id, "title" => $title, "content" => $content, "screen" => $screen, "context" => $context, "priority" => $priority, "render" => true, "forms" => [], "html" => null];
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addAdminTermFieldBox(string $id, string $title, callable $content, array $terms = [])
     {
         static::$settingsTermFieldBoxes[] = ["id" => $id, "title" => $title, "content" => $content, "terms" => $terms, "render" => true, "html" => null];
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addAdminUserFieldBox(string $id, string $title, callable $content, bool $visibleToSelf = true, bool $visibleToOthers = false)
     {
         static::$settingsUserFieldBoxes[] = ["id" => $id, "title" => $title, 'visibleToSelf' => $visibleToSelf, 'visibleToOthers' => $visibleToOthers, "content" => $content, "render" => true, "html" => null];
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function addSystemAdminMenuPage(string $id)
     {
         static::$settingsMenus[] = ["pageTitle" => null, "menuTitle" => null, "menuSlug" => $id, "capability" => null, "content" => null, "html" => null, "iconUrl" => null, "position" => null, "system" => true, "render" => true, "subMenus" => []];
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addAdminMenuField(array $fieldDescriptor, string $menuId = null)
     {
         $key = $menuId === null ? '' : $menuId;
@@ -1659,14 +1580,12 @@ JS;
         static::$settingsMenuFields[$key][] = $fieldDescriptor;
         return;
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addAdminPageAction(string $page, string $caption, string $uri)
     {
         if (array_key_exists($page, static::$pageActions)) {
@@ -1676,24 +1595,20 @@ JS;
         static::$pageActions[$page] = ['caption' => $caption, 'uri' => $uri];
         return;
     }
-    
     /**
      * method
      * 
      * @return ?string
      */
-    
     public static function getCurrentAdminPage()
     {
         return static::$currentAdminPage;
     }
-    
     /**
      * method
      * 
      * @return ?string
      */
-    
     public static function getCurrentAdminObjectType()
     {
         if (!static::isAdmin(true)) {
@@ -1717,13 +1632,11 @@ JS;
         }
         return null;
     }
-    
     /**
      * method
      * 
      * @return ?int
      */
-    
     public static function getCurrentAdminObjectId()
     {
         if (!static::isAdmin()) {
@@ -1748,13 +1661,11 @@ JS;
         }
         return null;
     }
-    
     /**
      * method
      * 
      * @return ?object
      */
-    
     public static function getCurrentAdminObject()
     {
         if (!static::isAdmin()) {
@@ -1778,5 +1689,4 @@ JS;
         }
         return null;
     }
-
 }

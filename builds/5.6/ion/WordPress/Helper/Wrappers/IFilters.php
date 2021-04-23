@@ -8,7 +8,6 @@ namespace ion\WordPress\Helper\Wrappers;
  *
  * @author Justus
  */
-
 interface IFilters
 {
     /**
@@ -17,25 +16,19 @@ interface IFilters
      * 
      * @return void
      */
-    
     static function addFilter($name, callable $function, $priority = null, $args = null, $order = null);
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     static function removeFilter($name, callable $function, $priority = null);
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     static function addContentFilter(callable $function);
-
 }

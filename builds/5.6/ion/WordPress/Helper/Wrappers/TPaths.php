@@ -27,56 +27,47 @@ trait TPaths
      * 
      * @return mixed
      */
-    
     protected static function initialize_TPaths()
     {
         //        static::registerWrapperAction('init', function() {
         //
         //        });
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public static function getHelperDirectory()
     {
         return static::$helperDir;
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public static function getHelperUri()
     {
         return static::$helperUri;
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public static function getWordPressPath()
     {
         //if(is_multisite() && $network) {
         return rtrim((string) ABSPATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         //}
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getWordPressUri($network = false)
     {
         if (!is_multisite() || !$network) {
@@ -84,14 +75,12 @@ trait TPaths
         }
         return rtrim(static::getSiteUri(true) . str_replace(static::getSitePath(true), '', static::getWordPressPath()), '/') . '/';
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getSitePath($network = false)
     {
         if (is_multisite() && $network) {
@@ -99,14 +88,12 @@ trait TPaths
         }
         return rtrim(get_home_path(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getSiteUri($network = false)
     {
         if (!is_multisite() || !$network) {
@@ -114,48 +101,40 @@ trait TPaths
         }
         return rtrim(network_site_url(), '/') . '/';
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public static function getContentPath()
     {
         return rtrim(defined('WP_CONTENT_DIR') ? constant('WP_CONTENT_DIR') : ABSPATH . 'wp-content', DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public static function getContentUri()
     {
         return rtrim(content_url(), '/') . '/';
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function ensureTemporaryFilePath($filename, $relativePath = null)
     {
         return static::ensureTemporaryFileDirectory($relativePath) . $filename;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getThemePath($includeChildTheme = true)
     {
         if ($includeChildTheme) {
@@ -163,14 +142,12 @@ trait TPaths
         }
         return get_template_directory() . DIRECTORY_SEPARATOR;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getThemeUri($includeChildTheme = true)
     {
         if ($includeChildTheme) {
@@ -178,38 +155,32 @@ trait TPaths
         }
         return get_template_directory_uri() . "/";
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getTemporaryFileDirectory($relativePath = null)
     {
         return get_temp_dir() . ($relativePath === null ? "" : trim($relativePath, "/ ")) . "/";
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getTemporaryFilePath($filename, $relativePath = null)
     {
         return static::getTemporaryFileDirectory($relativePath) . $filename;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function ensureTemporaryFileDirectory($relativePath = null)
     {
         $directory = static::GetTemporaryFileDirectory($relativePath);
@@ -220,14 +191,12 @@ trait TPaths
         }
         return $directory;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getAdminUrl($filename, $page = null, $network = false)
     {
         $uri = null;
@@ -242,14 +211,12 @@ trait TPaths
         }
         return esc_url($uri);
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getAjaxUrl($name = null, array $parameters = null, $encodeParameters = true, $network = false)
     {
         $url = static::getAdminUrl('admin-ajax', null, $network);
@@ -265,26 +232,22 @@ trait TPaths
         }
         return static::getUrl($url, null, $tmp, $encodeParameters);
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getBackEndUri($path = null, $blogId = null)
     {
         return get_admin_url($blogId, $path === null ? '' : $path, 'admin');
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function getPostUri($id = null)
     {
         if ($id === null) {
@@ -293,5 +256,4 @@ trait TPaths
         }
         return get_permalink($id);
     }
-
 }

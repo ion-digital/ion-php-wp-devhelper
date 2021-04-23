@@ -8,7 +8,6 @@ namespace ion\WordPress\Helper\Wrappers;
  *
  * @author Justus
  */
-
 interface IRewrites
 {
     /**
@@ -17,16 +16,12 @@ interface IRewrites
      * 
      * @return void
      */
-    
     static function addRewriteRule(string $pattern, string $target, bool $top = false);
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     static function flushRewriteRules(bool $hard = true);
-
 }

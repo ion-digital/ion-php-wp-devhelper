@@ -27,7 +27,6 @@ trait TActions
      * 
      * @return mixed
      */
-    
     protected static function initialize_TActions()
     {
         static::registerWrapperAction('init', function () {
@@ -62,26 +61,22 @@ trait TActions
             //            die('</pre>');
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addAction($name, callable $function, $priority = null)
     {
         static::$actions[$name][] = ['function' => $function, 'priority' => $priority === null ? 10 : $priority];
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function removeAction($name, callable $function, $priority = null)
     {
         if (array_key_exists($name, static::$actions)) {
@@ -89,50 +84,42 @@ trait TActions
         }
         remove_action($name, $function, $priority === null ? 10 : $priority);
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function addAjaxAction($name, callable $action, $backEnd = true, $frontEnd = false)
     {
         static::$ajaxActions[] = ['name' => $name, 'action' => $action, 'backEnd' => $backEnd, 'frontEnd' => $frontEnd];
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public static function addFormAction($name, callable $action, $backEnd = true, $frontEnd = false)
     {
         static::$formActions[] = ['name' => $name, 'action' => $action, 'backEnd' => $backEnd, 'frontEnd' => $frontEnd];
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasAction($name)
     {
         return (bool) has_action($name, false);
     }
-    
     /**
      * method
      * 
      * 
      * @return ?int
      */
-    
     public static function getActionPriority($name, callable $action)
     {
         if (static::hasAction($name)) {
@@ -140,5 +127,4 @@ trait TActions
         }
         return null;
     }
-
 }

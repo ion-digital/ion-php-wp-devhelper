@@ -9,7 +9,6 @@ namespace ion\WordPress\Helper\Wrappers;
  *
  * @author Justus
  */
-
 class LogLevel
 {
     const EMERGENCY = 1;

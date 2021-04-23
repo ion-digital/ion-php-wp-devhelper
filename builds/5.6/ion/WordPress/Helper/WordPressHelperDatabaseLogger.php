@@ -8,7 +8,6 @@ use ion\WordPress\WordPressHelper as WP;
 use ion\PhpHelper as PHP;
 use ion\WordPress\Helper\Constants;
 use Monolog\Logger;
-
 class WordPressHelperDatabaseLogger extends WordPressHelperLogger
 {
     const TABLE_NAME = 'log';
@@ -18,30 +17,25 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
      * 
      * @return mixed
      */
-    
     public function __construct($slug, $purgeAge = null, $flushImmediately = true)
     {
         parent::__construct($slug, $purgeAge, $flushImmediately);
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public function __destruct()
     {
         parent::__destruct();
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public function activate($force = false)
     {
         $table = WP::getDbTablePrefix() . static::TABLE_NAME;
@@ -51,25 +45,21 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
             WP::dbDeltaTable(static::TABLE_NAME, ['id' => ['type' => 'int(11)', 'null' => false, 'primary' => true, 'auto' => true], 'slug' => ['type' => 'varchar(250)', 'null' => false], 'time' => ['type' => 'datetime', 'null' => false], 'level' => ['type' => 'varchar(250)', 'null' => false], 'message' => ['type' => 'text', 'null' => false], 'context' => ['type' => 'text', 'null' => true]], true);
         }
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     public function deactivate()
     {
         //TODO
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     protected function initialize($slug)
     {
         if (!WP::isWordPress()) {
@@ -78,14 +68,12 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
         //TODO: This should probably be moved to plugin activate...
         $this->activate(false);
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     protected function loadEntries($ageInDays = null)
     {
         $table = WP::getDbTablePrefix() . static::TABLE_NAME;
@@ -110,14 +98,12 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
         }
         return $result;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public function purge($full = false)
     {
         parent::purge($full);
@@ -134,13 +120,11 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
         }
         WP::dbQuery($baseSql . " AND `time` < '{$purgeTime}'");
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public function flush()
     {
         $table = WP::getDbTablePrefix() . static::TABLE_NAME;
@@ -156,5 +140,4 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
             WP::dbQuery($sql);
         }
     }
-
 }

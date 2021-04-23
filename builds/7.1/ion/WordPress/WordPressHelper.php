@@ -24,7 +24,6 @@ use ion\ISemVer;
 use ion\SemVer;
 use ion\WordPress\Helper\Api\Wrappers\OptionMetaType;
 use ion\WordPress\Helper\WordPressHelperException;
-
 final class WordPressHelper implements IWordPressHelper
 {
     use \ion\WordPress\Helper\Wrappers\TActions;
@@ -55,7 +54,6 @@ final class WordPressHelper implements IWordPressHelper
      * 
      * @return void
      */
-    
     private static function registerWrapperAction(string $actionName, callable $init, int $priority = 0, bool $returnFirstResult = false) : void
     {
         if (!array_key_exists($actionName, static::$wrapperActions)) {
@@ -64,13 +62,11 @@ final class WordPressHelper implements IWordPressHelper
         static::$wrapperActions[$actionName][] = ['priority' => $priority, 'callable' => $init, 'returnFirstResult' => $returnFirstResult];
         return;
     }
-    
     /**
      * method
      * 
      * @return void
      */
-    
     private static function invokeWrapperActions() : void
     {
         foreach (static::$wrapperActions as $actionName => $actions) {
@@ -88,47 +84,39 @@ final class WordPressHelper implements IWordPressHelper
         }
         return;
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     private static function getContentDir()
     {
         return static::getContentDirectory();
     }
-    
     /**
      * method
      * 
      * @return array
      */
-    
     public static function &getContexts() : array
     {
         return static::$contexts;
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public static function getContentDirectory()
     {
         $tmp = explode(DIRECTORY_SEPARATOR, trim(static::getContentPath(), DIRECTORY_SEPARATOR));
         return array_pop($tmp);
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     private static function isHelperDebugMode()
     {
         if (defined('WP_HELPER_DEBUG') && WP_HELPER_DEBUG === true && WP_DEBUG === true) {
@@ -136,14 +124,12 @@ final class WordPressHelper implements IWordPressHelper
         }
         return false;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     protected static function debugLog($message)
     {
         // /* string */ $slug = null, /* string */ $level = null, /* string */ $message = null,
@@ -151,14 +137,12 @@ final class WordPressHelper implements IWordPressHelper
             static::log(Constants::WP_HELPER_DEBUG_SLUG, 'debug', $message);
         }
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     private static function initializeHelper(IHelperContext $context, array $wpHelperSettings, string $helperDir = null) : void
     {
         if (static::$helperInitialized) {
@@ -320,14 +304,12 @@ final class WordPressHelper implements IWordPressHelper
             }
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function getContextByIndex(int $index)
     {
         if (PHP::count(array_values(static::getContexts())) === 0) {
@@ -338,14 +320,12 @@ final class WordPressHelper implements IWordPressHelper
         }
         return array_values(static::getContexts())[$index];
     }
-    
     /**
      * method
      * 
      * 
      * @return IHelperContext
      */
-    
     public static function getContext(string $slug = null) : IHelperContext
     {
         if ($slug === null) {
@@ -356,25 +336,21 @@ final class WordPressHelper implements IWordPressHelper
         }
         throw new WordPressHelperException("Could not find a context named '{$slug}.'");
     }
-    
     /**
      * method
      * 
      * @return IHelperContext
      */
-    
     public static function getCurrentContext() : IHelperContext
     {
         return static::getContextByIndex(count(static::getContexts()) - 1);
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function handleError(string $errorWord, string $message, int $code, string $file, int $line, array $trace)
     {
         $title = "";
@@ -417,7 +393,6 @@ TEMPLATE;
         }
         static::panic(trim($template), 500, $title);
     }
-    
     //    protected static function setCurrentContextCycle($cycle) {
     //
     //        static::$currentContextCycle = $cycle;
@@ -433,7 +408,6 @@ TEMPLATE;
      * 
      * @return mixed
      */
-    
     private static function getSettingsValue(array &$array, $key)
     {
         if (array_key_exists($key, $array) === false) {
@@ -441,14 +415,12 @@ TEMPLATE;
         }
         return $array[$key];
     }
-    
     //TODO: Move to version specific files.
     /**
      * method
      * 
      * @return mixed
      */
-    
     private static function _getContexts()
     {
         if (static::$contexts === null) {
@@ -456,7 +428,6 @@ TEMPLATE;
         }
         return static::$contexts;
     }
-    
     //    public static function context(): IWordPressHelper {
     //        return static::getCurrentContext();
     //    }
@@ -465,41 +436,34 @@ TEMPLATE;
      * 
      * @return bool
      */
-    
     public static function isHelperInitialized() : bool
     {
         return (bool) static::$helperInitialized;
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public static function isHelperFinalized() : bool
     {
         return (bool) static::$helperFinalized;
     }
-    
     /**
      * method
      * 
      * 
      * @return string
      */
-    
     public static function slugify(string $s) : string
     {
         return PHP::strToDashedCase($s);
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public static function isDebugMode() : bool
     {
         if (defined("WP_DEBUG")) {
@@ -507,14 +471,12 @@ TEMPLATE;
         }
         return false;
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function panic(string $errorMessage, int $httpCode = null, string $title = null) : void
     {
         if ($title === null) {
@@ -538,14 +500,12 @@ TEMPLATE;
         }
         exit($httpCode);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasCapability(string $capability, int $user = null) : bool
     {
         if ($user === null) {
@@ -553,73 +513,61 @@ TEMPLATE;
         }
         return user_can($user, $capability);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasManageOptionsCapability(int $user = null) : bool
     {
         return static::hasCapability("manage_options", $user);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasEditThemeOptionsCapability(int $user = null) : bool
     {
         return static::hasCapability("edit_theme_options", $user);
     }
-    
     /**
      * method
      * 
      * 
      * @return bool
      */
-    
     public static function hasManageNetworkCapability(int $user = null) : bool
     {
         return static::hasCapability("manage_network", $user);
     }
-    
     /**
      * method
      * 
      * @return bool
      */
-    
     public static function isLoggedIn() : bool
     {
         return is_user_logged_in();
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     private static function isAssociativeArray($array)
     {
         return PHP::isAssociativeArray($array);
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressHelper
      */
-    
     public static function createContext(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, ISemVer $version = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, callable $finalize = null, array $uninstall = null) : IWordPressHelper
     {
         set_exception_handler(function (Throwable $throwable) {
@@ -657,14 +605,12 @@ TEMPLATE;
         static::initializeHelper(static::getContext(null), $wpHelperSettings, $helperDir);
         return $helper;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     protected function __construct(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, ISemVer $version = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, callable $finalize = null, array $uninstall = null)
     {
         $context = new HelperContext($vendorName, $projectName, $loadPath, $helperDir, $wpHelperSettings, $version);
@@ -687,71 +633,60 @@ TEMPLATE;
             }
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressHelper
      */
-    
     public function initialize(callable $call = null) : IWordPressHelper
     {
         $this->getCurrentContext()->setInitializeOperation($call);
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressHelper
      */
-    
     public function activate(callable $call = null) : IWordPressHelper
     {
         $this->getCurrentContext()->setActivateOperation($call);
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressHelper
      */
-    
     public function deactivate(callable $call = null) : IWordPressHelper
     {
         $this->getCurrentContext()->setDeactivateOperation($call);
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressHelper
      */
-    
     public function uninstall(array $call = null) : IWordPressHelper
     {
         $this->getCurrentContext()->setUninstallOperation($call);
         return $this;
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressHelper
      */
-    
     public function finalize(callable $call = null) : IWordPressHelper
     {
         $this->getCurrentContext()->setFinalizeOperation($call);
         $this->getCurrentContext()->invokeFinalizeOperation();
         return $this;
     }
-
 }

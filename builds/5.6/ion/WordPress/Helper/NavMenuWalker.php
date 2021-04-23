@@ -15,7 +15,6 @@ class NavMenuWalker extends Walker_Nav_Menu
      * @param stdClass $args   An object of wp_nav_menu() arguments.
      * @param int      $id     Current item ID.
      */
-    
     public function start_el(&$output, $item, $depth = 0, $args = array(), $id = 0)
     {
         if (isset($args->item_spacing) && 'discard' === $args->item_spacing) {
@@ -130,5 +129,4 @@ class NavMenuWalker extends Walker_Nav_Menu
          */
         $output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
     }
-
 }

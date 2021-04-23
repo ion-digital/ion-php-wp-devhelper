@@ -20,7 +20,6 @@ trait TWidgets
      * 
      * @return mixed
      */
-    
     protected static function initialize_TWidgets()
     {
         static::registerWrapperAction('widgets_init', function () {
@@ -32,43 +31,36 @@ trait TWidgets
             }
         });
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addSideBar($name, $description = null, $id = null, $beforeWidget = null, $afterWidget = null, $beforeTitle = null, $afterTitle = null)
     {
         $id = $id === null ? static::slugify($name) : $id;
         static::$sideBars[$id] = ["name" => $name, "id" => $id, "description" => $description, "class" => $id, "before_widget" => $beforeWidget === null ? "<div id=\"%1\" class=\"widget %2\">" : $beforeWidget, "after_widget" => $afterWidget === null ? "</div>\n" : $afterWidget, "before_title" => $beforeTitle === null ? "<h3>" : $beforeTitle, "after_title" => $afterTitle === null ? "</h3>\n" : $afterTitle];
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressWidget
      */
-    
     public static function addWidget(IWordPressWidget $widget)
     {
         static::$widgets[$widget->getId()] = $widget;
         return $widget;
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressWidget
      */
-    
     public static function getWidget($id)
     {
         return static::$widgets[$id];
     }
-
 }

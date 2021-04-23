@@ -10,7 +10,6 @@ namespace ion\WordPress\Helper\Wrappers;
  * @author Justus
  */
 // This is a stand-in class for WP-Helper compatibility - it will be removed soon.
-
 class OptionMetaType
 {
     const POST = 'WP_Post';
@@ -24,44 +23,36 @@ class OptionMetaType
      * 
      * @return OptionMetaType
      */
-    
     public static function create(string $value = null) : OptionMetaType
     {
         return new static($value);
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public function __construct(string $value = null)
     {
         $this->value = $value;
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public function toString() : string
     {
         return (string) $this->value;
     }
-    
     /**
      * method
      * 
      * @return ?string
      */
-    
     public function toValue() : ?string
     {
         return $this->value;
     }
-
 }

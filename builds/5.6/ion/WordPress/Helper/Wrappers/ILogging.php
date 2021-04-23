@@ -9,7 +9,6 @@ namespace ion\WordPress\Helper\Wrappers;
  * @author Justus
  */
 use ion\WordPress\Helper\IWordPressHelperLog;
-
 interface ILogging
 {
     /**
@@ -18,24 +17,18 @@ interface ILogging
      * 
      * @return IWordPressHelperLog
      */
-    
     static function registerLog($slug, $name = null);
-    
     /**
      * method
      * 
      * 
      * @return IWordPressHelperLog
      */
-    
     static function log($message, $level = null, $slug = null, array $logContext = null);
-    
     /**
      * method
      * 
      * @return array
      */
-    
     static function getLogs();
-
 }

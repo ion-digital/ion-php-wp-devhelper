@@ -11,7 +11,6 @@ namespace ion\WordPress\Helper;
  */
 use WP_Widget;
 use ion\WordPress\WordPressHelper;
-
 abstract class WordPressWidget extends WP_Widget implements IWordPressWidget
 {
     /**
@@ -20,19 +19,16 @@ abstract class WordPressWidget extends WP_Widget implements IWordPressWidget
      * 
      * @return mixed
      */
-    
     public function __construct($title)
     {
         parent::__construct(WordPressHelper::slugify(__CLASS__), $title);
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public function widget($args, $instance)
     {
         echo $args["before_widget"];
@@ -42,26 +38,22 @@ abstract class WordPressWidget extends WP_Widget implements IWordPressWidget
         echo $this->RenderFrontEnd($instance);
         echo $args["after_widget"];
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public function update($new_instance, $old_instance)
     {
         return $this->ProcessBackEndForm($old_instance, $new_instance);
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     public function form($instance)
     {
         $form = $this->RenderBackEndForm($instance);
@@ -69,60 +61,49 @@ abstract class WordPressWidget extends WP_Widget implements IWordPressWidget
             echo $form;
         }
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public function getId()
     {
         return $this->id;
     }
-    
     /**
      * method
      * 
      * @return mixed
      */
-    
     public function getBaseId()
     {
         return $this->id_base;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     protected abstract function renderFrontEnd(array $values = null);
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     protected function renderBackEndForm(array $values = null)
     {
         return null;
     }
-    
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    
     protected function processBackEndForm(array $oldValues = null, array $newValues = null)
     {
         return [];
     }
-
 }

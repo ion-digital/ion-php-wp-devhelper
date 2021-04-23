@@ -9,7 +9,6 @@ namespace ion\WordPress\Helper;
  * @author Justus
  */
 use ion\IPackage;
-
 interface IContext
 {
     /**
@@ -17,15 +16,11 @@ interface IContext
      * 
      * @return IHelperContext
      */
-    
     function getHelperContext();
-    
     /**
      * method
      * 
      * @return IPackage
      */
-    
     function getPackage();
-
 }

@@ -34,7 +34,6 @@ trait TTaxonomies
      * 
      * @return mixed
      */
-    
     protected static function initialize_TTaxonomies()
     {
         static::registerWrapperAction('init', function () {
@@ -55,14 +54,12 @@ trait TTaxonomies
             }
         }, 1);
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressTaxonomy
      */
-    
     public static function addTaxonomy(string $slug, string $pluralLabel, string $singularLabel, array $postTypes = null, string $description = null, bool $registerMetaBox = true, callable $metaBoxCallback = null, bool $hierarchical = null, bool $sort = null, array $labels = null, bool $public = null, bool $publiclyQueryable = null, bool $showUi = null, bool $showInNavMenus = null, bool $showInMenu = null, bool $showTagcloud = null, bool $showInQuickEdit = null, bool $showAdminColumn = null, array $capabilities = null, bool $rewrite = null, string $rewriteSlug = null, bool $rewriteWithFront = null, bool $rewriteHierarchical = null, string $rewriteEndPointMask = null, bool $enableQueryVar = null, string $queryVar = null, bool $showInRest = null, string $restBase = null, string $restControllerClass = null, callable $updateCountCallback = null) : IWordPressTaxonomy
     {
         if ($labels === null) {
@@ -84,28 +81,24 @@ trait TTaxonomies
         static::$taxonomies[$slug] = ['slug' => $slug, 'pluralLabel' => $pluralLabel, 'singularLabel' => $singularLabel, 'postTypes' => $postTypes === null ? null : $postTypes, 'description' => $description, 'registerMetaBox' => $registerMetaBox, 'metaBoxCallback' => $metaBoxCallback, 'hierarchical' => $hierarchical, 'sort' => $sort, 'labels' => $labels, 'public' => $public, 'publiclyQueryable' => $publiclyQueryable, 'showUi' => $showUi, 'showInNavMenus' => $showInNavMenus, 'showInMenu' => $showInMenu, 'showTagcloud' => $showTagcloud, 'showInQuickEdit' => $showInQuickEdit, 'showAdminColumn' => $showAdminColumn, 'capabilities' => $capabilities === null ? null : $capabilities, 'rewrite' => $rewrite, 'rewriteSlug' => $rewriteSlug, 'rewriteWithFront' => $rewriteWithFront, 'rewriteHierarchical' => $rewriteHierarchical, 'rewriteEndPointMask' => $rewriteEndPointMask, 'enableQueryVar' => $enableQueryVar, 'queryVar' => $queryVar, 'showInRest' => $showInRest, 'restBase' => $restBase, 'restControllerClass' => $restControllerClass, 'updateCountCallback' => $updateCountCallback];
         return new WordPressTaxonomy($slug, static::$taxonomies[$slug]);
     }
-    
     /**
      * method
      * 
      * 
      * @return void
      */
-    
     public static function addPostTypesToTaxonomy(string $taxonomy, array $postTypes) : void
     {
         foreach ($postTypes as $postType) {
             static::$taxonomiesToLink[$taxonomy][] = $postType;
         }
     }
-    
     /**
      * method
      * 
      * 
      * @return ?string
      */
-    
     public static function getTaxonomyFromTerm(string $termSlug) : ?string
     {
         global $wpdb;
@@ -121,7 +114,6 @@ SQL;
         }
         return null;
     }
-    
     //    private static function getTermsForId(array $taxonomies, int $id, bool $hideEmpty): array {
     //
     //        $result = get_terms([
@@ -141,7 +133,6 @@ SQL;
      * 
      * @return ?WP_Term
      */
-    
     public static function getTermParent(int $termId) : ?WP_Term
     {
         $term = get_term($termId);
@@ -154,14 +145,12 @@ SQL;
         }
         return $parent;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function getTermParents(int $termId) : array
     {
         $terms = [];
@@ -173,14 +162,12 @@ SQL;
         //       $terms = $terms;
         return $terms;
     }
-    
     /**
      * method
      * 
      * 
      * @return array
      */
-    
     public static function getTerms(array $taxonomies, bool $hierarchy = true, int $parent = null, bool $hideEmpty = false) : array
     {
         $result = get_terms(['taxonomy' => $taxonomies, 'hide_empty' => $hideEmpty]);
@@ -204,5 +191,4 @@ SQL;
         }
         return $terms;
     }
-
 }

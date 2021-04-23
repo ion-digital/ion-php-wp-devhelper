@@ -7,7 +7,6 @@ namespace ion\WordPress\Helper;
 use Psr\Log\LoggerInterface;
 use ion\Logger\Logger;
 use ion\WordPress\WordPressHelper;
-
 class WordPressHelperLog implements IWordPressHelperLog
 {
     private $logger = null;
@@ -19,7 +18,6 @@ class WordPressHelperLog implements IWordPressHelperLog
      * 
      * @return mixed
      */
-    
     public function __construct($slug, $name, $enable, $logToDatabase, $purgeAge = null)
     {
         $this->slug = WordPressHelper::slugify($slug);
@@ -34,66 +32,55 @@ class WordPressHelperLog implements IWordPressHelperLog
             $this->setLogger(new WordPressHelperDatabaseLogger($this->slug, $purgeAge));
         }
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressHelperLog
      */
-    
     protected function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
         return $this;
     }
-    
     /**
      * Get the underlying PSR logging interface implementation.
      *
      * @return LoggerInterface
      */
-    
     public function getLogger()
     {
         return $this->logger;
     }
-    
     /**
      * method
      * 
      * 
      * @return IWordPressHelperLog
      */
-    
     public function setName($name = null)
     {
         $this->name = $name;
         return $this;
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public function getName()
     {
         return $this->name;
     }
-    
     /**
      * method
      * 
      * @return string
      */
-    
     public function getSlug()
     {
         return $this->slug;
     }
-    
     /**
      * System is unusable.
      *
@@ -102,7 +89,6 @@ class WordPressHelperLog implements IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     public function emergency($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -110,7 +96,6 @@ class WordPressHelperLog implements IWordPressHelperLog
         }
         return $this;
     }
-    
     /**
      * Action must be taken immediately.
      *
@@ -122,7 +107,6 @@ class WordPressHelperLog implements IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     public function alert($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -130,7 +114,6 @@ class WordPressHelperLog implements IWordPressHelperLog
         }
         return $this;
     }
-    
     /**
      * Critical conditions.
      *
@@ -141,7 +124,6 @@ class WordPressHelperLog implements IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     public function critical($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -149,7 +131,6 @@ class WordPressHelperLog implements IWordPressHelperLog
         }
         return $this;
     }
-    
     /**
      * Runtime errors that do not require immediate action but should typically
      * be logged and monitored.
@@ -159,7 +140,6 @@ class WordPressHelperLog implements IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     public function error($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -167,7 +147,6 @@ class WordPressHelperLog implements IWordPressHelperLog
         }
         return $this;
     }
-    
     /**
      * Exceptional occurrences that are not errors.
      *
@@ -179,7 +158,6 @@ class WordPressHelperLog implements IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     public function warning($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -187,7 +165,6 @@ class WordPressHelperLog implements IWordPressHelperLog
         }
         return $this;
     }
-    
     /**
      * Normal but significant events.
      *
@@ -196,7 +173,6 @@ class WordPressHelperLog implements IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     public function notice($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -204,7 +180,6 @@ class WordPressHelperLog implements IWordPressHelperLog
         }
         return $this;
     }
-    
     /**
      * Interesting events.
      *
@@ -215,7 +190,6 @@ class WordPressHelperLog implements IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     public function info($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -223,7 +197,6 @@ class WordPressHelperLog implements IWordPressHelperLog
         }
         return $this;
     }
-    
     /**
      * Detailed debug information.
      *
@@ -232,7 +205,6 @@ class WordPressHelperLog implements IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     public function debug($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -240,7 +212,6 @@ class WordPressHelperLog implements IWordPressHelperLog
         }
         return $this;
     }
-    
     /**
      * Logs with an arbitrary level.
      *
@@ -250,7 +221,6 @@ class WordPressHelperLog implements IWordPressHelperLog
      *
      * @return IWordPressHelperLog
      */
-    
     public function log($level, $message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -258,5 +228,4 @@ class WordPressHelperLog implements IWordPressHelperLog
         }
         return $this;
     }
-
 }
