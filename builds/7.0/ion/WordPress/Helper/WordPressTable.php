@@ -145,7 +145,10 @@ class WordPressTable extends WP_List_Table
         $index = 0;
         if (PHP::isArray($this->descriptor["columnGroups"])) {
             foreach ($this->descriptor["columnGroups"] as $columnGroup) {
-                if (PHP::isArray($columnGroup["columns"])) {
+                if (!PHP::isArray($columnGroup)) {
+                    continue;
+                }
+                if (array_key_exists("columns", $columnGroup) && PHP::isArray($columnGroup["columns"])) {
                     foreach ($columnGroup["columns"] as $column) {
                         if ($column["name"] === $column_name) {
                             $selectedColumn = $column;

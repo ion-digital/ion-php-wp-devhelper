@@ -141,7 +141,7 @@ class AdminTableHelper implements IAdminTableHelper
     public function addColumnGroup(string $label = null, string $id = null, array $columns = []) : IAdminTableHelper
     {
         $groupDescriptor = static::createGroupDescriptorInstance($label, $id, $columns);
-        if (is_array($this->parent["columnGroups"]) && count($this->parent["columnGroups"]) === 1 && (is_array($this->parent["columnGroups"][0]["columns"]) && count($this->parent["columnGroups"][0]["columns"]) === 0)) {
+        if (array_key_exists("columnGroups", $this->parent) && (PHP::isArray($this->parent["columnGroups"]) && PHP::count($this->parent["columnGroups"]) === 1) && PHP::isArray($this->parent["columnGroups"][0]) && array_key_exists("columns", $this->parent["columnGroups"][0]) && (PHP::isArray($this->parent["columnGroups"][0]["columns"]) && PHP::count($this->parent["columnGroups"][0]["columns"]) === 0)) {
             $this->parent["columnGroups"][0] = $groupDescriptor;
         } else {
             $this->parent["columnGroups"][] = $groupDescriptor;
