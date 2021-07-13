@@ -805,6 +805,11 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
 
             foreach ($files as $file) {
 
+                if(is_dir($this->getWorkingDirectory() . "/{$relativePath}/" . $file)) {
+
+                    continue;
+                }                
+                
                 $matches = [];
                 $name = $file;
 

@@ -788,6 +788,9 @@ final class HelperContext implements IHelperContext
         if (is_dir($workingPath) === true) {
             $files = array_values(array_diff(scandir($workingPath), array('.', '..')));
             foreach ($files as $file) {
+                if (is_dir($this->getWorkingDirectory() . "/{$relativePath}/" . $file)) {
+                    continue;
+                }
                 $matches = [];
                 $name = $file;
                 if (preg_match('|Template Name:(.*)$|mi', file_get_contents($this->getWorkingDirectory() . "/{$relativePath}/" . $file), $matches)) {
