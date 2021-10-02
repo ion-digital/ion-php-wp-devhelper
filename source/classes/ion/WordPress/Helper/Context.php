@@ -17,12 +17,12 @@ use \ion\Package;
 use \ion\IPackage;
 
 
-abstract class Context implements IContext {
+abstract class Context implements ContextInterface{
         
-    use \ion\WordPress\Helper\TContext;
+    use \ion\WordPress\Helper\ContextTrait;
     
-    public function __construct(IPackage $package, array $helperSettings = null) {
+    public function __construct(PackageInterface$package, array $helperSettings = null) {
 
-        $this->__construct_TContext($package, $helperSettings);
+        $this->__construct_ContextTrait($package, $helperSettings);
     }
 }

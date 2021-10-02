@@ -22,7 +22,7 @@ use \Parsedown;
 
 class Tools {
 
-//    public static function initialize(IWordPressHelper $context, array $wpHelperSettings = null): static {
+//    public static function initialize(WordPressHelperInterface$context, array $wpHelperSettings = null): static {
 //        
 //
 //        
@@ -113,7 +113,7 @@ class Tools {
         };
     }
 
-    private static function getSettingsView(IHelperContext $context) {
+    private static function getSettingsView(HelperContextInterface$context) {
         
 
         
@@ -159,12 +159,12 @@ class Tools {
         };
     }
 
-    private static function getStateDetailView(IHelperContext $context) {
+    private static function getStateDetailView(HelperContextInterface$context) {
         
         return null;
     }
 
-    private static function getStateView(IHelperContext $context) {
+    private static function getStateView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -321,7 +321,7 @@ class Tools {
         };
     }
     
-    private static function getWordPressStateView(IHelperContext $context) {
+    private static function getWordPressStateView(HelperContextInterface$context) {
 
         return function () use ($context) {
 
@@ -441,7 +441,7 @@ class Tools {
         };
     }
     
-    private static function getPhpErrorLogView(IHelperContext $context) {
+    private static function getPhpErrorLogView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -479,7 +479,7 @@ HTML;
         };
     }
 
-    private static function getLogListView(IHelperContext $context) {
+    private static function getLogListView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -506,7 +506,7 @@ HTML;
         };
     }
 
-    private static function getLogDetailView(IHelperContext $context, IWordPressHelperLog $log = null) {
+    private static function getLogDetailView(HelperContextInterface$context, WordPressHelperLogInterface$log = null) {
         
         return function () use ($context, $log) {
 
@@ -616,7 +616,7 @@ JS
         };
     }
 
-    private static function getPhpInfoView(IHelperContext $context) {
+    private static function getPhpInfoView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -632,7 +632,7 @@ HTML;
         };
     }
 
-    private static function getHtAccessView(IHelperContext $context) {
+    private static function getHtAccessView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -651,7 +651,7 @@ HTML;
         };
     }
     
-    private static function getWordPressOptionDetailView(IHelperContext $context) {
+    private static function getWordPressOptionDetailView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -725,7 +725,7 @@ HTML;
         };
     }
 
-    private static function getWordPressOptionsView(IHelperContext $context) {
+    private static function getWordPressOptionsView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -751,7 +751,7 @@ HTML;
         };
     }
 
-    private static function getAboutView(IHelperContext $context) {
+    private static function getAboutView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -817,7 +817,7 @@ HTML;
     }
     
 
-    public function __construct(IHelperContext $context, array $wpHelperSettings = null) {
+    public function __construct(HelperContextInterface$context, array $wpHelperSettings = null) {
 
         //print_r(static::isDisabled());
         //die("X");
@@ -1041,7 +1041,7 @@ HTML;
         //WP::AddRewriteRule("/?red-i/property/([0-9]+)(/([^/]+))?/?\$", "?red-i=true&load=single&label=\$1&function=\$3");
     }
     
-    private static function getCronStateView(IHelperContext $context) {
+    private static function getCronStateView(HelperContextInterface$context) {
         
         return function () use ($context) {
 

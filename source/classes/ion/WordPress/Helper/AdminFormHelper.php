@@ -17,7 +17,7 @@ use \ion\WordPress\WordPressHelper as WP;
 use \ion\PhpHelper as PHP;
 use \ion\WordPress\Helper\Wrappers\OptionMetaType;
 
-class AdminFormHelper implements IAdminFormHelper {
+class AdminFormHelper implements AdminFormHelperInterface{
     
     private const WP_HELPER_LEGACY = 'WP_HELPER_LEGACY';
     
@@ -73,7 +73,7 @@ class AdminFormHelper implements IAdminFormHelper {
         $this->rendered = false;
     }
     
-    public function onRead(callable $onRead = null): IAdminFormHelper {
+    public function onRead(callable $onRead = null): AdminFormHelperInterface{
         
         if($this->rendered) {
             
@@ -84,7 +84,7 @@ class AdminFormHelper implements IAdminFormHelper {
         return $this;
     }
     
-    public function onCreate(callable $onCreate = null): IAdminFormHelper {
+    public function onCreate(callable $onCreate = null): AdminFormHelperInterface{
         
         if($this->rendered) {
             
@@ -95,7 +95,7 @@ class AdminFormHelper implements IAdminFormHelper {
         return $this;        
     }
     
-    public function onUpdate(callable $onUpdate = null): IAdminFormHelper {
+    public function onUpdate(callable $onUpdate = null): AdminFormHelperInterface{
                 
         
         if($this->rendered) {
@@ -111,7 +111,7 @@ class AdminFormHelper implements IAdminFormHelper {
         return $this->descriptor['id'];
     }
     
-    public function addGroup(string $title = null, string $description = null, string $id = null, int $columns = null): IAdminFormHelper {
+    public function addGroup(string $title = null, string $description = null, string $id = null, int $columns = null): AdminFormHelperInterface{
 
         if($this->rendered) {
             
@@ -131,7 +131,7 @@ class AdminFormHelper implements IAdminFormHelper {
         return $this;
     }
     
-    public function addField(array $fieldDescriptor): IAdminFormHelper {
+    public function addField(array $fieldDescriptor): AdminFormHelperInterface{
         
         if($this->rendered) {
             
@@ -142,7 +142,7 @@ class AdminFormHelper implements IAdminFormHelper {
         return $this;
     }
     
-    public function addForeignKey(string $name, int $value): IAdminFormHelper {
+    public function addForeignKey(string $name, int $value): AdminFormHelperInterface{
         
         if($this->rendered) {
             
@@ -783,7 +783,7 @@ TEMPLATE;
         }
     }        
     
-    public function setOptionPrefix(string $optionPrefix = null): IAdminFormHelper {
+    public function setOptionPrefix(string $optionPrefix = null): AdminFormHelperInterface{
         
         $this->optionPrefix = $optionPrefix;
         return $this;
@@ -794,7 +794,7 @@ TEMPLATE;
         return $this->optionPrefix;
     }
     
-    public function setUseSerialization(bool $useSerialization): IAdminFormHelper {
+    public function setUseSerialization(bool $useSerialization): AdminFormHelperInterface{
         
         $this->useSerialization = $useSerialization;
         return $this;
@@ -806,7 +806,7 @@ TEMPLATE;
     }    
    
     
-    public function readFromOptions(string $optionName = null): IAdminFormHelper {
+    public function readFromOptions(string $optionName = null): AdminFormHelperInterface{
         
         $self = $this;
 
@@ -859,7 +859,7 @@ TEMPLATE;
         });
     }
     
-    public function updateToOptions(string $optionName = null): IAdminFormHelper {
+    public function updateToOptions(string $optionName = null): AdminFormHelperInterface{
         $self = $this;
 
         if($optionName !== null) {
@@ -933,7 +933,7 @@ TEMPLATE;
     
 
     
-    public function createToOptions(string $optionName = null): IAdminFormHelper {
+    public function createToOptions(string $optionName = null): AdminFormHelperInterface{
         $self = $this;
 
         if($optionName !== null) {
@@ -976,7 +976,7 @@ TEMPLATE;
         });
     }         
         
-    public function redirect(callable $redirect): IAdminFormHelper {
+    public function redirect(callable $redirect): AdminFormHelperInterface{
         $this->redirectProcessor = $redirect;
         return $this;
     }   
@@ -1305,7 +1305,7 @@ TEMPLATE;
 
     //TODO: Verify if the following methods are working
     
-    public function readFromSqlQuery(string $query): IAdminFormHelper {
+    public function readFromSqlQuery(string $query): AdminFormHelperInterface{
 
         return $this->onRead(function(/* string */ $record = null) use ($query) {
 
@@ -1331,7 +1331,7 @@ TEMPLATE;
 
                         if ($state['key'] !== null) {
                             
-                            $query = "SELECT * FROM ( {$query} ) AS q WHERE CAST(`{$state['key']}` AS CHAR(255)) LIKE ('{$wpdb->esc_like($record)}')";
+                            $query = "SELECT * FROM ( {$query} ) AS q WHERE CAST(`{$state['key']}` AS CHAR(255)) LKEInterface('{$wpdb->esc_like($record)}')";
                         }
                     }
 
@@ -1345,7 +1345,7 @@ TEMPLATE;
                 });
     }   
 
-    public function readFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null, string $recordField = null, int $recordId = null): IAdminFormHelper {
+    public function readFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null, string $recordField = null, int $recordId = null): AdminFormHelperInterface{
         global $wpdb;
 
         $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
@@ -1422,7 +1422,7 @@ SQL
         );
     }
     
-    public function updateToSqlTable(string $tableNameWithoutPrefix,  string $tableNamePrefix = null, string $recordField = null, int $recordId = null): IAdminFormHelper {
+    public function updateToSqlTable(string $tableNameWithoutPrefix,  string $tableNamePrefix = null, string $recordField = null, int $recordId = null): AdminFormHelperInterface{
 
         $self = $this;
 
@@ -1522,7 +1522,7 @@ SQL
                 });
     }
     
-    public function createToSqlTable(string $tableNameWithoutPrefix,  string $tableNamePrefix = null): IAdminFormHelper {
+    public function createToSqlTable(string $tableNameWithoutPrefix,  string $tableNamePrefix = null): AdminFormHelperInterface{
         return $this->onCreate(function ($values, $key, int $metaId = null) use ($tableNameWithoutPrefix, $tableNamePrefix) {
 
                     global $wpdb;

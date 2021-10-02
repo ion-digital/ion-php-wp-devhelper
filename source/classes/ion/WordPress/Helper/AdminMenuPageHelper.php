@@ -14,7 +14,7 @@ namespace ion\WordPress\Helper;
 
 use \ion\WordPress\WordPressHelper;
 
-class AdminMenuPageHelper implements IAdminMenuPageHelper {
+class AdminMenuPageHelper implements AdminMenuPageHelperInterface{
 
     private static function createSubMenuPageDescriptor(/* string */ $title, callable &$content, /* string */ $id = null, /* string */ $menuTitle = null, /* string */ $capability = null): array {
 
@@ -67,7 +67,7 @@ class AdminMenuPageHelper implements IAdminMenuPageHelper {
         return $instance;
     }
     
-    public function addSubMenuPage(string $title, callable $content, string $id = null, string $menuTitle = null, string $capability = null): IAdminMenuPageHelper {
+    public function addSubMenuPage(string $title, callable $content, string $id = null, string $menuTitle = null, string $capability = null): AdminMenuPageHelperInterface{
         $subMenus = &$this->parent[$this->parentIndex]["subMenus"];
 
         $this->createSubMenuPage($subMenus, $title, $content, $id, $menuTitle, $capability);        
@@ -75,7 +75,7 @@ class AdminMenuPageHelper implements IAdminMenuPageHelper {
         return new static($this->parent, null);
     }
     
-    public function addSubMenuPageTab(string $title, callable $content, string $id = null, string $menuTitle = null, string $capability = null): IAdminMenuPageHelper {              
+    public function addSubMenuPageTab(string $title, callable $content, string $id = null, string $menuTitle = null, string $capability = null): AdminMenuPageHelperInterface{              
         $menuPage = &$this->parent[$this->parentIndex];
         $subMenuPage = &$menuPage["subMenus"][count($menuPage["subMenus"]) - 1]["tabs"];
 

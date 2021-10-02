@@ -14,7 +14,7 @@ namespace ion\WordPress\Helper;
 use \WP_Widget;
 use \ion\WordPress\WordPressHelper;
 
-abstract class WordPressWidget extends WP_Widget implements IWordPressWidget {
+abstract class WordPressWidget extends WP_Widget implements WordPressWidgetInterface{
 
     public function __construct(/* string */ $title) {
         parent::__construct(WordPressHelper::slugify(__CLASS__), $title);

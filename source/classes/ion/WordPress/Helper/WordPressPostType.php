@@ -15,7 +15,7 @@ namespace ion\WordPress\Helper;
  */
 
 
-class WordPressPostType implements IWordPressPostType {
+class WordPressPostType implements WordPressPostTypeInterface{
 
     private $slug;
 //    private $pluralItemName;
@@ -78,7 +78,7 @@ class WordPressPostType implements IWordPressPostType {
 //        bool $hierarchical = false,
 //        array $supports = null,
 //        callable $registerMetaBox = null,
-//        IVector $taxonomies = null,
+//        VectorInterface$taxonomies = null,
 //        bool $rewriteWithFront = true,
 //        bool $rewriteFeeds = null,
 //        bool $rewritePages = true,
@@ -129,7 +129,7 @@ class WordPressPostType implements IWordPressPostType {
         return $this->parent['pluralLabel'];
     }
     
-    public function pluralLabel(string $pluralLabel): IWordPressPostType {
+    public function pluralLabel(string $pluralLabel): WordPressPostTypeInterface{
         $this->setPluralLabel($pluralLabel);
         return $this;
     }
@@ -324,7 +324,7 @@ class WordPressPostType implements IWordPressPostType {
         return $this->parent['taxonomies'];
     }
     
-    public function addTaxonomy(string $taxonomy): IWordPressPostType {
+    public function addTaxonomy(string $taxonomy): WordPressPostTypeInterface{
         $this->parent['taxonomies'][] = $taxonomy;
         return $this;
     }

@@ -19,9 +19,9 @@ use \ion\ISemVer;
 use \ion\Package;
 use \ion\SemVer;
 
-final class HelperContext implements IHelperContext /*, IObserver */ {
+final class HelperContext implements HelperContextInterface/*, ObserverInterface*/ {
         
-//    use \ion\TObserver;
+//    use \ion\ObserverTrait;
     
     private const OPTION_ACTIVATION_TIMESTAMP = 'activation-timestamp';
     private const OPTION_ACTIVATION_VERSION = 'activation-version';    
@@ -60,8 +60,8 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
             string $loadPath, 
             string $helperDir = null, 
             array $wpHelperSettings = null,
-            ISemVer $version = null,
-            IHelperContext $parent = null
+            SemVerInterface$version = null,
+            HelperContextInterface$parent = null
     ) {
 
 //        $this->setParent($parent);
@@ -195,7 +195,7 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
     }
     
 
-//    public function onAddObserved(IObservable $observable, IMap $data = null): IObserver {
+//    public function onAddObserved(ObservableInterface$observable, MapInterface$data = null): ObserverInterface{
 //        
 //        if($observable === $this->children) {
 //        
@@ -210,30 +210,30 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
 //        return $this;
 //    }    
     
-    public function getLog(): IWordPressHelperLog {
+    public function getLog(): WordPressHelperLogInterface{
         
         return $this->log;
     }         
     
-//    public function initialize(callable $call = null): IWordPressHelper {
+//    public function initialize(callable $call = null): WordPressHelperInterface{
 //        
 //        $this->initialize = $call;
 //        return $this;
 //    }
 //    
-//    public function activate(callable $call = null): IWordPressHelper {
+//    public function activate(callable $call = null): WordPressHelperInterface{
 //        
 //        $this->activate = $call;
 //        return $this;
 //    }
 //    
-//    public function deactivate(callable $call = null): IWordPressHelper {
+//    public function deactivate(callable $call = null): WordPressHelperInterface{
 //        
 //        $this->deactivate = $call;
 //        return $this;
 //    }
 //    
-//    public function uninstall(callable $call = null): IWordPressHelper {
+//    public function uninstall(callable $call = null): WordPressHelperInterface{
 //        
 //        $this->uninstall = $call;
 //        return $this;
@@ -371,31 +371,31 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
         return $this->finalize;
     }     
     
-    public function setInitializeOperation(callable $operation = null) : IHelperContext {
+    public function setInitializeOperation(callable $operation = null) : HelperContextInterface{
         
         $this->initialize = $operation;
         return $this;
     }
     
-    public function setActivateOperation(callable $operation = null) : IHelperContext {
+    public function setActivateOperation(callable $operation = null) : HelperContextInterface{
         
         $this->activate = $operation;
         return $this;
     }
     
-    public function setDeactivateOperation(callable $operation = null) : IHelperContext {
+    public function setDeactivateOperation(callable $operation = null) : HelperContextInterface{
         
         $this->deactivate = $operation;
         return $this;
     }
 
-    public function setUninstallOperation(array $operation = null) : IHelperContext {
+    public function setUninstallOperation(array $operation = null) : HelperContextInterface{
         
         $this->uninstall = $operation;
         return $this;
     }
     
-    public function setFinalizeOperation(callable $operation = null) : ?IHelperContext {
+    public function setFinalizeOperation(callable $operation = null) : ?HelperContextInterface{
         
         $this->finalize = $operation;
         return $this;
@@ -690,12 +690,12 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
         return $this->activationTimeStamp;                   
     }
 
-    public function getVersion(): ?ISemVer {
+    public function getVersion(): ?SemVerInterface{
        
         return $this->version;
     }
     
-    public function getActivationVersion(): ?ISemVer {
+    public function getActivationVersion(): ?SemVerInterface{
         
         if($this->activationVersion !== null) {
             
@@ -719,13 +719,13 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
         return $this->activationVersion;                
     }    
     
-    public function setParent(IHelperContext $context = null): IHelperContext {
+    public function setParent(HelperContextInterface$context = null): HelperContextInterface{
         
         $this->parent = $context;
         return $this;
     }
     
-    public function getParent(): ?IHelperContext {
+    public function getParent(): ?HelperContextInterface{
         
         return $this->parent;
     }
@@ -735,7 +735,7 @@ final class HelperContext implements IHelperContext /*, IObserver */ {
         return $this->children;
     }        
     
-    public function addChild(IHelperContext $child): void {
+    public function addChild(HelperContextInterface$child): void {
         
         $this->children[] = $child;        
         $child->setParent($this);

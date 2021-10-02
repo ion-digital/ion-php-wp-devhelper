@@ -32,13 +32,13 @@
     },
     "require": {
         "php": ">=5.6",    
-        "ion/php-helper": "^0.8",
+        "ion/php-helper": "^0.10",
         "psr/log": "1.0.2",
         "erusev/parsedown": "^1.7.1"
     },
     "require-dev": {
         "php": ">=7.2",
-        "ion/dev": "dev-release/master"
+        "ion/dev": "^0.7"
     },       
     "autoload": {
         "files": [
