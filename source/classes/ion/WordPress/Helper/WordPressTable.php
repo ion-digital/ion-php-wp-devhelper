@@ -28,103 +28,18 @@ class WordPressTable extends WP_List_Table
     {
 
         parent::__construct(
-            array(
+                
+            [                
                 "singular" => $descriptor["singular"],
                 "plural" => $descriptor["plural"],
                 "ajax" => $descriptor["ajax"],
                 'screen' => null
-            )
+            ]
         );
 
         $this->descriptor = $descriptor;
         $this->data = $rows;
     }
-
-    //protected function column_default($item, $column_name) {
-
-
-    /*
-      $actions = array();
-
-      $convertedItem = array_change_key_case($item, CASE_LOWER);
-
-      $output = S::From($convertedItem[S::From($column_name . "")->ToLowerCase()->ToNativeValue()]);
-
-      //echo $column_name . " vs. " , $this->GetForm()->GetDescriptor()->GetColumns()->Get(0)->GetId()->ToString() . "<br />";
-
-      if ( S::From($column_name)->Matches($this->GetForm()->GetDescriptor()->GetColumns()->Get(I::From(0))->GetDataFieldName())->IsTrue() ) {
-
-
-      $identity = $this->GetForm()->GetTableDescriptor()->GetIdentityDataField()->ToLowerCase()->ToNativeValue();
-
-
-      if ( $this->GetForm()->GetActions()->Count()->ToNativeValue() > 0 ) {
-
-      //var_dump($this->GetForm()->GetActions()->ToArray());
-
-      foreach ( $this->GetForm()->GetActions()->ToArray() as $action ) {
-
-      if ( ($action->ToNativeValue() === DataAction::Update) || ($action->ToNativeValue() === DataAction::Delete) ) {
-
-      $actionCaption = S::Blank();
-      $actionString = S::Blank();
-
-      switch ( $action->ToNativeValue() ) {
-
-      case DataAction::Update: {
-
-      $actionCaption = S::From("Edit");
-      $actionString = S::From("edit");
-
-      break;
-      }
-      case DataAction::Delete: {
-
-      $actionCaption = S::From("Delete");
-      $actionString = S::From("delete");
-
-      break;
-      }
-      }
-
-
-
-      $url = static::GetListAction($actionString);
-
-
-
-
-      //var_dump($item);
-
-      // the id
-      if ( array_key_exists($identity, $convertedItem) ) {
-      $url->SetParameter(S::From("id"), Type::CreateFrom($convertedItem[$identity])->ToString());
-      }
-
-
-
-      //$url->SetParameter(String::From("test"), String::From("XXX"));
-
-      $link = $url->ToString();
-      $link = $link->Wrap(S::From("<a href=\""), S::From("\">"));
-      $link = $link->Append($actionCaption);
-      $link = $link->Append(S::From("</a>"));
-
-      $actions[$actionCaption->ToNativeValue()] = $link->ToNativeValue();
-      }
-      }
-
-      //var_dump($actions);
-      }
-
-      $output = $output->Append(S::From($this->row_actions($actions)));
-      }
-
-      //$output = $output->
-
-      return $output->ToNativeValue();
-     */
-    //}
 
     public function column_cb($item)
     {
@@ -162,18 +77,20 @@ class WordPressTable extends WP_List_Table
                 if(array_key_exists("columns", $columnGroup) && PHP::isArray($columnGroup["columns"])) {
 
                     foreach ($columnGroup["columns"] as $column) {
+                        
                         if ($column["name"] === $column_name) {
+                            
                             $selectedColumn = $column;
 
-                            //if(strtolower($column_name) !== strtolower($this->descriptor['key']) && $actionColumn === false && $index < 1) {
                             if ($index < 1) {
+                                
                                 $actionColumn = true;
                             }
-                            //}
                         }
 
 
                         if ($selectedColumn !== null) {
+                            
                             break;
                         }
 
@@ -182,6 +99,7 @@ class WordPressTable extends WP_List_Table
                 }
 
                 if ($selectedColumn !== null) {
+                    
                     break;
                 }
             }
@@ -192,6 +110,7 @@ class WordPressTable extends WP_List_Table
             $label = '';
 
             if(!array_key_exists($column_name, $item)) {
+                
                 throw new WordPressHelperException("Column '$column_name' has not been defined in the row data.");
             }
             
@@ -229,11 +148,15 @@ class WordPressTable extends WP_List_Table
                 }
 
                 if (PHP::isArray($this->descriptor['additionalActions']) && (count($this->descriptor['additionalActions']) > 0)) {
+                    
                     foreach ($this->descriptor['additionalActions'] as $label => $callBack) {
+                        
                         $tmp = $callBack($item[$this->descriptor['key']]);
 
                         if ($tmp !== false) {
+                            
                             $actions[$tmp] = WP::applyTemplate($label, [
+                                
                                 'record' => $item[$this->descriptor['key']]
                             ]);
                         }
@@ -241,6 +164,7 @@ class WordPressTable extends WP_List_Table
                 }
 
                 if (PHP::isArray($actions) && count($actions) > 0) {
+                    
                     $output .= $this->row_actions($actions);
                 }
             }
@@ -253,16 +177,21 @@ class WordPressTable extends WP_List_Table
 
     public function get_columns()
     {
-        //$columns = ['cb' => '<input type="checkbox">'];
+
         if(PHP::isArray($this->descriptor["columnGroups"])) {
+            
             foreach ($this->descriptor["columnGroups"] as $columnGroup) {
+                
                 if(PHP::isArray($columnGroup)) {
+                    
                     foreach ($columnGroup["columns"] as $column) {
+                        
                         $columns[$column["name"]] = $column["label"];
                     }
                 }
             }
         }
+        
         return $columns;
     }
 
@@ -272,10 +201,15 @@ class WordPressTable extends WP_List_Table
         $columns = [];
 
         if(PHP::isArray($this->descriptor["columnGroups"])) {
+            
             foreach ($this->descriptor["columnGroups"] as $columnGroup) {
+                
                 if(PHP::isArray($columnGroup)) {
+                    
                     foreach ($columnGroup["columns"] as $column) {
+                        
                         if ($column["sortable"] === true) {
+                            
                             $columns[] = $column["name"];
                         }
                     }
@@ -330,24 +264,16 @@ class WordPressTable extends WP_List_Table
 
         $this->_column_headers = [$columns, $hidden, $sortable, "cb"];
 
-
-        /*
-          usort($data, function($a, $b) {
-          $orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : 'title'; //If no sort, default to title
-          $order = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'asc'; //If no order, default to asc
-          $result = strcmp($a[$orderby], $b[$orderby]); //Determine sort order
-          return ($order === 'asc') ? $result : -$result; //Send final sort direction to usort
-          });
-         */
-
         $currentPage = $this->get_pagenum();
         $totalItems = count($data);
         $this->items = array_slice($data, (($currentPage - 1) * $perPage), $perPage);
 
         $this->set_pagination_args([
+            
             'total_items' => $totalItems,
             'total_pages' => ceil($totalItems / $perPage),
             'per_page' => $perPage
+                
         ]);
     }
 
@@ -359,10 +285,6 @@ class WordPressTable extends WP_List_Table
 
         if ($this->descriptor['allowNew'] === true) {
 
-            //$url = filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_DEFAULT);
-            //$url = $_SERVER['REQUEST_URI']; // We use this instead of filter_input for compatability with some PHP 5.6 servers
-            //$url = PHP::getServerRequestUri() . '&list=' . $this->descriptor['id'];
-            
             $page = PHP::filterInput('page', [ INPUT_GET ]);
             
             $url = WP::getAdminUrl('admin') . '?page=' . $page . "&list={$this->descriptor['id']}";
@@ -389,9 +311,7 @@ class WordPressTable extends WP_List_Table
             if(!PHP::isEmpty(WP::getCurrentAdminPage())) {
             
                 WP::addAdminPageAction(WP::getCurrentAdminPage(), "Add New " . ucfirst($this->_args['singular']), $url);
-            }
-            
-//            echo '<a href="' . $url . '" class="page-title-action">Add New</a>';
+            }            
         }
         
         parent::display();     
@@ -400,24 +320,18 @@ class WordPressTable extends WP_List_Table
     protected function set_pagination_args($args)
     {
         $args = wp_parse_args($args, [
+            
             'total_items' => 0,
             'total_pages' => 0,
             'per_page' => 0
+            
         ]);
 
-        if (!$args['total_pages'] && $args['per_page'] > 0)
+        if (!$args['total_pages'] && $args['per_page'] > 0) {
+            
             $args['total_pages'] = ceil($args['total_items'] / $args['per_page']);
-
-        // Redirect if page number is invalid and headers are not already sent.
-//        if ( ! headers_sent() && ! wp_doing_ajax() && $args['total_pages'] > 0 && $this->get_pagenum() > $args['total_pages'] ) {
-//			wp_redirect( add_query_arg( 'paged', $args['total_pages'] ) );
-//			exit;
-//			//echo "X";
-//			//var_dump(! headers_sent() && ! wp_doing_ajax() && $args['total_pages'] > 0 && $this->get_pagenum() > $args['total_pages']);
-
-//        }
+        }
 
         $this->_pagination_args = $args;
     }
-
 }

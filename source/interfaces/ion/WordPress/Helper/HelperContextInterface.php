@@ -2,8 +2,8 @@
 
 namespace ion\WordPress\Helper;
 
+use \ion\SemVerInterface;
 use \ion\WordPress\Helper\WordPressHelperLogInterface;
-use \ion\WordPress\Helper\SemVerInterface;
 
 interface HelperContextInterface {
 

@@ -11,6 +11,7 @@ use Psr\Log\AbstractLogger;
 use \ion\WordPress\WordPressHelper;
 
 abstract class WordPressHelperLogger extends AbstractLogger implements WordPressHelperLoggerInterface {
+    
     private $slug = null;
     private $entries = [];
     private $purgeAge = null;
@@ -19,6 +20,7 @@ abstract class WordPressHelperLogger extends AbstractLogger implements WordPress
 
     public function __construct(/* string */ $slug, /* int */ $purgeAge = null, /* bool */ $flushImmediately = true)
     {
+        
         $this->slug = WordPressHelper::slugify($slug);
 
         $this->entries = [];
@@ -28,6 +30,7 @@ abstract class WordPressHelperLogger extends AbstractLogger implements WordPress
         $this->initialize($slug);
 
         if($purgeAge !== null & $purgeAge !== 0) {
+            
             $this->purge();
         }
     }
@@ -35,6 +38,7 @@ abstract class WordPressHelperLogger extends AbstractLogger implements WordPress
     public function __destruct()
     {
         if($this->isFlushed() === false) {
+            
             $this->flush();
         }
     }
@@ -53,16 +57,20 @@ abstract class WordPressHelperLogger extends AbstractLogger implements WordPress
     public abstract function deactivate(): void;
     
     public function getSlug(): ?string {
+        
         return $this->slug;
     }
 
     public function getPurgeAge(): ?int {
+        
         return $this->purgeAge;
     }
 
     public function getEntries($ageInDays = null)
     {
+        
         if($ageInDays === null) {
+            
             return $this->entries;
         }
 
@@ -71,12 +79,14 @@ abstract class WordPressHelperLogger extends AbstractLogger implements WordPress
     }
 
     public function getFlushImmediately() {
+        
         return $this->flushImmediately;
     }
 
     public function log($level, $message, array $context = [])
     {
         $this->entries[] = [
+            
             'level' => $level,
             'message' => $message,
             'time' => current_time('timestamp'),
@@ -84,19 +94,23 @@ abstract class WordPressHelperLogger extends AbstractLogger implements WordPress
         ];
 
         if($this->getFlushImmediately() === true && !$this->isFlushed()) {
+            
             $this->flush();
         }
     }
 
     public function isFlushed() {
+        
         return (bool) (count($this->entries) === 0);
     }
 
     public function clear() {
+        
         $this->entries = [];
     }
     
     public function purge(bool $full = false) {
+        
         $this->clear();
     }
 }

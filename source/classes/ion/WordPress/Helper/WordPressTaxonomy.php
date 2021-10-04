@@ -17,8 +17,8 @@ class WordPressTaxonomy implements WordPressTaxonomyInterface {
     private $parent;
     
     public function __construct(string $slug, array &$parent) {
+        
         $this->slug = $slug;
         $this->parent = $parent;
     }
-    
 }

@@ -15,15 +15,14 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
 {
     const TABLE_NAME = 'log';
 
-
-
     public function __construct(/* string */ $slug, /* int */ $purgeAge = null, /* bool */ $flushImmediately = true)
     {
+        
         parent::__construct($slug, $purgeAge, $flushImmediately);
-
     }
     
     public function __destruct() {
+        
         parent::__destruct();
     }
 
@@ -144,6 +143,7 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
         foreach($this->getEntries(null) as $entry) {
 
             $values = [
+                
                 'slug' => "'" . $this->getSlug() . "'",
                 'time' => "'" . strftime('%F %T', $entry['time']) . "'",
                 'level' => "'" . $entry['level'] . "'",
@@ -156,17 +156,12 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
         }
 
         if(count($lines) > 0) {
+            
             $sql = "INSERT INTO `$table` (`" . implode("`, `", array_keys($values)) . "`) VALUES " . implode(',', $lines) . ';';
             
             $this->clear();
 
             WP::dbQuery($sql);            
         }
-        
-
-
     }
-
-
-
 }

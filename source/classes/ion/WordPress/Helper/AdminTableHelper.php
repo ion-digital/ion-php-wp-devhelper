@@ -18,7 +18,9 @@ use \ion\PhpHelper as PHP;
 class AdminTableHelper implements AdminTableHelperInterface {
     
     private static function createGroupDescriptorInstance(/* string */ $title = null, /* string */ $id = null, array $columns = []) {
+
         return [
+            
             "id" => (string) $id,
             "title" => (string) $title,
             "columns" => (array) $columns
@@ -39,22 +41,17 @@ class AdminTableHelper implements AdminTableHelperInterface {
     }
     
     private $parent;
-    private $columnGroup;
-//    private $rows = [];
-//    private $readProcessor = null;
-//    private $deleteProcessor = null;    
+    private $columnGroup;  
     private $onReadHandlers;
     private $onDeleteHandlers;
     
     public function __construct(array &$parent) {
+        
         $this->parent = &$parent;
         $this->columnGroup = &$parent["columnGroups"][0];
         
         $this->onReadHandlers = [];
         $this->onDeleteHandlers = [];        
-        
-//        $this->onRead(null);
-//        $this->onDelete(null);        
     }
     
     
@@ -70,33 +67,24 @@ class AdminTableHelper implements AdminTableHelperInterface {
         return $this;        
     }    
     
+    //FIXME: ???
     public function read(callable $read): AdminTableHelperInterface {
         
         
         
     }
-    
-//    protected function doReadHandler(array $data = null): ?array {
-//        
-//        $tmp = $this->onReadHandlers;
-//        return $tmp($data);
-//    }
-//
-//    protected function doDeleteHandler(array $data = null): ?array {
-//        
-//        $tmp = $this->onDeleteHandlers;
-//        return $tmp($data);
-//    }    
-    
+
     public function getDescriptor(): array {
         
         return $this->parent;
     }
     
     public function addColumn(array $columnDescriptor): AdminTableHelperInterface {
+        
         $this->columnGroup["columns"][] = $columnDescriptor;
 
         if ($this->parent["key"] === null) {
+            
             $this->parent["key"] = $columnDescriptor["id"];
         }
 
@@ -125,18 +113,6 @@ class AdminTableHelper implements AdminTableHelperInterface {
         return $this;
     }
     
-//    public function getRows() {
-//        return $this->getRows();
-//    }
-//    
-//    public function addRows(array $rows) {
-//        $this->addRows($rows);
-//    }
-//    
-//    public function addRow(array $cells) {
-//        $this->addRow($cells);
-//    }
-    
     public function processAndRender(bool $echo = true): string {
         
         $this->process();
@@ -146,18 +122,12 @@ class AdminTableHelper implements AdminTableHelperInterface {
     public function process(): void {
         
         $state = [
+            
             'delete' => (filter_input(INPUT_GET, Constants::LIST_ACTION_QUERYSTRING_PARAMETER, FILTER_DEFAULT) === 'delete'),
             'record' => (filter_input(INPUT_GET, 'record', FILTER_DEFAULT)),
             'records' => (filter_input(INPUT_GET, 'records', FILTER_DEFAULT)),
             'list' => (filter_input(INPUT_GET, 'list', FILTER_DEFAULT)),
         ];   
-        
-
-//        var_dump($this->parent['id']);
-//        var_Dump($state);
-//        die("X");
-
-        
         
         if($state['delete'] === true && $this->parent['id'] === $state['list']) {
             
@@ -217,14 +187,13 @@ class AdminTableHelper implements AdminTableHelperInterface {
     public function render(bool $echo = true): string {
 
         $state = [
+            
             'list' => filter_input(INPUT_GET, Constants::LIST_QUERYSTRING_PARAMETER, FILTER_DEFAULT),
             'create' => (filter_input(INPUT_GET, Constants::LIST_ACTION_QUERYSTRING_PARAMETER, FILTER_DEFAULT) === 'create'),
             'update' => (filter_input(INPUT_GET, Constants::LIST_ACTION_QUERYSTRING_PARAMETER, FILTER_DEFAULT) === 'update'),
             'record' => (filter_input(INPUT_GET, 'record', FILTER_DEFAULT))
         ];
-        
-        
-        
+
         ob_start();                
         
         static::setDetailMode(true);
@@ -233,9 +202,9 @@ class AdminTableHelper implements AdminTableHelperInterface {
             
             $this->parent['detailView'](false);            
             
-        } else {            
-            echo 'TODO: generate default detail view';
+        } else {         
             
+            echo 'TODO: generate default detail view';
         }
         
         static::setDetailMode(false);
@@ -244,10 +213,6 @@ class AdminTableHelper implements AdminTableHelperInterface {
         
         ob_start();
 
-        //echo($this->parent['id'] . "<br />");
-        
-        //echo $this->parent['id'] . "<br />";
-        
         if (($state['create'] === true) || ($state['update'] === true) && ($detail !== null) && ($state['list'] === $this->parent['id'])) {
             
             echo $detail;
@@ -268,28 +233,22 @@ class AdminTableHelper implements AdminTableHelperInterface {
                 $values = $handler($values, $state['record'], $descriptor['key']);
             }
             
-            
             $table = new WordPressTable($descriptor, $values);
             $table->display();
-
         }
 
         $output = ob_get_clean();
 
         if ($echo === true) {
+            
             echo $output;
         }
 
         return $output;
     }
-
-    
-//    public function read(callable $read): AdminTableHelperInterface {
-//        $this->readProcessor = $read;
-//        return $this;
-//    }
     
     public function readFromSqlTable(string $tableNameWithoutPrefix, array $where = null, string $tableNamePrefix = null): AdminTableHelperInterface {
+
         $self = $this;
         
         global $wpdb;
@@ -299,7 +258,9 @@ class AdminTableHelper implements AdminTableHelperInterface {
         $columns = [ '`' . $this->parent['key'] . '`' ];
         
         foreach($this->parent['columnGroups'] as $columnGroup) {
-            foreach($columnGroup['columns'] as $column) {                
+            
+            foreach($columnGroup['columns'] as $column) {
+                
                 $columns[] = '`' . $column['name'] . '`';                
             }
         }
@@ -316,6 +277,7 @@ class AdminTableHelper implements AdminTableHelperInterface {
                 $expressions = [];
 
                 if(is_array($expression) && count(array_keys($expression)) > 0) { //FIXME: Should be PHP::isAssociativeArray()
+
                     foreach($expression as $operator => $value) {
 
                         if(is_string($value)) {
@@ -324,19 +286,16 @@ class AdminTableHelper implements AdminTableHelperInterface {
 
                         $expressions[] = '`'. $field . '` ' . strtoupper($operator) . ' ' . $value;
                     }
-
                 }
 
                 $conditions[] = join(' OR ', $expressions);
             }
             
-        
-            if(count($conditions) > 0) {                
+            if(count($conditions) > 0) {  
+                
                 $whereString = ' WHERE ' . join(' AND ', $conditions);
             }               
         }
-        
-//        echo("<pre>SELECT $columnsString FROM `$table`$whereString</pre><br />");
         
         return $this->readFromSqlQuery(<<<SQL
 SELECT $columnsString FROM `$table`$whereString
@@ -352,12 +311,8 @@ SQL
         });
     }
     
-//    public function delete(callable $delete): AdminTableHelperInterface {
-//        $this->deleteProcessor = $delete;
-//        return $this;
-//    }
-    
     public function deleteFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null): AdminTableHelperInterface {
+
         $self = $this;
 
         return $this->onDelete(function (array $items, $key) use ($self, $tableNameWithoutPrefix, $tableNamePrefix) {
@@ -374,14 +329,10 @@ SQL
                 $values = [];
                 
                 foreach($items as $item) {
+                    
                     $where[] = 'CAST(`' . $self->parent['key'] . '` AS CHAR(255)) LIKE (%s)';
                     $values[] = $wpdb->esc_like($item);
                 }
-                
- // echo "<pre>";
- // var_dump($values);
- // echo "\n\nDELETE FROM `$table` WHERE " . join(' OR ', $where);
- // die("</pre>");  				
 				
                 WP::dbQuery("DELETE FROM `$table` WHERE " . join(' OR ', $where), $values);           
             }
@@ -396,6 +347,7 @@ SQL
             $records = WP::getSiteOption($optionName);
 
             if($records === null) {
+                
                 $records = [];
             }
           
@@ -411,30 +363,17 @@ SQL
             $records = WP::getSiteOption($optionName);
 
             if($records === null) {
+                
                 $records = [];
             }
-            
-//            echo "<pre>";
-//            var_dump($records);
-//            var_dump($items);
-//            echo $key;
-//            echo "</pre><hr />";
 
-            
             foreach($items as $index) {
                 
                 if(array_key_exists((string) $index, $records)) {
                     
                     unset($records[(string) $index]);
                 }
-            }
-            
-//            echo "<pre>";
-//            var_dump($records);
-//            var_dump($items);
-//            echo $key;
-//            echo "</pre>";
-//            exit;            
+            }   
             
             WP::setSiteOption($optionName, $records);             
         }); 

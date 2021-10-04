@@ -11,6 +11,7 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
+
 class AdminCustomizeHelper implements AdminCustomizeHelperInterface {
     
     private $descriptor;
@@ -20,30 +21,6 @@ class AdminCustomizeHelper implements AdminCustomizeHelperInterface {
         $this->descriptor = &$descriptor;
         
     }
-    
-//$wpCustomize->add_section( 'ion-settings' , array(
-//
-//    'title'      => __( 'ION', 'ion-settings' ),
-//    'priority'   => 30
-//));                       
-//
-//$wpCustomize->add_setting('ion-colour-theme', [
-//
-//    'default' => null,
-//    'transport' => 'refresh'
-//]);
-//
-//$wpCustomize->add_control(
-//
-//    'ion-colour-theme',
-//    [
-//        'label' => __('Colour Theme', 'ion-colour-theme'),
-//        'section' => 'ion-settings', //colors
-//        'settings' => 'ion-colour-theme',
-//        'type' => 'select',
-//        'choices' => $themes
-//    ]
-//);      
     
     public function addTextSetting(
             

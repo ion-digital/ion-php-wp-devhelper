@@ -13,13 +13,13 @@ namespace ion\WordPress\Helper;
  */
 
 use \ion\WordPress\WordPressHelper as WP;
-use \ion\WordPress\IWordPressHelper;
+use \ion\WordPress\WordPressHelperInterface;
 use \ion\PhpHelper as PHP;
-use \ion\ISemVer;
+use \ion\SemVerInterface;
 use \ion\Package;
 use \ion\SemVer;
 
-final class HelperContext implements HelperContextInterface/*, ObserverInterface*/ {
+final class HelperContext implements HelperContextInterface {
         
 //    use \ion\ObserverTrait;
     
@@ -55,13 +55,14 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
     
     final public function __construct(
             
-            string $vendorName,
-            string $projectName,
-            string $loadPath, 
-            string $helperDir = null, 
-            array $wpHelperSettings = null,
-            SemVerInterface$version = null,
-            HelperContextInterface$parent = null
+        string $vendorName,
+        string $projectName,
+        string $loadPath, 
+        string $helperDir = null, 
+        array $wpHelperSettings = null,
+        SemVerInterface$version = null,
+        HelperContextInterface$parent = null
+            
     ) {
 
 //        $this->setParent($parent);
@@ -134,12 +135,7 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
 
         $tmp = array_values(array_filter(explode(DIRECTORY_SEPARATOR, $this->getWorkingDirectory())));
 
-
         $this->contextType = (strpos($workingDir, DIRECTORY_SEPARATOR . 'themes') ? Constants::CONTEXT_THEME : Constants::CONTEXT_PLUGIN);
-        
-        
-        
-//        $this->contextSlug = static::slugify($projectName);
         $this->contextVendorName = PHP::strToDashedCase($vendorName);
         $this->contextProjectName = PHP::strToDashedCase($projectName);
         
@@ -194,51 +190,11 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
         $this->version = $version;                   
     }
     
-
-//    public function onAddObserved(ObservableInterface$observable, MapInterface$data = null): ObserverInterface {
-//        
-//        if($observable === $this->children) {
-//        
-//            $obj = $data->get('value');
-//           
-//            if($obj !== null) {
-//
-//                $obj->setParent($this);
-//            }
-//        }
-//    
-//        return $this;
-//    }    
-    
     public function getLog(): WordPressHelperLogInterface {
         
         return $this->log;
     }         
-    
-//    public function initialize(callable $call = null): WordPressHelperInterface {
-//        
-//        $this->initialize = $call;
-//        return $this;
-//    }
-//    
-//    public function activate(callable $call = null): WordPressHelperInterface {
-//        
-//        $this->activate = $call;
-//        return $this;
-//    }
-//    
-//    public function deactivate(callable $call = null): WordPressHelperInterface {
-//        
-//        $this->deactivate = $call;
-//        return $this;
-//    }
-//    
-//    public function uninstall(callable $call = null): WordPressHelperInterface {
-//        
-//        $this->uninstall = $call;
-//        return $this;
-//    }
-    
+
     public function isFinalized(): bool {
         
         return $this->finalized;
@@ -248,19 +204,11 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
         
         return $this->initialized;
     }
-    
 
-
-    
     public function getId(): int {
         
         return $this->contextId;
     }
-
-//    public function getSlug(): string {
-//        
-//        return $this->contextSlug;
-//    }
 
     public function getPackageName(): string {
         
@@ -282,16 +230,12 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
         return (bool) $this->primary;
     }
 
- 
-    
     public function getView(string $viewSlug): callable {
         
         return function () use ($viewSlug) {
-            //echo "VIEW COMES HERE [$viewSlug]";         
+        
             $path = $this->getViewDirectory() . $viewSlug . ".php";
 
-            //die($path . "<br />");
-            
             if (file_exists($path)) {
 
                 // Load the PHP view and strip the PHP tags before 
@@ -310,10 +254,12 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
     }
     
     public function getWorkingUri(): string {
+        
         return $this->workingUri;
     }
     
     public function getWorkingDirectory(): string {
+        
         return $this->workingDir;
     }    
     
@@ -325,27 +271,25 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
     public function getViewDirectory(): string {
         
         $dirs = [
+            
             'views/',
             'source/views/',
             'includes/views/'
         ];
         
         foreach($dirs as $subDir) {
+            
             $dir = $this->getWorkingDirectory() . $subDir;
             
             if(is_dir($dir)) {
+                
                 return $dir;
             }
-
         }
         
         return $this->getWorkingDirectory();
     }   
-    
-//    protected function getMainOperation() /* : ?callable */ {
-//        return $this->_getMainOperation();
-//    }
-    
+
     public function getInitializeOperation() : ?callable {
         
         return $this->initialize;
@@ -493,10 +437,7 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
     }    
     
     public function invokeDeactivateOperation(): void {
-        
-//        echo "{$this->contextName}:". static::OPTION_ACTIVATION_VERSION . '<br />';
-//        var_dump(static::hasOption("{$this->contextName}:". static::OPTION_ACTIVATION_VERSION));        
-        
+
         foreach(array_values($this->getChildren()) as $childContext) {
             
             $childContext->invokeDeactivateOperation();
@@ -555,9 +496,7 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
     }
     
     public function invokeFinalizeOperation(): void {
-        
-//        die('finalize');    
-         
+
         if($this->isFinalized()) {
             
             //throw new WordPressHelperException("Context '{$this->getProjectName()}' has already been finalized.");
@@ -605,13 +544,7 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
 
                 throw new WordPressHelperException("The uninstall hook for context '{$this->getProjectName()}' cannot be a Closure - it must be unspecified (NULL), a function or a static method.");
             }              
-            
-//            echo '<pre>';
-//            var_dump(Constants::CONTEXT_PLUGIN);            
-//            var_dump(Constants::CONTEXT_THEME);            
-//            var_dump($this->getType());            
-//            echo('</pre>');
-            
+
             if($this->getType() === Constants::CONTEXT_PLUGIN) {
 
                 register_activation_hook($this->loadPath, function() {
@@ -640,36 +573,10 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
                 add_action("switch_theme", function () {                    
                     
                     $this->invokeDeactivateOperation();  
-                    
-//                    if($this->hasUninstallOperation()) {
-//                        
-//                        $this->invokeUninstallOperation();  
-//                    }
+
                 });                   
             }  
-        }
-
-//        if(!is_admin()) {
-//            
-//            // NOTE: The following action is "wp" and not "wp_loaded," since "wp" is the first
-//            // hook where WordPress template tags return their proper values.
-//            
-//            add_action("wp", function () use ($context) {     
-//                                                                                        
-////                echo "<pre>{$context->getName()}</pre>";
-//
-//                if($context->hasTemplateOperation()) {
-//
-//                    if(!$context->invokeTemplateOperation()) {
-//                        
-//                        exit;
-//                    }
-//                }   
-//            });                     
-//        }
-
-
-                  
+        }                  
     }        
     
     
@@ -708,12 +615,7 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
             
             return null;
         }
-        
-//        if(!($tmp instanceof ISemVer)) {
-//        
-//            throw new WordPressHelperException("Retrieved activation version does not implement '\\ion\\ISemVer.'");
-//        }
-        
+
         $this->activationVersion = SemVer::parse($tmp);
         
         return $this->activationVersion;                
@@ -741,27 +643,6 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
         $child->setParent($this);
         return;
     }
-
-    
-//    /* abstract */ protected function initialize(): void {
-//        
-//        // empty for now!
-//    }
-//    
-//    protected function activate(): void {
-//        
-//        // empty for now!        
-//    }
-//    
-//    protected function deactivate(): void {
-//        
-//        // empty for now!        
-//    }     
-//    
-//    protected function finalize(): void {                
-//        
-//        // empty for now!       
-//    }
     
     public function getTemplates(bool $flat = true, bool $themeOnly = false, bool $labels = false, string $nullItem = null, string $relativePath = null): array {        
 
@@ -777,17 +658,24 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
             $templates = $wpTemplates;
         } else {
             if (count($wpTemplates) > 0) {
+                
                 if ($labels === true) {
+                    
                     $templates[wp_get_theme()->Name] = $wpTemplates;
+                    
                 } else {
+                    
                     $templates['theme'] = $wpTemplates;
                 }
+                
             } else {
+                
                 $templates = [];
             }
         }
 
         if ($themeOnly) {
+            
             return $templates;
         }
 
@@ -796,8 +684,6 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
         $relativePath = ($relativePath === null ? 'templates' : trim($relativePath, '/\\'));
 
         $workingPath = $this->getWorkingDirectory() . $relativePath;
-
-        //die($workingPath);
 
         if (is_dir($workingPath) === true) {
 
@@ -818,19 +704,26 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
                 }
 
                 if (array_key_exists($name, $wpTemplates) === false) {
+                    
                     $customTemplates[$name] = $file;
                 }
             }
         }
 
         if (PHP::isArray($customTemplates) && count($customTemplates) > 0) {
+            
             if ($flat == true) {
+                
                 $templates = array_merge($templates, $customTemplates);
+                
             } else {
 
                 if ($labels === true) {
+                    
                     $templates['Other'] = $customTemplates;
+                    
                 } else {
+                    
                     $templates['other'] = $customTemplates;
                 }
             }
@@ -844,6 +737,7 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
         $result = locate_template($name);
 
         if ($result === '') {
+            
             return false;
         }
 
@@ -854,14 +748,18 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
     public function template(string $name, bool $echo = false): string {        
 
         if (substr_compare($name, '.php', -strlen('.php')) !== 0) {
+            
             $name = $name . '.php';
         }
 
         ob_start();
 
         if ($overriddenTemplate = locate_template($name)) {
+            
             load_template($overriddenTemplate);
+            
         } else {
+            
             load_template($this->getWorkingDirectory() . "templates/$name");
         }
 

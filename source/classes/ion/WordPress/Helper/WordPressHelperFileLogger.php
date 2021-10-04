@@ -17,9 +17,8 @@ class WordPressHelperFileLogger extends WordPressHelperLogger
 
     public function __construct(/* string */ $slug, /* int */ $purgeAge = null, /* bool */ $flushImmediately = true)
     {
+        
         parent::__construct($slug, $purgeAge, $flushImmediately);
-
-
     }
 
     protected function initialize($slug) {

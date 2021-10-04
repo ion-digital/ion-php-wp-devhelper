@@ -2,6 +2,8 @@
 
 namespace ion\WordPress;
 
+use \ion\WordPress\Helper\HelperContextInterface;
+use \ion\SemVerInterface;
 use \ion\WordPress\Helper\Wrappers\ActionsInterface;
 use \ion\WordPress\Helper\Wrappers\AdminInterface;
 use \ion\WordPress\Helper\Wrappers\CommonInterface;
@@ -17,8 +19,6 @@ use \ion\WordPress\Helper\Wrappers\RewritesInterface;
 use \ion\WordPress\Helper\Wrappers\ShortCodesInterface;
 use \ion\WordPress\Helper\Wrappers\TaxonomiesInterface;
 use \ion\WordPress\Helper\Wrappers\WidgetsInterface;
-use \ion\WordPress\HelperContextInterface;
-use \ion\WordPress\SemVerInterface;
 
 interface WordPressHelperInterface extends 
 
