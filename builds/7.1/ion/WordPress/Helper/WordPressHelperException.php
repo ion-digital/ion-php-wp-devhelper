@@ -11,7 +11,7 @@ namespace ion\WordPress\Helper;
  */
 use Exception;
 use WP_Error;
-class WordPressHelperException extends Exception implements IWordPressHelperException
+class WordPressHelperException extends Exception implements WordPressHelperExceptionInterface
 {
     /**
      * method

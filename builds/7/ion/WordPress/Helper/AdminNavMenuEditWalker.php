@@ -43,20 +43,13 @@ class AdminNavMenuEditWalker extends Walker_Nav_Menu_Edit {
                     break;
                 }
 
-                foreach($fields as $field) {
-
-//            echo "<h2>{$field['name']}</h2>";
-//            echo '<pre>';
-//            var_dump($item);
-//            echo('</pre>');                      
+                foreach($fields as $field) {                 
                     
                     if(!array_key_exists($field['name'], $item->meta)) {
 
                         continue;
                     }
 
-
-                    
                     ?>
                         <p class="field-<?php echo($field['name']); ?> description description-wide">
                             <label for="edit-menu-item-<?php echo($field['name']); ?>-<?php echo $item_id; ?>">

@@ -14,10 +14,6 @@ final class Constants
 {
     const WP_HELPER = 'WP_HELPER';
     const WP_HELPER_DEBUG_SLUG = 'wp-helper-debug';
-    //const MAJOR_VERSION = 0;
-    //const MINOR_VERSION = 55;
-    //const PATCH_VERSION = 2;
-    //const VERSION = self::MAJOR_VERSION . '.' . self::MINOR_VERSION . '.' . self::PATCH_VERSION;
     const DEFAULT_CAPABILITY = "manage_options";
     const DEFAULT_THEME_CAPABILITY = "edit_theme_options";
     const DEFAULT_PLUGIN_CAPABILITY = self::DEFAULT_CAPABILITY;

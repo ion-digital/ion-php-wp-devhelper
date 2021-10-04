@@ -12,7 +12,7 @@ use ion\PhpHelper as PHP;
  *
  * @author Justus
  */
-class AdminTableHelper implements IAdminTableHelper
+class AdminTableHelper implements AdminTableHelperInterface
 {
     /**
      * method
@@ -47,9 +47,6 @@ class AdminTableHelper implements IAdminTableHelper
     }
     private $parent;
     private $columnGroup;
-    //    private $rows = [];
-    //    private $readProcessor = null;
-    //    private $deleteProcessor = null;
     private $onReadHandlers;
     private $onDeleteHandlers;
     /**
@@ -64,14 +61,12 @@ class AdminTableHelper implements IAdminTableHelper
         $this->columnGroup =& $parent["columnGroups"][0];
         $this->onReadHandlers = [];
         $this->onDeleteHandlers = [];
-        //        $this->onRead(null);
-        //        $this->onDelete(null);
     }
     /**
      * method
      * 
      * 
-     * @return IAdminTableHelper
+     * @return AdminTableHelperInterface
      */
     public function onRead(callable $onRead)
     {
@@ -82,33 +77,23 @@ class AdminTableHelper implements IAdminTableHelper
      * method
      * 
      * 
-     * @return IAdminTableHelper
+     * @return AdminTableHelperInterface
      */
     public function onDelete(callable $onDelete)
     {
         $this->onDeleteHandlers[] = $onDelete;
         return $this;
     }
+    //FIXME: ???
     /**
      * method
      * 
      * 
-     * @return IAdminTableHelper
+     * @return AdminTableHelperInterface
      */
     public function read(callable $read)
     {
     }
-    //    protected function doReadHandler(array $data = null): ?array {
-    //
-    //        $tmp = $this->onReadHandlers;
-    //        return $tmp($data);
-    //    }
-    //
-    //    protected function doDeleteHandler(array $data = null): ?array {
-    //
-    //        $tmp = $this->onDeleteHandlers;
-    //        return $tmp($data);
-    //    }
     /**
      * method
      * 
@@ -122,7 +107,7 @@ class AdminTableHelper implements IAdminTableHelper
      * method
      * 
      * 
-     * @return IAdminTableHelper
+     * @return AdminTableHelperInterface
      */
     public function addColumn(array $columnDescriptor)
     {
@@ -136,7 +121,7 @@ class AdminTableHelper implements IAdminTableHelper
      * method
      * 
      * 
-     * @return IAdminTableHelper
+     * @return AdminTableHelperInterface
      */
     public function addColumnGroup($label = null, $id = null, array $columns = [])
     {
@@ -149,17 +134,6 @@ class AdminTableHelper implements IAdminTableHelper
         $this->columnGroup =& $this->parent["columnGroups"][count($this->parent["columnGroups"]) - 1];
         return $this;
     }
-    //    public function getRows() {
-    //        return $this->getRows();
-    //    }
-    //
-    //    public function addRows(array $rows) {
-    //        $this->addRows($rows);
-    //    }
-    //
-    //    public function addRow(array $cells) {
-    //        $this->addRow($cells);
-    //    }
     /**
      * method
      * 
@@ -179,9 +153,6 @@ class AdminTableHelper implements IAdminTableHelper
     public function process()
     {
         $state = ['delete' => filter_input(INPUT_GET, Constants::LIST_ACTION_QUERYSTRING_PARAMETER, FILTER_DEFAULT) === 'delete', 'record' => filter_input(INPUT_GET, 'record', FILTER_DEFAULT), 'records' => filter_input(INPUT_GET, 'records', FILTER_DEFAULT), 'list' => filter_input(INPUT_GET, 'list', FILTER_DEFAULT)];
-        //        var_dump($this->parent['id']);
-        //        var_Dump($state);
-        //        die("X");
         if ($state['delete'] === true && $this->parent['id'] === $state['list']) {
             foreach ($this->onDeleteHandlers as $handler) {
                 if ($state['records'] !== null) {
@@ -235,8 +206,6 @@ class AdminTableHelper implements IAdminTableHelper
         static::setDetailMode(false);
         $detail = ob_get_clean();
         ob_start();
-        //echo($this->parent['id'] . "<br />");
-        //echo $this->parent['id'] . "<br />";
         if ($state['create'] === true || $state['update'] === true && $detail !== null && $state['list'] === $this->parent['id']) {
             echo $detail;
         } else {
@@ -257,15 +226,11 @@ class AdminTableHelper implements IAdminTableHelper
         }
         return $output;
     }
-    //    public function read(callable $read): IAdminTableHelper {
-    //        $this->readProcessor = $read;
-    //        return $this;
-    //    }
     /**
      * method
      * 
      * 
-     * @return IAdminTableHelper
+     * @return AdminTableHelperInterface
      */
     public function readFromSqlTable($tableNameWithoutPrefix, array $where = null, $tableNamePrefix = null)
     {
@@ -299,7 +264,6 @@ class AdminTableHelper implements IAdminTableHelper
                 $whereString = ' WHERE ' . join(' AND ', $conditions);
             }
         }
-        //        echo("<pre>SELECT $columnsString FROM `$table`$whereString</pre><br />");
         return $this->readFromSqlQuery(<<<SQL
 SELECT {$columnsString} FROM `{$table}`{$whereString}
 SQL
@@ -309,7 +273,7 @@ SQL
      * method
      * 
      * 
-     * @return IAdminTableHelper
+     * @return AdminTableHelperInterface
      */
     public function readFromSqlQuery($query)
     {
@@ -317,15 +281,11 @@ SQL
             return WP::dbQuery($query);
         });
     }
-    //    public function delete(callable $delete): IAdminTableHelper {
-    //        $this->deleteProcessor = $delete;
-    //        return $this;
-    //    }
     /**
      * method
      * 
      * 
-     * @return IAdminTableHelper
+     * @return AdminTableHelperInterface
      */
     public function deleteFromSqlTable($tableNameWithoutPrefix, $tableNamePrefix = null)
     {
@@ -340,10 +300,6 @@ SQL
                     $where[] = 'CAST(`' . $self->parent['key'] . '` AS CHAR(255)) LIKE (%s)';
                     $values[] = $wpdb->esc_like($item);
                 }
-                // echo "<pre>";
-                // var_dump($values);
-                // echo "\n\nDELETE FROM `$table` WHERE " . join(' OR ', $where);
-                // die("</pre>");
                 WP::dbQuery("DELETE FROM `{$table}` WHERE " . join(' OR ', $where), $values);
             }
         });
@@ -352,7 +308,7 @@ SQL
      * method
      * 
      * 
-     * @return IAdminTableHelper
+     * @return AdminTableHelperInterface
      */
     public function readFromOptions($optionName)
     {
@@ -368,7 +324,7 @@ SQL
      * method
      * 
      * 
-     * @return IAdminTableHelper
+     * @return AdminTableHelperInterface
      */
     public function deleteFromOptions($optionName)
     {
@@ -377,22 +333,11 @@ SQL
             if ($records === null) {
                 $records = [];
             }
-            //            echo "<pre>";
-            //            var_dump($records);
-            //            var_dump($items);
-            //            echo $key;
-            //            echo "</pre><hr />";
             foreach ($items as $index) {
                 if (array_key_exists((string) $index, $records)) {
                     unset($records[(string) $index]);
                 }
             }
-            //            echo "<pre>";
-            //            var_dump($records);
-            //            var_dump($items);
-            //            echo $key;
-            //            echo "</pre>";
-            //            exit;
             WP::setSiteOption($optionName, $records);
         });
     }

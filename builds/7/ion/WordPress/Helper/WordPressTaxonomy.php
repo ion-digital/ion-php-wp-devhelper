@@ -11,14 +11,14 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
-class WordPressTaxonomy implements IWordPressTaxonomy {
+class WordPressTaxonomy implements WordPressTaxonomyInterface {
 
     private $slug;
     private $parent;
     
     public function __construct(string $slug, array &$parent) {
+        
         $this->slug = $slug;
         $this->parent = $parent;
     }
-    
 }

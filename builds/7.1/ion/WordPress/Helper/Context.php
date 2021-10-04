@@ -11,18 +11,18 @@ namespace ion\WordPress\Helper;
  */
 use ion\WordPress\WordPressHelper as WP;
 use ion\Package;
-use ion\IPackage;
-abstract class Context implements IContext
+use ion\PackageInterface;
+abstract class Context implements ContextInterface
 {
-    use \ion\WordPress\Helper\TContext;
+    use \ion\WordPress\Helper\ContextTrait;
     /**
      * method
      * 
      * 
      * @return mixed
      */
-    public function __construct(IPackage $package, array $helperSettings = null)
+    public function __construct(PackageInterface $package, array $helperSettings = null)
     {
-        $this->__construct_TContext($package, $helperSettings);
+        $this->__construct_ContextTrait($package, $helperSettings);
     }
 }

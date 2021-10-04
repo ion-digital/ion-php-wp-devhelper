@@ -18,12 +18,6 @@ use ion\PhpHelper as PHP;
 use Parsedown;
 class Tools
 {
-    //    public static function initialize(IWordPressHelper $context, array $wpHelperSettings = null): static {
-    //
-    //
-    //
-    //        return new static($context, $wpHelperSettings);
-    //    }
     /**
      * method
      * 
@@ -78,8 +72,6 @@ class Tools
      */
     public static function addEnableMenuItem()
     {
-        //        var_dump(WP::getOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false));
-        //        exit;
         if (WP::getSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false) === false) {
             WP::getAdminMenuPage('tools.php')->addSubMenuPage('Helper', static::getEnableView(), 'wp-devhelper-enable');
         }
@@ -117,7 +109,7 @@ class Tools
      * 
      * @return mixed
      */
-    private static function getSettingsView(IHelperContext $context)
+    private static function getSettingsView(HelperContextInterface $context)
     {
         return function () use($context) {
             //FIXME: Investigate: why are forms being added twice anyway?
@@ -143,7 +135,7 @@ class Tools
      * 
      * @return mixed
      */
-    private static function getStateDetailView(IHelperContext $context)
+    private static function getStateDetailView(HelperContextInterface $context)
     {
         return null;
     }
@@ -153,7 +145,7 @@ class Tools
      * 
      * @return mixed
      */
-    private static function getStateView(IHelperContext $context)
+    private static function getStateView(HelperContextInterface $context)
     {
         return function () use($context) {
             echo "<h2>Primary WP Dev/helper package</h2>";
@@ -168,21 +160,11 @@ class Tools
                 }
                 return false;
             }])->addColumnGroup("Information", "information")->addColumn(WP::textTableColumn("Package", "package-name", "package-name"))->addColumn(WP::textTableColumn("Parent", "parent-package-name", "parent-package-name"))->addColumn(WP::textTableColumn("Context Type", "type", "type"))->addColumnGroup("Paths", "paths")->addColumn(WP::textTableColumn('Working Path', 'working-dir', 'working-dir'))->addColumn(WP::textTableColumn('Working URI', 'working-uri', 'working-uri'))->addColumn(WP::textTableColumn('Entry Point', 'loading-path', 'loading-path'))->addColumn(WP::textTableColumn('Version', 'context-version', 'context-version'));
-            //->addColumn(WP::textTableColumn('Helper Path', 'helper-dir', 'helper-dir'));
-            //->addColumn(WP::textTableColumn('DEBUG_COLUMN', 'sort-key', 'sort-key'));
             $list->onRead(function () {
                 $groupedRows = [];
                 foreach (WP::getContexts() as $id => $ctx) {
-                    //                    echo '<pre>';
-                    //                    echo($ctx->getSlug());
-                    //                    echo '</pre>';
-                    //print_r($ctx);
                     $type = null;
                     switch ($ctx->getType()) {
-                        //                                case Constants::CONTEXT_LIBRARY: {
-                        //                                        $type = 'Library';
-                        //                                        break;
-                        //                                    }
                         case Constants::CONTEXT_THEME:
                             $type = 'Theme';
                             break;
@@ -190,34 +172,15 @@ class Tools
                             $type = 'Plugin';
                             break;
                     }
-                    //                            $type = ($ctx->getParent() === null ? $type : $type . ($ctx->getParent() === null ? '' : "<br /> (<strong>{$ctx->getParent()->getPackageName()}</strong>)"));
                     $grouping = $ctx->getParent() !== null ? $ctx->getParent()->getPackageName() : $ctx->getPackageName();
                     if (!array_key_exists($grouping, $groupedRows)) {
                         $groupedRows[$grouping] = [];
                     }
-                    $groupedRows[$grouping][] = [
-                        //'context-id' => $ctx->getId(),
-                        //                                'context-slug' => $ctx->getSlug(),
-                        //                                'context-name' => ($ctx->getProjectName() === null ? '<em>None</em>' : $ctx->getProjectName()),
-                        'package-name' => $ctx->getParent() === null ? "<strong>{$ctx->getPackageName()}</strong>" : "<span> &nbsp; </span> {$ctx->getPackageName()}",
-                        //                                'is-primary' => $ctx->isPrimary(),
-                        //                                'version' => ($ctx->getVersion() === null ? 'N/A' : $ctx->getVersion()->toString()),
-                        'parent-package-name' => $ctx->getParent() === null ? '-' : "{$ctx->getParent()->getPackageName()}",
-                        'type' => $type,
-                        //'priority' => $ctx->getPriority(),
-                        'working-dir' => $ctx->getWorkingDirectory(),
-                        'working-uri' => $ctx->getWorkingUri(),
-                        'loading-path' => basename($ctx->getLoadPath()),
-                        'context-version' => $ctx->getVersion() !== null ? $ctx->getVersion()->toString() : null,
-                        'sort-key' => $ctx->getId(),
-                        'parent' => $ctx->getParent() !== null,
-                    ];
+                    $groupedRows[$grouping][] = ['package-name' => $ctx->getParent() === null ? "<strong>{$ctx->getPackageName()}</strong>" : "<span> &nbsp; </span> {$ctx->getPackageName()}", 'parent-package-name' => $ctx->getParent() === null ? '-' : "{$ctx->getParent()->getPackageName()}", 'type' => $type, 'working-dir' => $ctx->getWorkingDirectory(), 'working-uri' => $ctx->getWorkingUri(), 'loading-path' => basename($ctx->getLoadPath()), 'context-version' => $ctx->getVersion() !== null ? $ctx->getVersion()->toString() : null, 'sort-key' => $ctx->getId(), 'parent' => $ctx->getParent() !== null];
                 }
                 $rows = [];
                 foreach ($groupedRows as $grouping => $groupingRows) {
                     usort($groupingRows, function ($a, $b) {
-                        //                                echo "<pre>"; var_Dump($a); echo("</pre>");
-                        //                                echo "<pre>"; var_Dump($b); echo("</pre>");
                         if ($a['parent'] === true) {
                             return 1;
                             //                                    if($a['sort-key'] > $b['sort-key']) {
@@ -235,15 +198,10 @@ class Tools
                         }
                         return 0;
                     });
-                    //                            echo "<pre>"; var_Dump($groupingRows); die("</pre>");
-                    //                            exit;
                     foreach ($groupingRows as $tmp) {
                         $rows[] = $tmp;
                     }
                 }
-                //                        echo "<pre>"; var_Dump($groupedRows); die("</pre>");
-                //
-                //                        echo "<pre>"; var_Dump($rows); die("</pre>");
                 return array_values($rows);
             })->render();
         };
@@ -254,7 +212,7 @@ class Tools
      * 
      * @return mixed
      */
-    private static function getWordPressStateView(IHelperContext $context)
+    private static function getWordPressStateView(HelperContextInterface $context)
     {
         return function () use($context) {
             echo "<p>This page shows various configruation settings that are important to developers when debugging their projects.<br />More information can be found at <a target=\"_blank\" href=\"" . Constants::WP_CONFIG_DOCUMENTATION_URL . "\">the official documentation</a>.</p>";
@@ -314,7 +272,7 @@ class Tools
      * 
      * @return mixed
      */
-    private static function getPhpErrorLogView(IHelperContext $context)
+    private static function getPhpErrorLogView(HelperContextInterface $context)
     {
         return function () use($context) {
             $ajaxUrl = WP::getAjaxUrl('wp-devhelper-phperrors');
@@ -350,7 +308,7 @@ HTML;
      * 
      * @return mixed
      */
-    private static function getLogListView(IHelperContext $context)
+    private static function getLogListView(HelperContextInterface $context)
     {
         return function () use($context) {
             WP::addAdminTable("Logs", "logs", "Log", "Logs", "log-slug", static::getLogDetailView($context), false, false, false, ['<a href="' . WP::getAdminUrl('admin') . '?page=wp-devhelper-logs&form={record}">View</a>' => function ($id) {
@@ -370,7 +328,7 @@ HTML;
      * 
      * @return mixed
      */
-    private static function getLogDetailView(IHelperContext $context, IWordPressHelperLog $log = null)
+    private static function getLogDetailView(HelperContextInterface $context, WordPressHelperLogInterface $log = null)
     {
         return function () use($context, $log) {
             if ($log !== null) {
@@ -443,7 +401,7 @@ JS
      * 
      * @return mixed
      */
-    private static function getPhpInfoView(IHelperContext $context)
+    private static function getPhpInfoView(HelperContextInterface $context)
     {
         return function () use($context) {
             $ajaxUrl = WP::getAjaxUrl('wp-devhelper-phpinfo');
@@ -462,7 +420,7 @@ HTML;
      * 
      * @return mixed
      */
-    private static function getHtAccessView(IHelperContext $context)
+    private static function getHtAccessView(HelperContextInterface $context)
     {
         return function () use($context) {
             $ajaxUrl = WP::getAjaxUrl('wp-devhelper-htaccess');
@@ -483,7 +441,7 @@ HTML;
      * 
      * @return mixed
      */
-    private static function getWordPressOptionDetailView(IHelperContext $context)
+    private static function getWordPressOptionDetailView(HelperContextInterface $context)
     {
         return function () use($context) {
             //FIXME: Investigate: why are forms being added twice anyway?
@@ -500,8 +458,6 @@ HTML;
                 }
                 WP::setSiteOption($index, $newValues['option_value'], $newValues['autoload']);
             })->onRead(function (string $index = null) {
-                //var_dump($index);
-                //die("X");
                 if ($index !== null) {
                     $autoLoad = false;
                     $tbl = WP::getDbTableName('options');
@@ -516,9 +472,6 @@ HTML;
                 if (!WP::setSiteOption($values['option_name'], $values['option_value'], $values['autoload'])) {
                     //                            throw new \Exception("???");
                 }
-                //                        var_dump($values);
-                //                        die("53X");
-                //WP::setOption($values['option_name'], $values['option_value'], null, null, true, $values['autoload']);
             })->render();
         };
     }
@@ -528,12 +481,10 @@ HTML;
      * 
      * @return mixed
      */
-    private static function getWordPressOptionsView(IHelperContext $context)
+    private static function getWordPressOptionsView(HelperContextInterface $context)
     {
         return function () use($context) {
             WP::addAdminTable('Options', 'wordpress-options', 'Option', 'Options', 'option_name', static::getWordPressOptionDetailView($context), true, true, true)->addColumn(WP::textTableColumn('Name', 'option_name', 'option-name'))->addColumn(WP::textTableColumn('Value', 'option_value', 'option-value'))->addColumn(WP::checkBoxTableColumn('Auto-load', 'autoload', 'autoload'))->readFromSqlTable('options', ['option_name' => ['not like' => '\\_%']])->onDelete(function ($items) {
-                //                        var_dump($items);
-                //                        exit;
                 foreach ($items as $item) {
                     WP::removeOption($item);
                 }
@@ -546,7 +497,7 @@ HTML;
      * 
      * @return mixed
      */
-    private static function getAboutView(IHelperContext $context)
+    private static function getAboutView(HelperContextInterface $context)
     {
         return function () use($context) {
             $imgSrc = WP::getHelperUri() . 'assets/images/helper-logo.png';
@@ -601,16 +552,8 @@ HTML;
      * 
      * @return mixed
      */
-    public function __construct(IHelperContext $context, array $wpHelperSettings = null)
+    public function __construct(HelperContextInterface $context, array $wpHelperSettings = null)
     {
-        //print_r(static::isDisabled());
-        //die("X");
-        //var_dump(WP::getOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false));
-        //exit;
-        //print_r($context);
-        //global $wp_admin_bar;
-        //var_dump($wp_admin_bar);
-        //exit;
         WP::addFilter('admin_footer_text', function () {
             $serverTime = strftime('%a %e %b %G, %R');
             $wordPressTime = strftime('%a %e %b %G, %R', current_time('timestamp', 0));
@@ -701,13 +644,8 @@ HTML;
                     }
                     exit(200);
                 }, true, false);
-                //                echo "<pre>";
-                //                var_Dump(WordPressHelper::getLogs());
-                //                echo "</pre>";
-                //exit;
                 $icon = null;
                 $iconDir = WP::getHelperDirectory() . 'assets/images/icon.svg';
-                //die($iconDir);
                 if (file_exists($iconDir)) {
                     $icon = 'data:image/svg+xml;base64,';
                     $icon .= base64_encode(@file_get_contents($iconDir));
@@ -737,7 +675,6 @@ HTML;
                 }
             }
         });
-        //WP::AddRewriteRule("/?red-i/property/([0-9]+)(/([^/]+))?/?\$", "?red-i=true&load=single&label=\$1&function=\$3");
     }
     /**
      * method
@@ -745,7 +682,7 @@ HTML;
      * 
      * @return mixed
      */
-    private static function getCronStateView(IHelperContext $context)
+    private static function getCronStateView(HelperContextInterface $context)
     {
         return function () use($context) {
             $task = PHP::toString(PHP::filterInput('task', [INPUT_GET], FILTER_DEFAULT));
@@ -781,9 +718,6 @@ HTML;
                         }
                     }
                 }
-                //                        echo '<pre>';
-                //                        var_dump($cronArray);
-                //                        echo '</pre>';
                 foreach ($jobs as $key => $job) {
                     $slug = $job['slug'];
                     $args = null;

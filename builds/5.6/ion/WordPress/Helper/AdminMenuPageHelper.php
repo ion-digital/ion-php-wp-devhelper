@@ -10,7 +10,7 @@ namespace ion\WordPress\Helper;
  * @author Justus
  */
 use ion\WordPress\WordPressHelper;
-class AdminMenuPageHelper implements IAdminMenuPageHelper
+class AdminMenuPageHelper implements AdminMenuPageHelperInterface
 {
     /**
      * method
@@ -20,7 +20,6 @@ class AdminMenuPageHelper implements IAdminMenuPageHelper
      */
     private static function createSubMenuPageDescriptor($title, callable &$content, $id = null, $menuTitle = null, $capability = null)
     {
-        //WordPressHelper::registerView($content);
         return ["pageTitle" => $title, "menuTitle" => $menuTitle !== null ? $menuTitle : $title, "menuSlug" => $id !== null ? WordPressHelper::slugify($id) : ($menuTitle !== null ? WordPressHelper::slugify($menuTitle) : WordPressHelper::slugify($title)), "capability" => $capability, "content" => $content, "html" => null, "render" => true, "tabs" => []];
     }
     private $parent;
@@ -65,7 +64,7 @@ class AdminMenuPageHelper implements IAdminMenuPageHelper
      * method
      * 
      * 
-     * @return IAdminMenuPageHelper
+     * @return AdminMenuPageHelperInterface
      */
     public function addSubMenuPage($title, callable $content, $id = null, $menuTitle = null, $capability = null)
     {
@@ -77,19 +76,13 @@ class AdminMenuPageHelper implements IAdminMenuPageHelper
      * method
      * 
      * 
-     * @return IAdminMenuPageHelper
+     * @return AdminMenuPageHelperInterface
      */
     public function addSubMenuPageTab($title, callable $content, $id = null, $menuTitle = null, $capability = null)
     {
         $menuPage =& $this->parent[$this->parentIndex];
         $subMenuPage =& $menuPage["subMenus"][count($menuPage["subMenus"]) - 1]["tabs"];
         $instance = $this->createSubMenuPage($subMenuPage, $title, $content, $id, $menuTitle, $capability);
-        //        if($id == 'ion-about') {
-        //
-        //            echo "<pre>";
-        //            var_dump($subMenuPage);
-        //            echo "</pre>";
-        //        }
         return new static($this->parent, null);
     }
 }

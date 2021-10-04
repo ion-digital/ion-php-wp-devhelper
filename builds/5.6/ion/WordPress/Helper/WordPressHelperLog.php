@@ -7,7 +7,7 @@ namespace ion\WordPress\Helper;
 use Psr\Log\LoggerInterface;
 use ion\Logger\Logger;
 use ion\WordPress\WordPressHelper;
-class WordPressHelperLog implements IWordPressHelperLog
+class WordPressHelperLog implements WordPressHelperLogInterface
 {
     private $logger = null;
     private $slug = null;
@@ -36,7 +36,7 @@ class WordPressHelperLog implements IWordPressHelperLog
      * method
      * 
      * 
-     * @return IWordPressHelperLog
+     * @return WordPressHelperLogInterface
      */
     protected function setLogger(LoggerInterface $logger)
     {
@@ -56,7 +56,7 @@ class WordPressHelperLog implements IWordPressHelperLog
      * method
      * 
      * 
-     * @return IWordPressHelperLog
+     * @return WordPressHelperLogInterface
      */
     public function setName($name = null)
     {
@@ -87,8 +87,7 @@ class WordPressHelperLog implements IWordPressHelperLog
      * @param string $message
      * @param array  $context
      *
-     * @return IWordPressHelperLog
-     */
+     * @return WordPressHelperLogInterface*/
     public function emergency($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -105,8 +104,7 @@ class WordPressHelperLog implements IWordPressHelperLog
      * @param string $message
      * @param array  $context
      *
-     * @return IWordPressHelperLog
-     */
+     * @return WordPressHelperLogInterface*/
     public function alert($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -122,8 +120,7 @@ class WordPressHelperLog implements IWordPressHelperLog
      * @param string $message
      * @param array  $context
      *
-     * @return IWordPressHelperLog
-     */
+     * @return WordPressHelperLogInterface*/
     public function critical($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -138,8 +135,7 @@ class WordPressHelperLog implements IWordPressHelperLog
      * @param string $message
      * @param array  $context
      *
-     * @return IWordPressHelperLog
-     */
+     * @return WordPressHelperLogInterface*/
     public function error($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -156,8 +152,7 @@ class WordPressHelperLog implements IWordPressHelperLog
      * @param string $message
      * @param array  $context
      *
-     * @return IWordPressHelperLog
-     */
+     * @return WordPressHelperLogInterface*/
     public function warning($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -171,8 +166,7 @@ class WordPressHelperLog implements IWordPressHelperLog
      * @param string $message
      * @param array  $context
      *
-     * @return IWordPressHelperLog
-     */
+     * @return WordPressHelperLogInterface*/
     public function notice($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -188,8 +182,7 @@ class WordPressHelperLog implements IWordPressHelperLog
      * @param string $message
      * @param array  $context
      *
-     * @return IWordPressHelperLog
-     */
+     * @return WordPressHelperLogInterface*/
     public function info($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -203,8 +196,7 @@ class WordPressHelperLog implements IWordPressHelperLog
      * @param string $message
      * @param array  $context
      *
-     * @return IWordPressHelperLog
-     */
+     * @return WordPressHelperLogInterface*/
     public function debug($message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {
@@ -219,8 +211,7 @@ class WordPressHelperLog implements IWordPressHelperLog
      * @param string $message
      * @param array  $context
      *
-     * @return IWordPressHelperLog
-     */
+     * @return WordPressHelperLogInterface*/
     public function log($level, $message, array $logContext = [])
     {
         if ($this->getLogger() !== null) {

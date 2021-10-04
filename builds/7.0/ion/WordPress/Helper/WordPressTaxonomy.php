@@ -9,7 +9,7 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
-class WordPressTaxonomy implements IWordPressTaxonomy
+class WordPressTaxonomy implements WordPressTaxonomyInterface
 {
     private $slug;
     private $parent;

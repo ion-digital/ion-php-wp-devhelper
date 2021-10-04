@@ -17,13 +17,14 @@ use \ion\WordPress\WordPressHelper as WP;
 use \ion\PhpHelper as PHP;
 use \ion\WordPress\Helper\Wrappers\OptionMetaType;
 
-class AdminFormHelper implements IAdminFormHelper {
+class AdminFormHelper implements AdminFormHelperInterface {
     
     private const WP_HELPER_LEGACY = 'WP_HELPER_LEGACY';
     
     public static function createGroupDescriptorInstance(string $title = null, string $description = null, string $id = null, int $columns = null): array {    
 
         return [
+            
             "id" => (string) $id,
             "columns" => /* int or null (do not uncomment!) */ $columns,
             "title" => (string) $title,
@@ -61,19 +62,11 @@ class AdminFormHelper implements IAdminFormHelper {
         
         $this->setOptionPrefix(null);
         $this->setUseSerialization(defined(self::WP_HELPER_LEGACY) && constant(self::WP_HELPER_LEGACY) === true ? true : false );
-        
-//        $this->onRead(null);
-//        $this->onCreate(null);
-//        $this->onUpdate(null);
-        
-//        $this->readFromOptions(null); 
-//        $this->createToOptions(null);
-//        $this->updateToOptions(null);
-        
+
         $this->rendered = false;
     }
     
-    public function onRead(callable $onRead = null): IAdminFormHelper {
+    public function onRead(callable $onRead = null): AdminFormHelperInterface {
         
         if($this->rendered) {
             
@@ -84,7 +77,7 @@ class AdminFormHelper implements IAdminFormHelper {
         return $this;
     }
     
-    public function onCreate(callable $onCreate = null): IAdminFormHelper {
+    public function onCreate(callable $onCreate = null): AdminFormHelperInterface {
         
         if($this->rendered) {
             
@@ -95,7 +88,7 @@ class AdminFormHelper implements IAdminFormHelper {
         return $this;        
     }
     
-    public function onUpdate(callable $onUpdate = null): IAdminFormHelper {
+    public function onUpdate(callable $onUpdate = null): AdminFormHelperInterface {
                 
         
         if($this->rendered) {
@@ -108,10 +101,11 @@ class AdminFormHelper implements IAdminFormHelper {
     }    
     
     public function getId(): string {
+        
         return $this->descriptor['id'];
     }
     
-    public function addGroup(string $title = null, string $description = null, string $id = null, int $columns = null): IAdminFormHelper {
+    public function addGroup(string $title = null, string $description = null, string $id = null, int $columns = null): AdminFormHelperInterface {
 
         if($this->rendered) {
             
@@ -131,7 +125,7 @@ class AdminFormHelper implements IAdminFormHelper {
         return $this;
     }
     
-    public function addField(array $fieldDescriptor): IAdminFormHelper {
+    public function addField(array $fieldDescriptor): AdminFormHelperInterface {
         
         if($this->rendered) {
             
@@ -142,7 +136,7 @@ class AdminFormHelper implements IAdminFormHelper {
         return $this;
     }
     
-    public function addForeignKey(string $name, int $value): IAdminFormHelper {
+    public function addForeignKey(string $name, int $value): AdminFormHelperInterface {
         
         if($this->rendered) {
             
@@ -155,6 +149,7 @@ class AdminFormHelper implements IAdminFormHelper {
     }
 
     public function processAndRender(bool $echo = true, int $post = null): string {
+        
         $this->process($post);
         return $this->render($echo);
     }
@@ -271,12 +266,17 @@ class AdminFormHelper implements IAdminFormHelper {
                 }
 
                 $spanClass = " class=\"spanned\"";
+                
             } else {
+                
                 if ($columns > 1) {
 
                     if ($columns > 2) {
+                        
                         $colSpan = " colspan=\"" . ($columns * 2) / count($row) . "\"";
+                        
                     } else {
+                        
                         $colSpan = " colspan=\"" . (($columns * 2) - count($row)) / count($row) . "\"";
                     }
                 }
@@ -305,6 +305,7 @@ TEMPLATE;
                 $hidden = (array_key_exists('hidden', $field) && $field['hidden'] === true);
 
                 $value = null;
+                
                 if (!array_key_exists($fieldName, $_POST)) {
 
                     $loadProcessor = $field["load"];
@@ -327,13 +328,17 @@ TEMPLATE;
                     }
 
                     $value = ($loadProcessor === null ?  $dbValue : $loadProcessor($dbValue));
+                    
                 } else {
+                    
                     $value = filter_input(INPUT_POST, $field["name"]);
                 }
 
                 if ($fieldName === $state['key'] && $state['update'] === true && $this->descriptor['hideKey'] === true) {
 
                     $output .= '<input type="hidden" name="' . $name . '" value="' . $value . '" />' . "\n";
+                
+                    
                 } else {
 
                     $html = null;
@@ -341,6 +346,7 @@ TEMPLATE;
                     if ($fieldName === $state['key'] && $state['update'] === true) {
                         
                         $html .= '<input type="text" name="' . $name . '" value="' . $value . '" disabled />';
+                                            
                     } else {
                         
                         $html = $field["html"]($value, $state['key'], $state['record'], $name, $id);
@@ -431,6 +437,7 @@ TEMPLATE;
         $form = PHP::toString(filter_input(INPUT_GET, 'form', FILTER_DEFAULT));
 
         $state = [
+            
             'create' => (filter_input(INPUT_GET, Constants::LIST_ACTION_QUERYSTRING_PARAMETER, FILTER_DEFAULT) === 'create'),
             'update' => (filter_input(INPUT_GET, Constants::LIST_ACTION_QUERYSTRING_PARAMETER, FILTER_DEFAULT) === 'update'),
             'record' => (filter_input(INPUT_GET, 'record', FILTER_DEFAULT)),
@@ -487,19 +494,6 @@ TEMPLATE;
             
             $paged = filter_input(INPUT_GET, 'paged', FILTER_SANITIZE_NUMBER_INT);
             $listAction = filter_input(INPUT_GET, 'list-action', FILTER_DEFAULT); 
-            
-//            if(!PHP::isEmpty($listAction)) {
-//                
-//                // This is a list edit page
-//                
-//                $postReferrer = WP::getAdminUrl('admin') . '?page=' . $page . (!PHP::isEmpty($form) ? '&form=' . $form : '') . (!PHP::isEmpty($paged) ? '&paged=' . $paged : '');
-//            }
-//            else {
-//                
-//                // This is a global settings page
-//                
-//                $postReferrer = filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL);
-//            }
   
             $postReferrer = WP::getAdminUrl('admin') . '?page=' . $page . (!PHP::isEmpty($form) ? '&form=' . $form : '') . (!PHP::isEmpty($paged) ? '&paged=' . $paged : '');
             
@@ -507,9 +501,7 @@ TEMPLATE;
             
             $postReferrer = filter_input(INPUT_SERVER, 'HTTP_REFERER', FILTER_SANITIZE_URL);            
         }
-        
-//        die("HERE: {$postReferrer}");
-        
+
         // If we couldn't find a post referrer - keep this as a failsafe
     
         if(PHP::isEmpty($postReferrer)) {
@@ -529,6 +521,7 @@ TEMPLATE;
                 $formAction = '?' . Constants::LIST_ACTION_QUERYSTRING_PARAMETER . '=update';
 
                 if ($state['record'] !== null && $state['key'] !== null) {
+                    
                     $formAction .= '&record=' . $state['record'];
 
                     foreach($this->onReadHandlers as $handler) {
@@ -545,7 +538,6 @@ TEMPLATE;
                     $data = $handler(null, null, $metaId, $metaType);
                     
                     if($data !== null && !PHP::isAssociativeArray($data) && PHP::isCountable($data) && count($data) > 0) {
-
 
                         if(PHP::isAssociativeArray($data[0])) {
 
@@ -587,6 +579,7 @@ TEMPLATE;
         if (strpos($formAction, '?') === false) {
             
             $formAction .= '?';
+            
         } else {
             
             $formAction .= '&';
@@ -626,6 +619,7 @@ TEMPLATE;
             $columns = $group["columns"];
 
             if ($columns === null) {
+                
                 $columns = $this->descriptor["columns"];
             }
 
@@ -742,6 +736,7 @@ BTN;
         
         
             if($disabledCnt !== $fieldCnt) {
+                
                 $output .= <<<TEMPLATE
 $submitBtn
 TEMPLATE;
@@ -771,19 +766,22 @@ TEMPLATE;
     private static function getTypeParameter($field, /* mixed */ $value) /* : string */ {
 
         switch ($value) {
+            
             case is_bool($value):
             case is_int($value):
             case is_float($value):
             case is_double($value): {
-                    return '%d';
-                }
+                
+                return '%d';
+            }
             default: {
-                    return '%s';
-                }
+                
+                return '%s';
+            }
         }
     }        
     
-    public function setOptionPrefix(string $optionPrefix = null): IAdminFormHelper {
+    public function setOptionPrefix(string $optionPrefix = null): AdminFormHelperInterface {
         
         $this->optionPrefix = $optionPrefix;
         return $this;
@@ -794,7 +792,7 @@ TEMPLATE;
         return $this->optionPrefix;
     }
     
-    public function setUseSerialization(bool $useSerialization): IAdminFormHelper {
+    public function setUseSerialization(bool $useSerialization): AdminFormHelperInterface {
         
         $this->useSerialization = $useSerialization;
         return $this;
@@ -806,7 +804,7 @@ TEMPLATE;
     }    
    
     
-    public function readFromOptions(string $optionName = null): IAdminFormHelper {
+    public function readFromOptions(string $optionName = null): AdminFormHelperInterface {
         
         $self = $this;
 
@@ -859,7 +857,8 @@ TEMPLATE;
         });
     }
     
-    public function updateToOptions(string $optionName = null): IAdminFormHelper {
+    public function updateToOptions(string $optionName = null): AdminFormHelperInterface {
+        
         $self = $this;
 
         if($optionName !== null) {
@@ -933,7 +932,8 @@ TEMPLATE;
     
 
     
-    public function createToOptions(string $optionName = null): IAdminFormHelper {
+    public function createToOptions(string $optionName = null): AdminFormHelperInterface {
+        
         $self = $this;
 
         if($optionName !== null) {
@@ -976,7 +976,8 @@ TEMPLATE;
         });
     }         
         
-    public function redirect(callable $redirect): IAdminFormHelper {
+    public function redirect(callable $redirect): AdminFormHelperInterface {
+        
         $this->redirectProcessor = $redirect;
         return $this;
     }   
@@ -997,13 +998,6 @@ TEMPLATE;
                 // Verify the Nonce
                 
                 $nonce = PHP::filterInput('_wpnonce', [INPUT_POST]);
-                
-                //TODO: Sort out nonces
-//                if($nonce === null || wp_verify_nonce('_wpnonce')) {
-//                    
-//                    wp_die("Invalid form nonce - aborting.");
-//                }
-                
                 
                 $fields = [];
 
@@ -1027,6 +1021,7 @@ TEMPLATE;
        
                 
                 $state = [
+                    
                     'create' => PHP::toBool((PHP::filterInput(Constants::LIST_ACTION_QUERYSTRING_PARAMETER, [INPUT_GET]) === 'create')),
                     'update' => PHP::toBool((PHP::filterInput(Constants::LIST_ACTION_QUERYSTRING_PARAMETER, [INPUT_GET]) === 'update')),
                     'record' => PHP::toString((PHP::filterInput('record', [INPUT_GET]))),
@@ -1078,8 +1073,11 @@ TEMPLATE;
                     if(filter_input(INPUT_POST, $name, FILTER_DEFAULT) !== null) {
                     
                         if ($isArray === false) {
+                            
                             $idFieldValue = filter_input(INPUT_POST, $name, FILTER_DEFAULT);
+                            
                         } else {
+                            
                             $idFieldValue = serialize(filter_input(INPUT_POST, $name, FILTER_DEFAULT, FILTER_FORCE_ARRAY));
                         }
                     }
@@ -1126,7 +1124,7 @@ TEMPLATE;
                         $newLoadedValue = ($loadProcessor === null ? ($loadFieldValue === null ? null : $loadFieldValue) : $loadProcessor($loadFieldValue));
                         
                         if ($newLoadedValue !== null) {
-                            //WordPressHelper::setOption($field["name"], $newProcessedValue);
+                            
                             $oldValues[$field['name']] = $newLoadedValue;
                         }
 
@@ -1138,51 +1136,29 @@ TEMPLATE;
 
                 foreach($this->foreignKeys as $key => $value) {
 
-                    //if(!array_key_exists($key, $newValues)) {
-
-                    $newValues[$key] = $value;
-                    //}            
+                    $newValues[$key] = $value;      
                 }
                 
                 if ($state['create'] === false && $state['update'] === false) {
                     
-
-                    
-//                    if ($this->onUpdateHandlers === [] || ($this->onCreateHandlers === [] && PHP::isInt($metaId))) {
                     if ($this->onUpdateHandlers === []) {
                         
                         foreach ($newValues as $key => $value) {
                             
-//                            WP::setOption($key, $value, $metaId, $metaType, $this->getRawOptionOperations());
                             $this->setOption($key, $value, $metaId, $metaType);
                         }
 
-//                    echo "<pre>";
-//                    var_dump($newValues);
-//                die("</pre>");
-
                     } else {
-                                
-//                        if($metaType->toValue() == OptionMetaType::TERM) {
-//                        var_dump(PHP::isInt($metaId));
-//                        var_dump($oldValues);
-//                        var_dump($newValues);
-//                        die('xXx');
-//                        }
-                        
+
                         if(PHP::isInt($metaId) && (PHP::isCountable($oldValues) && count($oldValues) === 0)) {
-                            
-//                            $tmp = $this->onCreateHandlers;
-                            
+
                             foreach($this->onCreateHandlers as $handler) {
                                 
                                 $handler($newValues, $state['key'], $metaId, $metaType);
                             }
                             
                         } else {
-                            
-//                            $tmp = $this->onUpdateHandlers;
-                            
+
                             foreach($this->onUpdateHandlers as $handler) {
                                 
                                 $handler($state['record'], $newValues, $oldValues, $state['key'], $metaId, $metaType);
@@ -1193,15 +1169,6 @@ TEMPLATE;
                 } else if ($state['create'] === true && $state['update'] === false) {
                     
                     // List Edit Form
-
-//                    if ($this->onCreateHandlers === null) {
-//
-//                        //TODO: Need a default handler here
-//                    } else {
-//                        $tmp = $this->onCreateHandlers;
-//                        $tmp($newValues, $state['key']);
-//                    }
-                    
                     
                     foreach($this->onCreateHandlers as $handler) {
 
@@ -1210,26 +1177,11 @@ TEMPLATE;
                     
                 } else if ($state['create'] === false && $state['update'] === true) {
                     
-//                    if ($this->onUpdateHandlers === null) {
-//                        //TODO: Need a default handler here
-//                        
-//                    } else {
-//                        $tmp = $this->onUpdateHandlers;
-//                        $tmp($state['record'], $newValues, $oldValues, $state['key'], $metaId);
-//                    }
-                    
                     foreach($this->onUpdateHandlers as $handler) {
 
                         $handler($state['record'], $newValues, $oldValues, $state['key'], $metaId);
                     }
                 }
-                
-//                if($metaId !== null) {
-//                    
-//                    var_dump($_POST);
-//                    var_dump($state);
-//                    die("ZZZ");
-//                }                
 
                 if ($this->redirectProcessor !== null) {
 
@@ -1244,12 +1196,6 @@ TEMPLATE;
                     $host = (array_key_exists('host', $tmp) ? $tmp['host'] : '');
                     $path = (array_key_exists('path', $tmp) ? $tmp['path'] : '');
 
-//                    echo "<pre>";
-//                    var_dump(filter_input(INPUT_POST, '__postReferrer', FILTER_SANITIZE_URL));
-//                    var_dump($_POST);
-//                    var_dump($tmp);
-//                    die("</pre>");
-                    
                     $query = [];
 
                     array_key_exists('query', $tmp) ? parse_str($tmp['query'], $query) : [];
@@ -1279,8 +1225,6 @@ TEMPLATE;
 
                     $url = $scheme . $host . $path . (count($query) > 0 ? '?' . http_build_query($query) : '');                   
 
-//                    die($url);
-                    
                     if($metaId === null) {
                         
                         WP::redirect($url);
@@ -1305,47 +1249,49 @@ TEMPLATE;
 
     //TODO: Verify if the following methods are working
     
-    public function readFromSqlQuery(string $query): IAdminFormHelper {
+    public function readFromSqlQuery(string $query): AdminFormHelperInterface {
 
         return $this->onRead(function(/* string */ $record = null) use ($query) {
 
-                    $post = filter_input(INPUT_GET, 'post', FILTER_DEFAULT);
-            
-           
-                    $state = [
-                        'record' => (filter_input(INPUT_GET, 'record', FILTER_DEFAULT)),
-                        'key' => (filter_input(INPUT_GET, 'key', FILTER_DEFAULT)),
-                        'form' => (filter_input(INPUT_GET, 'form', FILTER_DEFAULT))
-                    ];
-
-                    $postBack = filter_input(INPUT_POST, "__postBack_" . $this->descriptor["id"]);
+            $post = filter_input(INPUT_GET, 'post', FILTER_DEFAULT);
 
 
-                    if ((bool) $postBack === true && $state['form'] !== null && $state['form'] != $this->getId()) {
-                        return [];
-                    }
+            $state = [
+                'record' => (filter_input(INPUT_GET, 'record', FILTER_DEFAULT)),
+                'key' => (filter_input(INPUT_GET, 'key', FILTER_DEFAULT)),
+                'form' => (filter_input(INPUT_GET, 'form', FILTER_DEFAULT))
+            ];
 
-                    if ($record !== null) {
+            $postBack = filter_input(INPUT_POST, "__postBack_" . $this->descriptor["id"]);
 
-                        global $wpdb;
 
-                        if ($state['key'] !== null) {
-                            
-                            $query = "SELECT * FROM ( {$query} ) AS q WHERE CAST(`{$state['key']}` AS CHAR(255)) LIKE ('{$wpdb->esc_like($record)}')";
-                        }
-                    }
+            if ((bool) $postBack === true && $state['form'] !== null && $state['form'] != $this->getId()) {
+                return [];
+            }
 
-                    $result = WP::dbQuery($query);
+            if ($record !== null) {
 
-                    if (count($result) === 1) {
-                        return $result[0];
-                    }
+                global $wpdb;
 
-                    return [];
-                });
+                if ($state['key'] !== null) {
+
+                    $query = "SELECT * FROM ( {$query} ) AS q WHERE CAST(`{$state['key']}` AS CHAR(255)) LKEInterface('{$wpdb->esc_like($record)}')";
+                }
+            }
+
+            $result = WP::dbQuery($query);
+
+            if (count($result) === 1) {
+                
+                return $result[0];
+            }
+
+            return [];
+        });
     }   
 
-    public function readFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null, string $recordField = null, int $recordId = null): IAdminFormHelper {
+    public function readFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null, string $recordField = null, int $recordId = null): AdminFormHelperInterface {
+
         global $wpdb;
 
         $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
@@ -1353,6 +1299,7 @@ TEMPLATE;
         $post = filter_input(INPUT_GET, 'post', FILTER_DEFAULT);
 
         if(!PHP::isEmpty($post)) {
+            
             $post = (int) $post;
         }                  
 
@@ -1413,8 +1360,6 @@ TEMPLATE;
                 }
             }
         }
-//        if($table === 'wp_ion_form_submissions') 
-//        die("SELECT $columnsString FROM `$table`$whereString LIMIT 1");
 
         return $this->readFromSqlQuery(<<<SQL
 SELECT $columnsString FROM `$table`$whereString LIMIT 1
@@ -1422,143 +1367,137 @@ SQL
         );
     }
     
-    public function updateToSqlTable(string $tableNameWithoutPrefix,  string $tableNamePrefix = null, string $recordField = null, int $recordId = null): IAdminFormHelper {
+    public function updateToSqlTable(string $tableNameWithoutPrefix,  string $tableNamePrefix = null, string $recordField = null, int $recordId = null): AdminFormHelperInterface {
 
         $self = $this;
 
         return $this->onUpdate(function ($index, $newValues, $oldValues, $key, int $metaId = null) use ($self, $tableNameWithoutPrefix, $tableNamePrefix, $recordField, $recordId) {
 
-                    global $wpdb;
+            global $wpdb;
 
-                    $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
+            $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
 
-                    $metaId = filter_input(INPUT_GET, 'post', FILTER_DEFAULT);
-            
-                    if(!PHP::isEmpty($metaId)) {
-                        $metaId = (int) $metaId;
-                    }                    
-                    
-                    $state = [
-                        //'record' => (filter_input(INPUT_GET, 'record', FILTER_DEFAULT)),
-                        'key' => (filter_input(INPUT_GET, 'key', FILTER_DEFAULT)),
-                        'post' => $metaId
-                    ];
+            $metaId = filter_input(INPUT_GET, 'post', FILTER_DEFAULT);
 
-                    $updates = [];
+            if(!PHP::isEmpty($metaId)) {
+                
+                $metaId = (int) $metaId;
+            }                    
 
-                    foreach ($self->descriptor["groups"] as $group) {
-                        
-                        foreach ($group['fields'] as $field) {
-                            
-                            if (array_key_exists($field['name'], $newValues) && $newValues[$field['name']] !== null) {
-                                
-                                $updates[] = '`' . $field['name'] . '` = ' . static::getTypeParameter($field, $newValues[$field['name']]);
-                            } else {
-                                
-                                $updates[] = '`' . $field['name'] . '` = NULL';
-                            }
-                        }
+            $state = [
+
+                'key' => (filter_input(INPUT_GET, 'key', FILTER_DEFAULT)),
+                'post' => $metaId
+            ];
+
+            $updates = [];
+
+            foreach ($self->descriptor["groups"] as $group) {
+
+                foreach ($group['fields'] as $field) {
+
+                    if (array_key_exists($field['name'], $newValues) && $newValues[$field['name']] !== null) {
+
+                        $updates[] = '`' . $field['name'] . '` = ' . static::getTypeParameter($field, $newValues[$field['name']]);
+                    } else {
+
+                        $updates[] = '`' . $field['name'] . '` = NULL';
                     }
+                }
+            }
+
+            foreach($this->foreignKeys as $key => $value) {
+
+                if(!in_array('`' . $key . '`', $updates)) {
+
+                    $updates[] = '`' . $key . "` = %d";
+
+                    $newValues[$key] = $value;
+                }            
+            }                    
+
+            $updateString = join(', ', $updates);
+
+            $whereString = '';
+
+            if($recordId !== null) {
+
+                if($recordField === null) {
+
+                    throw new WordPressHelperException("If a record ID is specified ({$recordId}), a record field must be specified as well.");
+                }
+
+                $whereString = " WHERE `{$recordField}` = {$wpdb->esc_like($recordId)}";
+
+            } else {                    
+
+                if ($state['key'] !== null && $index !== null) {
                     
-                    foreach($this->foreignKeys as $key => $value) {
+                    $whereString = ' WHERE CAST(`' . $state['key'] . '` AS CHAR(255)) LIKE (\'' . $wpdb->esc_like($index) . '\')';
 
-                        if(!in_array('`' . $key . '`', $updates)) {
+                    if(!PHP::isEmpty($metaId) && ($postField !== null)) {
 
-                            $updates[] = '`' . $key . "` = %d";
-                            
-                            $newValues[$key] = $value;
-                        }            
-                    }                    
+                        $whereString .= " AND `{$postField}` = {$wpdb->esc_like($state['record'])}";
+                    }                        
+                }
+            }
 
-                    $updateString = join(', ', $updates);
+            $sql = "UPDATE `$table` SET $updateString$whereString";
 
-                    $whereString = '';
+            WP::dbQuery($sql, array_filter(array_values($newValues), function($v) { 
+
+                if($v === null) {
                     
-                    if($recordId !== null) {
+                    return false;
+                }
 
-                        if($recordField === null) {
+                return true; 
 
-                            throw new WordPressHelperException("If a record ID is specified ({$recordId}), a record field must be specified as well.");
-                        }
+            }));
 
-                        $whereString = " WHERE `{$recordField}` = {$wpdb->esc_like($recordId)}";
-
-//                        unset($newValues[$recordField]);
-                        
-                    } else {                    
-                    
-                        if ($state['key'] !== null && $index !== null) {
-                            $whereString = ' WHERE CAST(`' . $state['key'] . '` AS CHAR(255)) LIKE (\'' . $wpdb->esc_like($index) . '\')';
-
-                            if(!PHP::isEmpty($metaId) && ($postField !== null)) {
-
-                                $whereString .= " AND `{$postField}` = {$wpdb->esc_like($state['record'])}";
-                            }                        
-                            
-//                            unset($newValues[$state['key']]);
-                        }
-                    }
-        
-                    $sql = "UPDATE `$table` SET $updateString$whereString";
-
-
-//                    echo "<h1>{$this->getId()}</h1>";
-//                    var_dump($recordField);
-//                    var_dump($newValues);
-//                    var_dump(array_values($newValues));
-//                    die("<pre>$sql</pre>");
-
-                    
-                    WP::dbQuery($sql, array_filter(array_values($newValues), function($v) { 
-                        
-                        if($v === null) {
-                            return false;
-                        }
-                        
-                        return true; 
-                        
-                    }));
-
-                });
+        });
     }
     
-    public function createToSqlTable(string $tableNameWithoutPrefix,  string $tableNamePrefix = null): IAdminFormHelper {
+    public function createToSqlTable(string $tableNameWithoutPrefix,  string $tableNamePrefix = null): AdminFormHelperInterface {
+
         return $this->onCreate(function ($values, $key, int $metaId = null) use ($tableNameWithoutPrefix, $tableNamePrefix) {
 
-                    global $wpdb;
+            global $wpdb;
 
-                    $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
+            $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
 
 
-                    $columns = [];
-                    foreach ($this->descriptor["groups"] as $group) {
-                        foreach ($group['fields'] as $field) {
-                            $columns['`' . $field['name'] . '`'] = static::getTypeParameter($field, $values[$field['name']]);
-                            
-                            if (array_key_exists($field['name'], $values)) {
-                                $columns['`' . $field['name'] . '`'] = static::getTypeParameter($field, $values[$field['name']]);
-                            } else {
-                                $columns['`' . $field['name'] . '`'] = 'NULL';
-                            }                            
-                        }
-                    }
+            $columns = [];
+            
+            foreach ($this->descriptor["groups"] as $group) {
+                
+                foreach ($group['fields'] as $field) {
                     
-                    foreach($this->foreignKeys as $key => $value) {
+                    $columns['`' . $field['name'] . '`'] = static::getTypeParameter($field, $values[$field['name']]);
 
-                        if(!in_array('`' . $key . '`', $columns)) {
-
-                            $columns['`' . $key . '`'] = static::getTypeParameter(null, $value);
-                        }            
-                    }                       
-
-                    $insertColumnsString = join(', ', array_keys($columns));
-                    $insertValuesString = join(', ', array_values($columns));
+                    if (array_key_exists($field['name'], $values)) {
+                        
+                        $columns['`' . $field['name'] . '`'] = static::getTypeParameter($field, $values[$field['name']]);
                     
-// echo "<pre>";
-// var_dump($values);
-// echo "\n\nINSERT INTO `$table` ($insertColumnsString) VALUES ($insertValuesString)";
-// die("</pre>");
-                    WP::dbQuery("INSERT INTO `$table` ($insertColumnsString) VALUES ($insertValuesString)", array_values($values));
-                });
+                    } else {
+                        
+                        $columns['`' . $field['name'] . '`'] = 'NULL';
+                    }                            
+                }
+            }
+
+            foreach($this->foreignKeys as $key => $value) {
+
+                if(!in_array('`' . $key . '`', $columns)) {
+
+                    $columns['`' . $key . '`'] = static::getTypeParameter(null, $value);
+                }            
+            }                       
+
+            $insertColumnsString = join(', ', array_keys($columns));
+            $insertValuesString = join(', ', array_values($columns));
+
+            WP::dbQuery("INSERT INTO `$table` ($insertColumnsString) VALUES ($insertValuesString)", array_values($values));
+        });
     }           
 }

@@ -9,7 +9,7 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
-class AdminCustomizeHelper implements IAdminCustomizeHelper
+class AdminCustomizeHelper implements AdminCustomizeHelperInterface
 {
     private $descriptor;
     /**
@@ -22,36 +22,13 @@ class AdminCustomizeHelper implements IAdminCustomizeHelper
     {
         $this->descriptor =& $descriptor;
     }
-    //$wpCustomize->add_section( 'ion-settings' , array(
-    //
-    //    'title'      => __( 'ION', 'ion-settings' ),
-    //    'priority'   => 30
-    //));
-    //
-    //$wpCustomize->add_setting('ion-colour-theme', [
-    //
-    //    'default' => null,
-    //    'transport' => 'refresh'
-    //]);
-    //
-    //$wpCustomize->add_control(
-    //
-    //    'ion-colour-theme',
-    //    [
-    //        'label' => __('Colour Theme', 'ion-colour-theme'),
-    //        'section' => 'ion-settings', //colors
-    //        'settings' => 'ion-colour-theme',
-    //        'type' => 'select',
-    //        'choices' => $themes
-    //    ]
-    //);
     /**
      * method
      * 
      * 
-     * @return IAdminCustomizeHelper
+     * @return AdminCustomizeHelperInterface
      */
-    public function addTextSetting(string $label, string $key, string $default = null, bool $multiLine = false, int $priority = null, string $transport = 'refresh') : IAdminCustomizeHelper
+    public function addTextSetting(string $label, string $key, string $default = null, bool $multiLine = false, int $priority = null, string $transport = 'refresh') : AdminCustomizeHelperInterface
     {
         $this->descriptor[$key] = ['label' => $label, 'key' => $key, 'default' => $default, 'transport' => $transport, 'type' => 'text', 'multiLine' => $multiLine, 'options' => null, 'priority' => $priority];
         return $this;
@@ -60,9 +37,9 @@ class AdminCustomizeHelper implements IAdminCustomizeHelper
      * method
      * 
      * 
-     * @return IAdminCustomizeHelper
+     * @return AdminCustomizeHelperInterface
      */
-    public function addDropDownSetting(string $label, string $key, $default = null, array $options = [], int $priority = null, string $transport = 'refresh') : IAdminCustomizeHelper
+    public function addDropDownSetting(string $label, string $key, $default = null, array $options = [], int $priority = null, string $transport = 'refresh') : AdminCustomizeHelperInterface
     {
         $this->descriptor[$key] = ['label' => $label, 'key' => $key, 'default' => $default, 'transport' => $transport, 'type' => 'select', 'multiLine' => null, 'options' => $options, 'priority' => $priority];
         return $this;
@@ -71,9 +48,9 @@ class AdminCustomizeHelper implements IAdminCustomizeHelper
      * method
      * 
      * 
-     * @return IAdminCustomizeHelper
+     * @return AdminCustomizeHelperInterface
      */
-    public function addMediaSetting(string $label, string $key, $default = null, int $priority = null, string $transport = 'refresh') : IAdminCustomizeHelper
+    public function addMediaSetting(string $label, string $key, $default = null, int $priority = null, string $transport = 'refresh') : AdminCustomizeHelperInterface
     {
         $this->descriptor[$key] = ['label' => $label, 'key' => $key, 'default' => $default, 'transport' => $transport, 'type' => 'media', 'multiLine' => null, 'options' => null, 'priority' => $priority];
         return $this;
@@ -82,9 +59,9 @@ class AdminCustomizeHelper implements IAdminCustomizeHelper
      * method
      * 
      * 
-     * @return IAdminCustomizeHelper
+     * @return AdminCustomizeHelperInterface
      */
-    public function addCheckBoxSetting(string $label, string $key, bool $default = null, int $priority = null, string $transport = 'refresh') : IAdminCustomizeHelper
+    public function addCheckBoxSetting(string $label, string $key, bool $default = null, int $priority = null, string $transport = 'refresh') : AdminCustomizeHelperInterface
     {
         $this->descriptor[$key] = ['label' => $label, 'key' => $key, 'default' => $default, 'transport' => $transport, 'type' => 'checkbox', 'multiLine' => null, 'options' => null, 'priority' => $priority];
         return $this;

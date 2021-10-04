@@ -10,7 +10,7 @@ namespace ion\WordPress\Helper;
  * @author Justus
  */
 use WP_Term;
-class WordPressTerm implements IWordPressTerm
+class WordPressTerm implements WordPressTermInterface
 {
     private $wpTerm;
     private $children;

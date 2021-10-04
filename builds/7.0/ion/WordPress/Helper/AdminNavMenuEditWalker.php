@@ -40,10 +40,6 @@ class AdminNavMenuEditWalker extends Walker_Nav_Menu_Edit
                     break;
                 }
                 foreach ($fields as $field) {
-                    //            echo "<h2>{$field['name']}</h2>";
-                    //            echo '<pre>';
-                    //            var_dump($item);
-                    //            echo('</pre>');
                     if (!array_key_exists($field['name'], $item->meta)) {
                         continue;
                     }

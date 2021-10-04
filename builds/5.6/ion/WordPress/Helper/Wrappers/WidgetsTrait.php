@@ -1,0 +1,65 @@
+<?php
+/*
+ * See license information at the package root in LICENSE.md
+ */
+namespace ion\WordPress\Helper\Wrappers;
+
+use ion\WordPress\Helper\WordPressWidgetInterface;
+use ion\WordPress\WordPressHelperInterface;
+/**
+ * Description of WidgetsTrait*
+ * @author Justus
+ */
+trait WidgetsTrait
+{
+    private static $widgets = [];
+    private static $sideBars = [];
+    /**
+     * method
+     * 
+     * @return mixed
+     */
+    protected static function initialize()
+    {
+        static::registerWrapperAction('widgets_init', function () {
+            foreach (static::$sideBars as $id => $sideBar) {
+                register_sidebar(["name" => $sideBar["name"], "id" => $sideBar["id"], "description" => $sideBar["description"], "class" => $sideBar["class"], "before_widget" => $sideBar["before_widget"], "after_widget" => $sideBar["after_widget"], "before_title" => $sideBar["before_title"], "after_title" => $sideBar["after_title"]]);
+            }
+            foreach (array_values(static::$widgets) as $widget) {
+                register_widget($widget);
+            }
+        });
+    }
+    /**
+     * method
+     * 
+     * 
+     * @return void
+     */
+    public static function addSideBar($name, $description = null, $id = null, $beforeWidget = null, $afterWidget = null, $beforeTitle = null, $afterTitle = null)
+    {
+        $id = $id === null ? static::slugify($name) : $id;
+        static::$sideBars[$id] = ["name" => $name, "id" => $id, "description" => $description, "class" => $id, "before_widget" => $beforeWidget === null ? "<div id=\"%1\" class=\"widget %2\">" : $beforeWidget, "after_widget" => $afterWidget === null ? "</div>\n" : $afterWidget, "before_title" => $beforeTitle === null ? "<h3>" : $beforeTitle, "after_title" => $afterTitle === null ? "</h3>\n" : $afterTitle];
+    }
+    /**
+     * method
+     * 
+     * 
+     * @return WordPressWidgetInterface
+     */
+    public static function addWidget(WordPressWidgetInterface $widget)
+    {
+        static::$widgets[$widget->getId()] = $widget;
+        return $widget;
+    }
+    /**
+     * method
+     * 
+     * 
+     * @return WordPressWidgetInterface
+     */
+    public static function getWidget($id)
+    {
+        return static::$widgets[$id];
+    }
+}

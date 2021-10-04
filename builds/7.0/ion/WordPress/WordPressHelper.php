@@ -13,35 +13,36 @@ use Throwable;
 use WP_Post;
 use WP_Term;
 use WP_User;
-use ion\WordPress\IWordPressHelper;
-use ion\WordPress\Helper\IHelperContext;
+use ion\WordPress\WordPressHelperInterface;
+use ion\WordPress\Helper\HelperContextInterface;
 use ion\WordPress\Helper\HelperContext;
 use ion\WordPress\Helper\Tools;
 use ion\WordPress\Helper\Constants;
 use ion\PhpHelper as PHP;
 use ion\Package;
-use ion\ISemVer;
+use ion\SemVerInterface;
 use ion\SemVer;
 use ion\WordPress\Helper\Api\Wrappers\OptionMetaType;
 use ion\WordPress\Helper\WordPressHelperException;
-final class WordPressHelper implements IWordPressHelper
+final class WordPressHelper implements WordPressHelperInterface
 {
-    use \ion\WordPress\Helper\Wrappers\TActions;
-    use \ion\WordPress\Helper\Wrappers\TAdmin;
-    use \ion\WordPress\Helper\Wrappers\TCommon;
-    use \ion\WordPress\Helper\Wrappers\TCron;
-    use \ion\WordPress\Helper\Wrappers\TDatabase;
-    use \ion\WordPress\Helper\Wrappers\TFilters;
-    use \ion\WordPress\Helper\Wrappers\TTemplate;
-    use \ion\WordPress\Helper\Wrappers\TLogging;
-    use \ion\WordPress\Helper\Wrappers\TOptions;
-    use \ion\WordPress\Helper\Wrappers\TPaths;
-    use \ion\WordPress\Helper\Wrappers\TPosts;
-    use \ion\WordPress\Helper\Wrappers\TRewrites;
-    use \ion\WordPress\Helper\Wrappers\TShortCodes;
-    use \ion\WordPress\Helper\Wrappers\TTaxonomies;
-    use \ion\WordPress\Helper\Wrappers\TWidgets;
-    //    private static $currentContextCycle = Constants::CONTEXT_PLUGIN;
+    use \ion\WordPress\Helper\Wrappers\ActionsTrait, \ion\WordPress\Helper\Wrappers\AdminTrait, \ion\WordPress\Helper\Wrappers\CommonTrait, \ion\WordPress\Helper\Wrappers\CronTrait, \ion\WordPress\Helper\Wrappers\DatabaseTrait, \ion\WordPress\Helper\Wrappers\FiltersTrait, \ion\WordPress\Helper\Wrappers\TemplateTrait, \ion\WordPress\Helper\Wrappers\LoggingTrait, \ion\WordPress\Helper\Wrappers\OptionsTrait, \ion\WordPress\Helper\Wrappers\PathsTrait, \ion\WordPress\Helper\Wrappers\PostsTrait, \ion\WordPress\Helper\Wrappers\RewritesTrait, \ion\WordPress\Helper\Wrappers\ShortCodesTrait, \ion\WordPress\Helper\Wrappers\TaxonomiesTrait, \ion\WordPress\Helper\Wrappers\WidgetsTrait {
+        \ion\WordPress\Helper\Wrappers\ActionsTrait::initialize as initializeActions;
+        \ion\WordPress\Helper\Wrappers\AdminTrait::initialize as initializeAdmin;
+        \ion\WordPress\Helper\Wrappers\CommonTrait::initialize as initializeCommon;
+        \ion\WordPress\Helper\Wrappers\CronTrait::initialize as initializeCron;
+        \ion\WordPress\Helper\Wrappers\DatabaseTrait::initialize as initializeDatabase;
+        \ion\WordPress\Helper\Wrappers\FiltersTrait::initialize as initializeFilters;
+        \ion\WordPress\Helper\Wrappers\TemplateTrait::initialize as initializeTemplate;
+        \ion\WordPress\Helper\Wrappers\LoggingTrait::initialize as initializeLogging;
+        \ion\WordPress\Helper\Wrappers\OptionsTrait::initialize as initializeOptions;
+        \ion\WordPress\Helper\Wrappers\PathsTrait::initialize as initializePaths;
+        \ion\WordPress\Helper\Wrappers\PostsTrait::initialize as initializePosts;
+        \ion\WordPress\Helper\Wrappers\RewritesTrait::initialize as initializeRewrites;
+        \ion\WordPress\Helper\Wrappers\ShortCodesTrait::initialize as initializeShortCodes;
+        \ion\WordPress\Helper\Wrappers\TaxonomiesTrait::initialize as initializeTaxonomies;
+        \ion\WordPress\Helper\Wrappers\WidgetsTrait::initialize as initializeWidgets;
+    }
     private static $helperInitialized = false;
     private static $helperFinalized = false;
     private static $settings = [];
@@ -143,7 +144,7 @@ final class WordPressHelper implements IWordPressHelper
      * 
      * @return void
      */
-    private static function initializeHelper(IHelperContext $context, array $wpHelperSettings, string $helperDir = null)
+    private static function initializeHelper(HelperContextInterface $context, array $wpHelperSettings, string $helperDir = null)
     {
         if (static::$helperInitialized) {
             return;
@@ -204,7 +205,6 @@ final class WordPressHelper implements IWordPressHelper
                 Tools::addEnableMenuItem();
             }
         }
-        //if(defined(Constants::WP_CONFIG_DEBUG) && constant(Constants::WP_CONFIG_DEBUG) === true && WP::getOption(Constants::QUICK_404_OPTION, false) === true) {
         static::addAction("template_redirect", function ($template) {
             if (is_404() && !PHP::toBool(PHP::filterInput('wp-devhelper-disable-quick-404', [INPUT_GET], FILTER_DEFAULT))) {
                 $wpHelperPath = Constants::HELPER_SITE;
@@ -216,74 +216,21 @@ final class WordPressHelper implements IWordPressHelper
             }
             return $template;
         });
-        //}
-        //            static::addAction('wp_loaded', function() {
-        //
-        //                static::finalizeHelper($context);
-        //            });
-        //            static::setCurrentContextCycle(Constants::CONTEXT_PLUGIN);
-        //
-        //            add_action('plugins_loaded', function() {
-        //
-        //                die('plugins_loaded');
-        //
-        //                static::setCurrentContextCycle(Constants::CONTEXT_THEME);
-        //            });
-        //            add_action('switch_theme', function() {
-        //
-        //                static::setCurrentContextCycle(Constants::CONTEXT_THEME);
-        //            });
-        //            add_action('after_setup_theme', function() {
-        //
-        //                foreach(static::$contexts as $ctx) {
-        //
-        //                    if(!$ctx->isFinalized()) {
-        //
-        //                        throw new WordPressHelperException("Context '{$ctx->getProjectName()}' has not been finalized.");
-        //                    }
-        //
-        ////                    echo "{$ctx->getProjectName()}<br />";
-        //
-        //
-        //                    $ctx->invokeFinalizeOperation();
-        //
-        //                }
-        //            }, 0);
-        //TODO - template option has been removed
-        //        if(!is_admin()) {
-        //
-        //            // NOTE: The following action is "wp" and not "wp_loaded," since "wp" is the first
-        //            // hook where WordPress template tags return their proper values.
-        //
-        //            add_action("wp", function () use ($context) {
-        //
-        ////                echo "<pre>{$context->getName()}</pre>";
-        //
-        //                if($context->hasTemplateOperation()) {
-        //
-        //                    if(!$context->invokeTemplateOperation()) {
-        //
-        //                        exit;
-        //                    }
-        //                }
-        //            });
-        //        }
-        //TODO: The order of these seem significant at the moment - more investigation needed.
-        static::initialize_TLogging();
-        static::initialize_TDatabase();
-        static::initialize_TPaths();
-        static::initialize_TCommon();
-        static::initialize_TPosts();
-        static::initialize_TTaxonomies();
-        static::initialize_TCron();
-        static::initialize_TOptions();
-        static::initialize_TRewrites();
-        static::initialize_TWidgets();
-        static::initialize_TTemplate();
-        static::initialize_TShortCodes();
-        static::initialize_TActions();
-        static::initialize_TFilters();
-        static::initialize_TAdmin();
+        static::initializeLogging();
+        static::initializeDatabase();
+        static::initializePaths();
+        static::initializeCommon();
+        static::initializePosts();
+        static::initializeTaxonomies();
+        static::initializeCron();
+        static::initializeOptions();
+        static::initializeRewrites();
+        static::initializeWidgets();
+        static::initializeTemplate();
+        static::initializeShortCodes();
+        static::initializeActions();
+        static::initializeFilters();
+        static::initializeAdmin();
         static::invokeWrapperActions();
         if (static::getSettingsValue(static::$settings, 'html-auto-paragraphs') === false) {
             add_filter("tiny_mce_before_init", function ($settings) {
@@ -324,9 +271,9 @@ final class WordPressHelper implements IWordPressHelper
      * method
      * 
      * 
-     * @return IHelperContext
+     * @return HelperContextInterface
      */
-    public static function getContext(string $slug = null) : IHelperContext
+    public static function getContext(string $slug = null) : HelperContextInterface
     {
         if ($slug === null) {
             return static::getCurrentContext();
@@ -339,9 +286,9 @@ final class WordPressHelper implements IWordPressHelper
     /**
      * method
      * 
-     * @return IHelperContext
+     * @return HelperContextInterface
      */
-    public static function getCurrentContext() : IHelperContext
+    public static function getCurrentContext() : HelperContextInterface
     {
         return static::getContextByIndex(count(static::getContexts()) - 1);
     }
@@ -393,15 +340,6 @@ TEMPLATE;
         }
         static::panic(trim($template), 500, $title);
     }
-    //    protected static function setCurrentContextCycle($cycle) {
-    //
-    //        static::$currentContextCycle = $cycle;
-    //    }
-    //
-    //    public static function getCurrentContextCycle() {
-    //
-    //        return static::$currentContextCycle;
-    //    }
     /**
      * method
      * 
@@ -428,9 +366,6 @@ TEMPLATE;
         }
         return static::$contexts;
     }
-    //    public static function context(): IWordPressHelper {
-    //        return static::getCurrentContext();
-    //    }
     /**
      * method
      * 
@@ -566,9 +501,9 @@ TEMPLATE;
      * method
      * 
      * 
-     * @return IWordPressHelper
+     * @return WordPressHelperInterface
      */
-    public static function createContext(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, ISemVer $version = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, callable $finalize = null, array $uninstall = null) : IWordPressHelper
+    public static function createContext(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, callable $finalize = null, array $uninstall = null) : WordPressHelperInterface
     {
         set_exception_handler(function (Throwable $throwable) {
             static::handleError('Exception / Error', $throwable->getMessage(), $throwable->getCode(), $throwable->getFile(), $throwable->getLine(), $throwable->getTrace());
@@ -577,31 +512,6 @@ TEMPLATE;
             $wpHelperSettings = [];
         }
         $helper = new static($vendorName, $projectName, $loadPath, $helperDir, $wpHelperSettings, $version, $initialize, $activate, $deactivate, $finalize, $uninstall);
-        //        $context = new Context($vendorName, $projectName, $loadPath, $version);
-        //        $context->setInitializeOperation(function() use ($initialize) {
-        //
-        //            $initialize();
-        //        });
-        //
-        //        $context->setActivateOperation(function() use ($activate) {
-        //
-        //            $activate();
-        //        });
-        //
-        //        $context->setDeactivateOperation(function() use ($deactivate) {
-        //
-        //            $deactivate();
-        //        });
-        //
-        //        $context->setUninstallOperation(function() use ($uninstall) {
-        //
-        //            $uninstall();
-        //        });
-        //
-        //        $context->setFinalizeOperation(function() use ($finalize) {
-        //
-        //            $finalize();
-        //        });
         static::initializeHelper(static::getContext(null), $wpHelperSettings, $helperDir);
         return $helper;
     }
@@ -611,7 +521,7 @@ TEMPLATE;
      * 
      * @return mixed
      */
-    protected function __construct(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, ISemVer $version = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, callable $finalize = null, array $uninstall = null)
+    protected function __construct(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, callable $finalize = null, array $uninstall = null)
     {
         $context = new HelperContext($vendorName, $projectName, $loadPath, $helperDir, $wpHelperSettings, $version);
         $this->context = $context;
@@ -637,9 +547,9 @@ TEMPLATE;
      * method
      * 
      * 
-     * @return IWordPressHelper
+     * @return WordPressHelperInterface
      */
-    public function initialize(callable $call = null) : IWordPressHelper
+    public function initialize(callable $call = null) : WordPressHelperInterface
     {
         $this->getCurrentContext()->setInitializeOperation($call);
         return $this;
@@ -648,9 +558,9 @@ TEMPLATE;
      * method
      * 
      * 
-     * @return IWordPressHelper
+     * @return WordPressHelperInterface
      */
-    public function activate(callable $call = null) : IWordPressHelper
+    public function activate(callable $call = null) : WordPressHelperInterface
     {
         $this->getCurrentContext()->setActivateOperation($call);
         return $this;
@@ -659,9 +569,9 @@ TEMPLATE;
      * method
      * 
      * 
-     * @return IWordPressHelper
+     * @return WordPressHelperInterface
      */
-    public function deactivate(callable $call = null) : IWordPressHelper
+    public function deactivate(callable $call = null) : WordPressHelperInterface
     {
         $this->getCurrentContext()->setDeactivateOperation($call);
         return $this;
@@ -670,9 +580,9 @@ TEMPLATE;
      * method
      * 
      * 
-     * @return IWordPressHelper
+     * @return WordPressHelperInterface
      */
-    public function uninstall(array $call = null) : IWordPressHelper
+    public function uninstall(array $call = null) : WordPressHelperInterface
     {
         $this->getCurrentContext()->setUninstallOperation($call);
         return $this;
@@ -681,9 +591,9 @@ TEMPLATE;
      * method
      * 
      * 
-     * @return IWordPressHelper
+     * @return WordPressHelperInterface
      */
-    public function finalize(callable $call = null) : IWordPressHelper
+    public function finalize(callable $call = null) : WordPressHelperInterface
     {
         $this->getCurrentContext()->setFinalizeOperation($call);
         $this->getCurrentContext()->invokeFinalizeOperation();

@@ -25,14 +25,18 @@ if (!class_exists('\\ion\\WordPress\\WordPressHelper')) {
         ];
 
         foreach ($dirs as $dir) {
+            
             $tmp = __DIR__ . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . 'autoload.php';
+            
             if (file_exists($tmp)) {
+                
                 $autoLoadDir = realpath($tmp);
                 break;
             }
         }
 
         if (($autoLoadDir !== null) && (file_exists($autoLoadDir))) {
+            
             require_once($autoLoadDir);
         } 
     }    
@@ -40,11 +44,11 @@ if (!class_exists('\\ion\\WordPress\\WordPressHelper')) {
     if (class_exists('\\ion\\Package')) {
 
         \ion\Package::create(
-                'ion', 'wp-devhelper', [ 'source/classes/', 'source/interfaces/', 'source/traits/' ],    
-                [                    
-                    'builds/' . PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION,
-                    'builds/' . PHP_MAJOR_VERSION
-                    
-                ], __DIR__);
+            'ion', 'wp-devhelper', [ 'source/classes/', 'source/interfaces/', 'source/traits/' ],    
+            [                    
+                'builds/' . PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION,
+                'builds/' . PHP_MAJOR_VERSION
+
+            ], __DIR__);
     }
 }

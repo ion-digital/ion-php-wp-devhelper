@@ -9,7 +9,7 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
-class AdminCustomizeHelper implements IAdminCustomizeHelper
+class AdminCustomizeHelper implements AdminCustomizeHelperInterface
 {
     private $descriptor;
     /**
@@ -22,34 +22,11 @@ class AdminCustomizeHelper implements IAdminCustomizeHelper
     {
         $this->descriptor =& $descriptor;
     }
-    //$wpCustomize->add_section( 'ion-settings' , array(
-    //
-    //    'title'      => __( 'ION', 'ion-settings' ),
-    //    'priority'   => 30
-    //));
-    //
-    //$wpCustomize->add_setting('ion-colour-theme', [
-    //
-    //    'default' => null,
-    //    'transport' => 'refresh'
-    //]);
-    //
-    //$wpCustomize->add_control(
-    //
-    //    'ion-colour-theme',
-    //    [
-    //        'label' => __('Colour Theme', 'ion-colour-theme'),
-    //        'section' => 'ion-settings', //colors
-    //        'settings' => 'ion-colour-theme',
-    //        'type' => 'select',
-    //        'choices' => $themes
-    //    ]
-    //);
     /**
      * method
      * 
      * 
-     * @return IAdminCustomizeHelper
+     * @return AdminCustomizeHelperInterface
      */
     public function addTextSetting($label, $key, $default = null, $multiLine = false, $priority = null, $transport = 'refresh')
     {
@@ -60,7 +37,7 @@ class AdminCustomizeHelper implements IAdminCustomizeHelper
      * method
      * 
      * 
-     * @return IAdminCustomizeHelper
+     * @return AdminCustomizeHelperInterface
      */
     public function addDropDownSetting($label, $key, $default = null, array $options = [], $priority = null, $transport = 'refresh')
     {
@@ -71,7 +48,7 @@ class AdminCustomizeHelper implements IAdminCustomizeHelper
      * method
      * 
      * 
-     * @return IAdminCustomizeHelper
+     * @return AdminCustomizeHelperInterface
      */
     public function addMediaSetting($label, $key, $default = null, $priority = null, $transport = 'refresh')
     {
@@ -82,7 +59,7 @@ class AdminCustomizeHelper implements IAdminCustomizeHelper
      * method
      * 
      * 
-     * @return IAdminCustomizeHelper
+     * @return AdminCustomizeHelperInterface
      */
     public function addCheckBoxSetting($label, $key, $default = null, $priority = null, $transport = 'refresh')
     {

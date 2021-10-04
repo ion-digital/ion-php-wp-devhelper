@@ -22,13 +22,6 @@ use \Parsedown;
 
 class Tools {
 
-//    public static function initialize(IWordPressHelper $context, array $wpHelperSettings = null): static {
-//        
-//
-//        
-//        return new static($context, $wpHelperSettings);
-//    }
-    
     public static function isHidden() {
         
         if (WP::hasOption(Constants::TOOLS_FULLY_HIDDEN_OPTION) === false) {
@@ -68,9 +61,6 @@ class Tools {
 
     public static function addEnableMenuItem() {
 
-//        var_dump(WP::getOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false));
-//        exit;
-
         if (WP::getSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false) === false) {
             WP::getAdminMenuPage('tools.php')
                     ->addSubMenuPage('Helper', static::getEnableView(), 'wp-devhelper-enable');
@@ -91,34 +81,30 @@ class Tools {
             }
 
             WP::addAdminForm("Settings", 'wp-devhelper-tools-settings')
-                    ->setOptionPrefix(null)
-                    ->addGroup("General")
-                    ->addField(WP::checkBoxInputField("Hidden", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Devhelper settings interface in the 'Tools' menu."))
-                    ->addField(WP::checkBoxInputField("Fully hidden", Constants::TOOLS_FULLY_HIDDEN_OPTION, null, null, "Fully hide the WP Devhelper settings interface. <br /><br /><strong>Be careful!</strong> You will need to be able to edit your WordPress database options table to revert this - look for the '<em>option_name</em>' with the value '<em>" . Constants::TOOLS_FULLY_HIDDEN_OPTION . "</em>' and remove the record to enable."))
-                    ->redirect(function ($values) {
+            ->setOptionPrefix(null)
+            ->addGroup("General")
+            ->addField(WP::checkBoxInputField("Hidden", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Devhelper settings interface in the 'Tools' menu."))
+            ->addField(WP::checkBoxInputField("Fully hidden", Constants::TOOLS_FULLY_HIDDEN_OPTION, null, null, "Fully hide the WP Devhelper settings interface. <br /><br /><strong>Be careful!</strong> You will need to be able to edit your WordPress database options table to revert this - look for the '<em>option_name</em>' with the value '<em>" . Constants::TOOLS_FULLY_HIDDEN_OPTION . "</em>' and remove the record to enable."))
+            ->redirect(function ($values) {
 
-                        // /wordpress/wp-admin/tools.php?page=wp-devhelper-enable
+                // /wordpress/wp-admin/tools.php?page=wp-devhelper-enable
 
-                        if ($values[Constants::TOOLS_FULLY_HIDDEN_OPTION] === true && $values[Constants::TOOLS_HIDDEN_OPTION] === true) {
-                            WP::setSiteOption(Constants::TOOLS_HIDDEN_OPTION, false);
-                            WP::redirect(WP::getAdminUrl('index'));
-                        }
+                if ($values[Constants::TOOLS_FULLY_HIDDEN_OPTION] === true && $values[Constants::TOOLS_HIDDEN_OPTION] === true) {
+                    WP::setSiteOption(Constants::TOOLS_HIDDEN_OPTION, false);
+                    WP::redirect(WP::getAdminUrl('index'));
+                }
 
-                        if ($values[Constants::TOOLS_HIDDEN_OPTION] === false) {
-                            WP::setSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false);
-                            WP::redirect(WP::getAdminUrl('admin') . '?page=wp-devhelper-settings');
-                        }
-                    })
-                    ->render();
+                if ($values[Constants::TOOLS_HIDDEN_OPTION] === false) {
+                    WP::setSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false);
+                    WP::redirect(WP::getAdminUrl('admin') . '?page=wp-devhelper-settings');
+                }
+            })
+            ->render();
         };
     }
 
-    private static function getSettingsView(IHelperContext $context) {
-        
+    private static function getSettingsView(HelperContextInterface$context) {
 
-        
-    
-        
         return function () use ($context) {
 
             //FIXME: Investigate: why are forms being added twice anyway?
@@ -132,39 +118,39 @@ class Tools {
             }                
             
             WP::addAdminForm("Settings", 'wp-devhelper-settings')
-                    ->setOptionPrefix(null)
-                    ->addGroup("General")
-                    ->addField(WP::checkBoxInputField("Hide settings interface", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Devhelper settings interface (you can enable it again, by navigating to 'Tools &gt; Helper')."))
-                    ->addField(WP::checkBoxInputField("HTML Auto paragraphs", Constants::TOOLS_AUTO_PARAGRAPHS_OPTION, null, null, "Enable automatic paragraph insertion for content."))
-                    ->addGroup("Logging", null, null, 1)
-                    ->addField(WP::checkBoxInputField("Enable logging", Constants::ENABLE_LOGGING, null, null, "Enable logging functionality."))
-                    //->addField(WP::checkBoxInputField("Log to database", Constants::LOG_TO_DATABASE, null, null, "Create log entries in the database, if enabled - otherwise send log entries to a text file."))
-                    //->addField(WP::textInputField("Archive age", Constants::LOGS_ARCHIVE_AGE, null, null, "The amount of days before fresh log entries are archived (specify <em>0</em> for never)."))
-                    ->addField(WP::textInputField("Purge age", Constants::LOGS_PURGE_AGE, null, null, "The amount of days before archived log entries are purged (specify <em>0</em> for never)."))
-                    ->addField(WP::textInputField("Max displayed log entries", Constants::MAX_DISPLAYED_LOG_ENTRIES, null, null, "The maximum amount of records to display when viewing a log (in the administration panel)."))
-                    ->addGroup("Development Tools", null, null, 1)                    
-                    ->addField(WP::checkBoxInputField("Enable quick 404 override", Constants::QUICK_404_OPTION, null, null, "Override the 404 functionality of the site to immediately display a very simple message and end the script."))
-                    ->redirect(function ($values) {
+            ->setOptionPrefix(null)
+            ->addGroup("General")
+            ->addField(WP::checkBoxInputField("Hide settings interface", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Devhelper settings interface (you can enable it again, by navigating to 'Tools &gt; Helper')."))
+            ->addField(WP::checkBoxInputField("HTML Auto paragraphs", Constants::TOOLS_AUTO_PARAGRAPHS_OPTION, null, null, "Enable automatic paragraph insertion for content."))
+            ->addGroup("Logging", null, null, 1)
+            ->addField(WP::checkBoxInputField("Enable logging", Constants::ENABLE_LOGGING, null, null, "Enable logging functionality."))
+            //->addField(WP::checkBoxInputField("Log to database", Constants::LOG_TO_DATABASE, null, null, "Create log entries in the database, if enabled - otherwise send log entries to a text file."))
+            //->addField(WP::textInputField("Archive age", Constants::LOGS_ARCHIVE_AGE, null, null, "The amount of days before fresh log entries are archived (specify <em>0</em> for never)."))
+            ->addField(WP::textInputField("Purge age", Constants::LOGS_PURGE_AGE, null, null, "The amount of days before archived log entries are purged (specify <em>0</em> for never)."))
+            ->addField(WP::textInputField("Max displayed log entries", Constants::MAX_DISPLAYED_LOG_ENTRIES, null, null, "The maximum amount of records to display when viewing a log (in the administration panel)."))
+            ->addGroup("Development Tools", null, null, 1)                    
+            ->addField(WP::checkBoxInputField("Enable quick 404 override", Constants::QUICK_404_OPTION, null, null, "Override the 404 functionality of the site to immediately display a very simple message and end the script."))
+            ->redirect(function ($values) {
 
-                        // /wordpress/wp-admin/tools.php?page=wp-devhelper-enable
+                // /wordpress/wp-admin/tools.php?page=wp-devhelper-enable
 
-                        if ($values[Constants::TOOLS_HIDDEN_OPTION] === true) {
-                            WP::setSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false);
-                            WP::redirect(WP::getAdminUrl('tools') . '?page=wp-devhelper-enable');
-                        }
-                    })
-                    ->render();
+                if ($values[Constants::TOOLS_HIDDEN_OPTION] === true) {
+                    WP::setSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false);
+                    WP::redirect(WP::getAdminUrl('tools') . '?page=wp-devhelper-enable');
+                }
+            })
+            ->render();
                     
             //var_dump($f->
         };
     }
 
-    private static function getStateDetailView(IHelperContext $context) {
+    private static function getStateDetailView(HelperContextInterface$context) {
         
         return null;
     }
 
-    private static function getStateView(IHelperContext $context) {
+    private static function getStateView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -180,109 +166,76 @@ class Tools {
             echo "<h2>Contexts</h2>";
             
             $list = WP::addAdminTable("Contexts", "contexts", "Context", "Contexts", 'package-name', static::getStateDetailView($context), false, false, false, [
-                        '<a href="' . WP::getAdminUrl('admin') . '?page=wp-devhelper-logs&form={record}">View log</a>' => function ($id) {
+                '<a href="' . WP::getAdminUrl('admin') . '?page=wp-devhelper-logs&form={record}">View log</a>' => function ($id) {
 
-                            if (array_key_exists($id, WP::getLogs())) {
-                                return true;
-                            }
+                    if (array_key_exists($id, WP::getLogs())) {
+                        return true;
+                    }
 
-                            return false;
-                        }
-                    ])
-                    ->addColumnGroup("Information", "information")
-//                    ->addColumn(WP::textTableColumn("Context Name", "context-name", "context-name"))
-//                    ->addColumn(WP::textTableColumn("Context Slug", "context-slug", "context-slug"))
-                    ->addColumn(WP::textTableColumn("Package", "package-name", "package-name"))
-                    ->addColumn(WP::textTableColumn("Parent", "parent-package-name", "parent-package-name"))
-//                    ->addColumn(WP::checkBoxTableColumn("Primary", "is-primary", "is-primary"))
-                    //->addColumn(WP::textTableColumn("Version", "helper-version", "helper-version"))        
-                    ->addColumn(WP::textTableColumn("Context Type", "type", "type"))
-//                            ->addColumn(WP::textTableColumn("Version", "version", "version"))
-                    ->addColumnGroup("Paths", "paths")
-                    ->addColumn(WP::textTableColumn('Working Path', 'working-dir', 'working-dir'))
-                    ->addColumn(WP::textTableColumn('Working URI', 'working-uri', 'working-uri'))
-                    ->addColumn(WP::textTableColumn('Entry Point', 'loading-path', 'loading-path'))
-                    ->addColumn(WP::textTableColumn('Version', 'context-version', 'context-version'));
-                    //->addColumn(WP::textTableColumn('Helper Path', 'helper-dir', 'helper-dir'));
-                    //->addColumn(WP::textTableColumn('DEBUG_COLUMN', 'sort-key', 'sort-key'));
-
+                    return false;
+                }
+            ])
+            ->addColumnGroup("Information", "information")
+            ->addColumn(WP::textTableColumn("Package", "package-name", "package-name"))
+            ->addColumn(WP::textTableColumn("Parent", "parent-package-name", "parent-package-name"))
+            ->addColumn(WP::textTableColumn("Context Type", "type", "type"))
+            ->addColumnGroup("Paths", "paths")
+            ->addColumn(WP::textTableColumn('Working Path', 'working-dir', 'working-dir'))
+            ->addColumn(WP::textTableColumn('Working URI', 'working-uri', 'working-uri'))
+            ->addColumn(WP::textTableColumn('Entry Point', 'loading-path', 'loading-path'))
+            ->addColumn(WP::textTableColumn('Version', 'context-version', 'context-version'));
 
             $list->onRead(function () {
 
-                        $groupedRows = [];
-                        
-                        foreach (WP::getContexts() as $id => $ctx) {
-                            
-//                    echo '<pre>';
-//                    echo($ctx->getSlug());
-//                    echo '</pre>';
-                            //print_r($ctx);
-                            $type = null;
+                $groupedRows = [];
 
-                            switch ($ctx->getType()) {
-//                                case Constants::CONTEXT_LIBRARY: {
-//                                        $type = 'Library';
-//                                        break;
-//                                    }
-                                case Constants::CONTEXT_THEME: {
-                                        $type = 'Theme';
-                                        break;
-                                    }
-                                case Constants::CONTEXT_PLUGIN: {
-                                        $type = 'Plugin';
-                                        break;
-                                    }
-//                                case Constants::CONTEXT_UNKNOWN:
-//                                default: {
-//                                        $type = 'Unknown';
-//                                        break;
-//                                    }
+                foreach (WP::getContexts() as $id => $ctx) {
+
+                    $type = null;
+
+                    switch ($ctx->getType()) {
+
+                        case Constants::CONTEXT_THEME: {
+                                $type = 'Theme';
+                                break;
                             }
-
-//                            $type = ($ctx->getParent() === null ? $type : $type . ($ctx->getParent() === null ? '' : "<br /> (<strong>{$ctx->getParent()->getPackageName()}</strong>)"));
-                            
-                            $grouping = ($ctx->getParent() !== null ? $ctx->getParent()->getPackageName() : $ctx->getPackageName());
-                            
-                            if(!array_key_exists($grouping, $groupedRows)) {
-                                
-                                $groupedRows[$grouping] = [];
+                        case Constants::CONTEXT_PLUGIN: {
+                                $type = 'Plugin';
+                                break;
                             }
-                            
-                            $groupedRows[$grouping][] = [
-                                //'context-id' => $ctx->getId(),
-//                                'context-slug' => $ctx->getSlug(),
-//                                'context-name' => ($ctx->getProjectName() === null ? '<em>None</em>' : $ctx->getProjectName()),
-                                'package-name' => ($ctx->getParent() === null ? "<strong>{$ctx->getPackageName()}</strong>" : "<span> &nbsp; </span> {$ctx->getPackageName()}"),
-//                                'is-primary' => $ctx->isPrimary(),
-//                                'version' => ($ctx->getVersion() === null ? 'N/A' : $ctx->getVersion()->toString()),
-                                'parent-package-name' => ($ctx->getParent() === null ? '-' : "{$ctx->getParent()->getPackageName()}"),
-                                'type' => $type,
-                                //'priority' => $ctx->getPriority(),
-                                'working-dir' => $ctx->getWorkingDirectory(),
-                                'working-uri' => $ctx->getWorkingUri(),
-                                'loading-path' => basename($ctx->getLoadPath()),
-                                'context-version' => ($ctx->getVersion() !== null ? $ctx->getVersion()->toString() : null),
-                                'sort-key' => $ctx->getId(),
-                                'parent' => ($ctx->getParent() !== null)
-                            ];
-                        }
+                    }
 
+                    $grouping = ($ctx->getParent() !== null ? $ctx->getParent()->getPackageName() : $ctx->getPackageName());
 
-                        
+                    if(!array_key_exists($grouping, $groupedRows)) {
 
-                        
-                        $rows = [];
-                        
-                        foreach($groupedRows as $grouping => $groupingRows) {                            
-                            
-                            usort($groupingRows, function($a, $b) {
+                        $groupedRows[$grouping] = [];
+                    }
 
-//                                echo "<pre>"; var_Dump($a); echo("</pre>");
-//                                echo "<pre>"; var_Dump($b); echo("</pre>");
-                                
-                                if($a['parent'] === true) {
-                                    
-                                    return 1;
+                    $groupedRows[$grouping][] = [
+
+                        'package-name' => ($ctx->getParent() === null ? "<strong>{$ctx->getPackageName()}</strong>" : "<span> &nbsp; </span> {$ctx->getPackageName()}"),
+                        'parent-package-name' => ($ctx->getParent() === null ? '-' : "{$ctx->getParent()->getPackageName()}"),
+                        'type' => $type,
+                        'working-dir' => $ctx->getWorkingDirectory(),
+                        'working-uri' => $ctx->getWorkingUri(),
+                        'loading-path' => basename($ctx->getLoadPath()),
+                        'context-version' => ($ctx->getVersion() !== null ? $ctx->getVersion()->toString() : null),
+                        'sort-key' => $ctx->getId(),
+                        'parent' => ($ctx->getParent() !== null)
+
+                    ];
+                }
+
+                $rows = [];
+
+                foreach($groupedRows as $grouping => $groupingRows) {                            
+
+                    usort($groupingRows, function($a, $b) {
+
+                        if($a['parent'] === true) {
+
+                            return 1;
 //                                    if($a['sort-key'] > $b['sort-key']) {
 //
 //                                        return -1;
@@ -292,36 +245,29 @@ class Tools {
 //
 //                                        return 0;
 //                                    }
-                                }
-  
-                                if($a['parent'] === false) {
-                                    
-                                    return -1;
-                                }
-
-                                return 0;
-                            });                            
-
-//                            echo "<pre>"; var_Dump($groupingRows); die("</pre>");
-//                            exit;
-                            
-                            foreach($groupingRows as $tmp) {
-                            
-                                $rows[] = $tmp;                                
-                            }
                         }
-                        
-//                        echo "<pre>"; var_Dump($groupedRows); die("</pre>");                        
-//
-//                        echo "<pre>"; var_Dump($rows); die("</pre>");
-                        
-                        return array_values($rows);
-                    })
-                    ->render();
+
+                        if($a['parent'] === false) {
+
+                            return -1;
+                        }
+
+                        return 0;
+                    });                            
+
+                    foreach($groupingRows as $tmp) {
+
+                        $rows[] = $tmp;                                
+                    }
+                }
+
+                return array_values($rows);
+            })
+            ->render();
         };
     }
     
-    private static function getWordPressStateView(IHelperContext $context) {
+    private static function getWordPressStateView(HelperContextInterface$context) {
 
         return function () use ($context) {
 
@@ -341,107 +287,105 @@ class Tools {
             } 
             
             WP::addAdminForm("WordPress Settings", 'wp-devhelper-edit-wordpress-settings')
-                    ->setOptionPrefix(null)
-                    ->addGroup("Installation", null, null, 3)
-                    
-                        ->addField(WP::textInputField("Site URI", Constants::SITE_URI, null, null, "The site root URI.", false, false, false, true, true))                                                                               
-                        ->addField(WP::textInputField("Site path", Constants::SITE_PATH, null, null, "The site root server path.", false, false, false, true, true))                                                                               
-                    
-                        ->addField(WP::textInputField("WordPress URI", Constants::WORDPRESS_URI, null, null, "The WordPress installation root URI.", false, false, false, true, true))                                                                               
-                        ->addField(WP::textInputField("WordPress path", Constants::WORDPRESS_PATH, null, null, "The WordPress installation root server path.", false, false, false, true, true))                                                                               
+            ->setOptionPrefix(null)
+            ->addGroup("Installation", null, null, 3)
 
-                        ->addField(WP::textInputField("WordPress content URI", Constants::WORDPRESS_CONTENT_URI, null, null, "The WordPress installation content root URI.", false, false, false, true, true))                                                                               
-                        ->addField(WP::textInputField("WordPress content path", Constants::WORDPRESS_CONTENT_PATH, null, null, "The WordPress installation root server content path.", false, false, false, true, true))                     
-                    
-                    ->addGroup("Debug Settings", null, null, 3)                    
-                    
-                        ->addField(WP::checkBoxInputField('Debugging', Constants::WP_CONFIG_DEBUG, null, null, "The value of the " . Constants::WP_CONFIG_DEBUG . " setting in the <em>wp-config.php</em>.", false, true, true))
-                        
-                        ->addField(WP::checkBoxInputField('Display errors (WP)', Constants::WP_CONFIG_DEBUG_DISPLAY, null, null, "The value of the " . Constants::WP_CONFIG_DEBUG_DISPLAY . " setting in the <em>wp-config.php</em>.", false, true, true))
-                        ->addField(WP::checkBoxInputField('Log errors (WP)', Constants::WP_CONFIG_DEBUG_LOG, null, null, "The value of the " . Constants::WP_CONFIG_DEBUG_LOG . " setting in the <em>wp-config.php</em>.", false, true, true))                                            
+                ->addField(WP::textInputField("Site URI", Constants::SITE_URI, null, null, "The site root URI.", false, false, false, true, true))                                                                               
+                ->addField(WP::textInputField("Site path", Constants::SITE_PATH, null, null, "The site root server path.", false, false, false, true, true))                                                                               
 
-                        ->addField(WP::textInputField("Error log location", Constants::PHP_ERROR_LOG, null, null, "The location of the PHP error log (the value of <em>ini_get('" . Constants::PHP_ERROR_LOG . "')</em>).", false, false, false, true, true))                                                                               
-                    
-                        ->addField(WP::textInputField("Log errors (PHP)", Constants::PHP_LOG_ERRORS, null, null, "Whether PHP is currently set to log errors (the value of <em>ini_get('" . Constants::PHP_LOG_ERRORS . "')</em>).", false, false, false, true, true))
-                        ->addField(WP::textInputField("Display errors (PHP)", Constants::PHP_DISPLAY_ERRORS, null, null, "Whether PHP is currently set to display errors (the value of <em>ini_get('" . Constants::PHP_DISPLAY_ERRORS . "')</em>).", false, false, false, true, true))                        
-                        
-                    
-                        ->addField(WP::checkBoxInputField('Save <em>$wpdb</em> queries', Constants::WP_CONFIG_SAVEQUERIES, null, null, "The value of the " . Constants::WP_CONFIG_SAVEQUERIES . " setting in the <em>wp-config.php</em>.", false, true, true))
-                        ->addField(WP::checkBoxInputField('Unminified internal styles/scripts', Constants::WP_CONFIG_SCRIPT_DEBUG, null, null, "The value of the " . Constants::WP_CONFIG_SCRIPT_DEBUG . " setting in the <em>wp-config.php</em>.", false, true, true))
-                        ->addField(WP::checkBoxInputField('Concatenate back-end scripts', Constants::WP_CONFIG_CONCATENATE_SCRIPTS, null, null, "The value of the " . Constants::WP_CONFIG_CONCATENATE_SCRIPTS . " setting in the <em>wp-config.php</em>.", false, true, true))
-                    
+                ->addField(WP::textInputField("WordPress URI", Constants::WORDPRESS_URI, null, null, "The WordPress installation root URI.", false, false, false, true, true))                                                                               
+                ->addField(WP::textInputField("WordPress path", Constants::WORDPRESS_PATH, null, null, "The WordPress installation root server path.", false, false, false, true, true))                                                                               
 
-                    ->addGroup("CRON Settings", null, null, 3)
-                        ->addField(WP::checkBoxInputField('Trigger WP CRON manually', Constants::WP_CONFIG_DISABLE_CRON, null, null, "The value of the " . Constants::WP_CONFIG_DISABLE_CRON . " setting in the <em>wp-config.php</em>.", false, true, true))
-                        ->addField(WP::checkBoxInputField('Alternate WP CRON trigger method', Constants::WP_CONFIG_ALTERNATE_CRON, null, null, "The value of the " . Constants::WP_CONFIG_ALTERNATE_CRON . " setting in the <em>wp-config.php</em>.", false, true, true))
-                        ->addField(WP::textInputField('WP CRON timeout lock', Constants::WP_CONFIG_CRON_LOCK_TIMEOUT, null, null, "The value of the " . Constants::WP_CONFIG_CRON_LOCK_TIMEOUT . " setting in the <em>wp-config.php</em>.", false, false, false, true, true))
+                ->addField(WP::textInputField("WordPress content URI", Constants::WORDPRESS_CONTENT_URI, null, null, "The WordPress installation content root URI.", false, false, false, true, true))                                                                               
+                ->addField(WP::textInputField("WordPress content path", Constants::WORDPRESS_CONTENT_PATH, null, null, "The WordPress installation root server content path.", false, false, false, true, true))                     
 
-                    ->onRead(function() {
-                        
-                        $checkBoolConst = function(string $const, bool $default = null): ?bool {
-                            
-                            if(defined($const)) {
-                                return (bool) constant($const);
-                            }
-                            
-                            return null;
-                        };
-                        
-                        $checkIntConst = function(string $const, int $default = null): ?int {
-                            
-                            if(defined($const)) {
-                                return (int) constant($const);
-                            }
-                            
-                            return null;
-                        };        
-                        
-                        $checkString = function(string $string, string $default = null): ?string {
-                            
-                            return $string;
-                        };                      
-                        
-                        
-                        return [
-                            
-                            // Installation
-                            
-                            Constants::SITE_URI => $checkString(WP::getSiteUri()),
-                            Constants::SITE_PATH => $checkString(WP::getSitePath()),
-                            Constants::WORDPRESS_URI => $checkString(WP::getWordPressUri()),
-                            Constants::WORDPRESS_PATH => $checkString(WP::getWordPressPath()),
-                            Constants::WORDPRESS_CONTENT_URI => $checkString(WP::getContentUri()),
-                            Constants::WORDPRESS_CONTENT_PATH => $checkString(WP::getContentPath()),
-                            
-                            // Debugging
-                                                        
-                            Constants::WP_CONFIG_DEBUG => $checkBoolConst(Constants::WP_CONFIG_DEBUG),
-                            Constants::WP_CONFIG_DEBUG_DISPLAY => $checkBoolConst(Constants::WP_CONFIG_DEBUG_DISPLAY),
-                            Constants::WP_CONFIG_DEBUG_LOG => $checkBoolConst(Constants::WP_CONFIG_DEBUG_LOG),
-                            Constants::WP_CONFIG_SAVEQUERIES => $checkBoolConst(Constants::WP_CONFIG_SAVEQUERIES),
-                            Constants::WP_CONFIG_SCRIPT_DEBUG => $checkBoolConst(Constants::WP_CONFIG_SCRIPT_DEBUG),
-                            Constants::WP_CONFIG_CONCATENATE_SCRIPTS => $checkBoolConst(Constants::WP_CONFIG_CONCATENATE_SCRIPTS),
-                            Constants::PHP_LOG_ERRORS => $checkString(@ini_get(Constants::PHP_LOG_ERRORS)),
-                            Constants::PHP_DISPLAY_ERRORS => $checkString(@ini_get(Constants::PHP_DISPLAY_ERRORS)),
-                            Constants::PHP_ERROR_LOG => $checkString(@ini_get(Constants::PHP_ERROR_LOG)),
-                            
-                            // CRON
-                            
-                            Constants::WP_CONFIG_DISABLE_CRON => $checkBoolConst(Constants::WP_CONFIG_DISABLE_CRON),                            
-                            Constants::WP_CONFIG_ALTERNATE_CRON => $checkBoolConst(Constants::WP_CONFIG_ALTERNATE_CRON),
-                            Constants::WP_CONFIG_CRON_LOCK_TIMEOUT => $checkIntConst(Constants::WP_CONFIG_CRON_LOCK_TIMEOUT)
-                            
-                        ];                        
-                        
-                    })
-                    
-                    ->render();            
-            
-            
+            ->addGroup("Debug Settings", null, null, 3)                    
+
+                ->addField(WP::checkBoxInputField('Debugging', Constants::WP_CONFIG_DEBUG, null, null, "The value of the " . Constants::WP_CONFIG_DEBUG . " setting in the <em>wp-config.php</em>.", false, true, true))
+
+                ->addField(WP::checkBoxInputField('Display errors (WP)', Constants::WP_CONFIG_DEBUG_DISPLAY, null, null, "The value of the " . Constants::WP_CONFIG_DEBUG_DISPLAY . " setting in the <em>wp-config.php</em>.", false, true, true))
+                ->addField(WP::checkBoxInputField('Log errors (WP)', Constants::WP_CONFIG_DEBUG_LOG, null, null, "The value of the " . Constants::WP_CONFIG_DEBUG_LOG . " setting in the <em>wp-config.php</em>.", false, true, true))                                            
+
+                ->addField(WP::textInputField("Error log location", Constants::PHP_ERROR_LOG, null, null, "The location of the PHP error log (the value of <em>ini_get('" . Constants::PHP_ERROR_LOG . "')</em>).", false, false, false, true, true))                                                                               
+
+                ->addField(WP::textInputField("Log errors (PHP)", Constants::PHP_LOG_ERRORS, null, null, "Whether PHP is currently set to log errors (the value of <em>ini_get('" . Constants::PHP_LOG_ERRORS . "')</em>).", false, false, false, true, true))
+                ->addField(WP::textInputField("Display errors (PHP)", Constants::PHP_DISPLAY_ERRORS, null, null, "Whether PHP is currently set to display errors (the value of <em>ini_get('" . Constants::PHP_DISPLAY_ERRORS . "')</em>).", false, false, false, true, true))                        
+
+
+                ->addField(WP::checkBoxInputField('Save <em>$wpdb</em> queries', Constants::WP_CONFIG_SAVEQUERIES, null, null, "The value of the " . Constants::WP_CONFIG_SAVEQUERIES . " setting in the <em>wp-config.php</em>.", false, true, true))
+                ->addField(WP::checkBoxInputField('Unminified internal styles/scripts', Constants::WP_CONFIG_SCRIPT_DEBUG, null, null, "The value of the " . Constants::WP_CONFIG_SCRIPT_DEBUG . " setting in the <em>wp-config.php</em>.", false, true, true))
+                ->addField(WP::checkBoxInputField('Concatenate back-end scripts', Constants::WP_CONFIG_CONCATENATE_SCRIPTS, null, null, "The value of the " . Constants::WP_CONFIG_CONCATENATE_SCRIPTS . " setting in the <em>wp-config.php</em>.", false, true, true))
+
+
+            ->addGroup("CRON Settings", null, null, 3)
+                ->addField(WP::checkBoxInputField('Trigger WP CRON manually', Constants::WP_CONFIG_DISABLE_CRON, null, null, "The value of the " . Constants::WP_CONFIG_DISABLE_CRON . " setting in the <em>wp-config.php</em>.", false, true, true))
+                ->addField(WP::checkBoxInputField('Alternate WP CRON trigger method', Constants::WP_CONFIG_ALTERNATE_CRON, null, null, "The value of the " . Constants::WP_CONFIG_ALTERNATE_CRON . " setting in the <em>wp-config.php</em>.", false, true, true))
+                ->addField(WP::textInputField('WP CRON timeout lock', Constants::WP_CONFIG_CRON_LOCK_TIMEOUT, null, null, "The value of the " . Constants::WP_CONFIG_CRON_LOCK_TIMEOUT . " setting in the <em>wp-config.php</em>.", false, false, false, true, true))
+
+            ->onRead(function() {
+
+                $checkBoolConst = function(string $const, bool $default = null): ?bool {
+
+                    if(defined($const)) {
+                        return (bool) constant($const);
+                    }
+
+                    return null;
+                };
+
+                $checkIntConst = function(string $const, int $default = null): ?int {
+
+                    if(defined($const)) {
+                        return (int) constant($const);
+                    }
+
+                    return null;
+                };        
+
+                $checkString = function(string $string, string $default = null): ?string {
+
+                    return $string;
+                };                      
+
+
+                return [
+
+                    // Installation
+
+                    Constants::SITE_URI => $checkString(WP::getSiteUri()),
+                    Constants::SITE_PATH => $checkString(WP::getSitePath()),
+                    Constants::WORDPRESS_URI => $checkString(WP::getWordPressUri()),
+                    Constants::WORDPRESS_PATH => $checkString(WP::getWordPressPath()),
+                    Constants::WORDPRESS_CONTENT_URI => $checkString(WP::getContentUri()),
+                    Constants::WORDPRESS_CONTENT_PATH => $checkString(WP::getContentPath()),
+
+                    // Debugging
+
+                    Constants::WP_CONFIG_DEBUG => $checkBoolConst(Constants::WP_CONFIG_DEBUG),
+                    Constants::WP_CONFIG_DEBUG_DISPLAY => $checkBoolConst(Constants::WP_CONFIG_DEBUG_DISPLAY),
+                    Constants::WP_CONFIG_DEBUG_LOG => $checkBoolConst(Constants::WP_CONFIG_DEBUG_LOG),
+                    Constants::WP_CONFIG_SAVEQUERIES => $checkBoolConst(Constants::WP_CONFIG_SAVEQUERIES),
+                    Constants::WP_CONFIG_SCRIPT_DEBUG => $checkBoolConst(Constants::WP_CONFIG_SCRIPT_DEBUG),
+                    Constants::WP_CONFIG_CONCATENATE_SCRIPTS => $checkBoolConst(Constants::WP_CONFIG_CONCATENATE_SCRIPTS),
+                    Constants::PHP_LOG_ERRORS => $checkString(@ini_get(Constants::PHP_LOG_ERRORS)),
+                    Constants::PHP_DISPLAY_ERRORS => $checkString(@ini_get(Constants::PHP_DISPLAY_ERRORS)),
+                    Constants::PHP_ERROR_LOG => $checkString(@ini_get(Constants::PHP_ERROR_LOG)),
+
+                    // CRON
+
+                    Constants::WP_CONFIG_DISABLE_CRON => $checkBoolConst(Constants::WP_CONFIG_DISABLE_CRON),                            
+                    Constants::WP_CONFIG_ALTERNATE_CRON => $checkBoolConst(Constants::WP_CONFIG_ALTERNATE_CRON),
+                    Constants::WP_CONFIG_CRON_LOCK_TIMEOUT => $checkIntConst(Constants::WP_CONFIG_CRON_LOCK_TIMEOUT)
+
+                ];                        
+
+            })
+            ->render();            
+
         };
     }
     
-    private static function getPhpErrorLogView(IHelperContext $context) {
+    private static function getPhpErrorLogView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -450,7 +394,7 @@ class Tools {
             $lastError = error_get_last();
             
             
-                            $tmp = <<<TMP
+            $tmp = <<<TMP
     <p><em>None!</em></p>
 TMP;
             
@@ -479,34 +423,36 @@ HTML;
         };
     }
 
-    private static function getLogListView(IHelperContext $context) {
+    private static function getLogListView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
             WP::addAdminTable("Logs", "logs", "Log", "Logs", "log-slug", static::getLogDetailView($context), false, false, false, [
-                        '<a href="' . WP::getAdminUrl('admin') . '?page=wp-devhelper-logs&form={record}">View</a>' => function ($id) {
-                            return true;
-                        }
-                    ])
-                    ->addColumn(WP::textTableColumn("Log", "name", "name"))
-                    ->onRead(function () {
+                
+                '<a href="' . WP::getAdminUrl('admin') . '?page=wp-devhelper-logs&form={record}">View</a>' => function ($id) {
+                    return true;
+                }
+            ])
+            ->addColumn(WP::textTableColumn("Log", "name", "name"))
+            ->onRead(function () {
 
-                        $rows = [];
+                $rows = [];
 
-                        foreach (WP::getLogs() as $log) {
+                foreach (WP::getLogs() as $log) {
 
-                            $rows[] = [
-                                'log-slug' => $log->getSlug(),
-                                'name' => $log->getName()
-                            ];
-                        }
-                        return $rows;
-                    })
-                    ->render();
+                    $rows[] = [
+                        'log-slug' => $log->getSlug(),
+                        'name' => $log->getName()
+                    ];
+                }
+                
+                return $rows;
+            })
+            ->render();
         };
     }
 
-    private static function getLogDetailView(IHelperContext $context, IWordPressHelperLog $log = null) {
+    private static function getLogDetailView(HelperContextInterface$context, WordPressHelperLogInterface$log = null) {
         
         return function () use ($context, $log) {
 
@@ -543,80 +489,78 @@ JS
             }
             
             WP::addAdminTable("Log", "log-entries", "Log Entry", "Log Entries", "id", null, false, false, false)
-                    ->addColumn(WP::textTableColumn("ID", "id", "id"))
-                    ->addColumn(WP::textTableColumn("Level", "level", "level"))
-                    ->addColumn(WP::textTableColumn("Time", "time", "time"))    
-                    ->addColumn(WP::textTableColumn("Message", "message", "message"))
-                    ->onRead(function () use ($log) {
+            ->addColumn(WP::textTableColumn("ID", "id", "id"))
+            ->addColumn(WP::textTableColumn("Level", "level", "level"))
+            ->addColumn(WP::textTableColumn("Time", "time", "time"))    
+            ->addColumn(WP::textTableColumn("Message", "message", "message"))
+            ->onRead(function () use ($log) {
 
-                        $formatLevel = function($level) {
+                $formatLevel = function($level) {
 
-                            $class = "level log-level-$level";
+                    $class = "level log-level-$level";
 
-                            return "<span class=\"$class\">$level</span>";
-                        };
+                    return "<span class=\"$class\">$level</span>";
+                };
 
-                        $formatTime = function($time) {
+                $formatTime = function($time) {
 
-                            //return strftime('%F', strtotime('-1 day', $time)) . ' ' . strftime('%F', strtotime('-1 day', current_time('timestamp')));
+                    //return strftime('%F', strtotime('-1 day', $time)) . ' ' . strftime('%F', strtotime('-1 day', current_time('timestamp')));
 
-                            $today = strftime('%F', current_time('timestamp'));
-                            $yesterday = strftime('%F', strtotime('-1 day', current_time('timestamp')));
+                    $today = strftime('%F', current_time('timestamp'));
+                    $yesterday = strftime('%F', strtotime('-1 day', current_time('timestamp')));
 
-                            //return "$today vs $yesterday";
-                            // Today
+                    //return "$today vs $yesterday";
+                    // Today
 
-                            if (strftime('%F', $time) == $today) {
-                                
-                                return strftime('<strong>Today</strong> %T', $time);
-                            }
+                    if (strftime('%F', $time) == $today) {
 
-                            // Yesterday
+                        return strftime('<strong>Today</strong> %T', $time);
+                    }
 
-                            if (strftime('%F', $time) == $yesterday) {
-                                
-                                return strftime('<strong>Yesterday</strong> %T', $time);
-                            }
+                    // Yesterday
 
-                            // Other days
+                    if (strftime('%F', $time) == $yesterday) {
 
-                            return strftime('<strong>%a %F</strong> %T', $time);
-                        };
+                        return strftime('<strong>Yesterday</strong> %T', $time);
+                    }
 
-                        $formatMessage = function($message) {
-                            
-                            $parseDown = new Parsedown();
-                            
-                            return str_replace("\n", "<br />\n", $parseDown->text($message));
-                        };
+                    // Other days
 
-                        $rows = [];
+                    return strftime('<strong>%a %F</strong> %T', $time);
+                };
 
-                        $age = intval(WP::getSiteOption(Constants::LOGS_PURGE_AGE));
+                $formatMessage = function($message) {
 
-                        if ($log !== null && $log->getLogger() !== null) {
-                            
-                            foreach ($log->getLogger()->getEntries($age) as $entry) {
+                    $parseDown = new Parsedown();
 
-                                $rows[] = [
-                                    'id' => $entry['id'],
-                                    'slug' => $entry['slug'],
-                                    'time' => $formatTime($entry['time']),
-                                    'level' => $formatLevel($entry['level']),
-                                    'message' => $formatMessage($entry['message'])
-                                ];
-                            }
-                        }
+                    return str_replace("\n", "<br />\n", $parseDown->text($message));
+                };
 
-                        return $rows;
-                    })
-                    ->render();
-                    
-            
+                $rows = [];
+
+                $age = intval(WP::getSiteOption(Constants::LOGS_PURGE_AGE));
+
+                if ($log !== null && $log->getLogger() !== null) {
+
+                    foreach ($log->getLogger()->getEntries($age) as $entry) {
+
+                        $rows[] = [
+                            'id' => $entry['id'],
+                            'slug' => $entry['slug'],
+                            'time' => $formatTime($entry['time']),
+                            'level' => $formatLevel($entry['level']),
+                            'message' => $formatMessage($entry['message'])
+                        ];
+                    }
+                }
+
+                return $rows;
+            })
+            ->render();
         };
     }
 
-    private static function getPhpInfoView(IHelperContext $context) {
+    private static function getPhpInfoView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -632,7 +576,7 @@ HTML;
         };
     }
 
-    private static function getHtAccessView(IHelperContext $context) {
+    private static function getHtAccessView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -651,7 +595,7 @@ HTML;
         };
     }
     
-    private static function getWordPressOptionDetailView(IHelperContext $context) {
+    private static function getWordPressOptionDetailView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -669,89 +613,79 @@ HTML;
             $valueField = WP::textInputField('Value', 'option_value', null, null, null, true);
 
             WP::addAdminForm("Edit Option", 'wp-devhelper-edit-wordpress-option', null, 1, false)
-                    ->setOptionPrefix(null)
-                    ->addField(WP::textInputField('Name', 'option_name'))
-                    ->addField($valueField)
-                    ->addField(WP::checkBoxInputField('Auto-load', 'autoload', null, null, "If the 'Auto-load' field is modified, the option needs to be removed and recreated, and will we appended to the options table."))
-                    ->readFromSqlTable('options')
-                    ->onUpdate(function ($index, $newValues, $oldValues) {                    
-                        
-                        if ($newValues['autoload'] !== $oldValues['autoload']) {
-                            
-                            WP::removeOption($index, null);
-                        }
+            ->setOptionPrefix(null)
+            ->addField(WP::textInputField('Name', 'option_name'))
+            ->addField($valueField)
+            ->addField(WP::checkBoxInputField('Auto-load', 'autoload', null, null, "If the 'Auto-load' field is modified, the option needs to be removed and recreated, and will we appended to the options table."))
+            ->readFromSqlTable('options')
+            ->onUpdate(function ($index, $newValues, $oldValues) {                    
 
-                        WP::setSiteOption($index, $newValues['option_value'], $newValues['autoload']);
-                    })
-                    ->onRead(function(string $index = null) {
+                if ($newValues['autoload'] !== $oldValues['autoload']) {
 
-//var_dump($index);
-//die("X");
-                        
-                        if($index !== null) {
-                        
-                            $autoLoad = false;
+                    WP::removeOption($index, null);
+                }
 
-                            $tbl = WP::getDbTableName('options');
+                WP::setSiteOption($index, $newValues['option_value'], $newValues['autoload']);
+            })
+            ->onRead(function(string $index = null) {
 
-                            $result = WP::dbQuery("SELECT `autoload` FROM `{$tbl}` WHERE `option_name` LIKE (%s)", [ $index ]);
+                if($index !== null) {
 
-                            if(PHP::count($result) > 0) {
+                    $autoLoad = false;
 
-                                $autoLoad = filter_var($result[0]['autoload'], FILTER_VALIDATE_BOOLEAN);
-                            }
+                    $tbl = WP::getDbTableName('options');
 
-                            return [ 
-                                
-                                'option_name' => $index,
-                                'autoload' => $autoLoad,
-                                'option_value' => WP::getSiteOption($index, null)                         
-                            ];
-                        }
-                        
-                        return [];
-                    })
-                    ->onCreate(function ($values) {
-                        
-                        if(!WP::setSiteOption($values['option_name'], $values['option_value'], $values['autoload'])) {
-                            
+                    $result = WP::dbQuery("SELECT `autoload` FROM `{$tbl}` WHERE `option_name` LIKE (%s)", [ $index ]);
+
+                    if(PHP::count($result) > 0) {
+
+                        $autoLoad = filter_var($result[0]['autoload'], FILTER_VALIDATE_BOOLEAN);
+                    }
+
+                    return [ 
+
+                        'option_name' => $index,
+                        'autoload' => $autoLoad,
+                        'option_value' => WP::getSiteOption($index, null)                         
+                    ];
+                }
+
+                return [];
+            })
+            ->onCreate(function ($values) {
+
+                if(!WP::setSiteOption($values['option_name'], $values['option_value'], $values['autoload'])) {
+
 //                            throw new \Exception("???");
-                        }
-//                        var_dump($values);
-//                        die("53X");
-                        //WP::setOption($values['option_name'], $values['option_value'], null, null, true, $values['autoload']);
-                    })
-                    ->render();
+                }
+            })
+            ->render();
         };
     }
 
-    private static function getWordPressOptionsView(IHelperContext $context) {
+    private static function getWordPressOptionsView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
             WP::addAdminTable('Options', 'wordpress-options', 'Option', 'Options', 'option_name', static::getWordPressOptionDetailView($context), true, true, true)
-                    //->addColumn(WP::textTableColumn('ID', 'option_id', 'option-id'))
-                    ->addColumn(WP::textTableColumn('Name', 'option_name', 'option-name'))
-                    ->addColumn(WP::textTableColumn('Value', 'option_value', 'option-value'))
-                    ->addColumn(WP::checkBoxTableColumn('Auto-load', 'autoload', 'autoload'))
-                    ->readFromSqlTable('options', [
-                        'option_name' => ['not like' => '\\_%']
-                    ])
-                    ->onDelete(function ($items) {
-                        
-//                        var_dump($items);
-//                        exit;
-                        
-                        foreach ($items as $item) {
-                            
-                            WP::removeOption($item);
-                        }
-                    })
-                    ->render();
+            ->addColumn(WP::textTableColumn('Name', 'option_name', 'option-name'))
+            ->addColumn(WP::textTableColumn('Value', 'option_value', 'option-value'))
+            ->addColumn(WP::checkBoxTableColumn('Auto-load', 'autoload', 'autoload'))
+            ->readFromSqlTable('options', [
+                'option_name' => ['not like' => '\\_%']
+            ])
+            ->onDelete(function ($items) {
+
+                foreach ($items as $item) {
+
+                    WP::removeOption($item);
+                }
+            })
+            ->render();
         };
     }
 
-    private static function getAboutView(IHelperContext $context) {
+    private static function getAboutView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -759,9 +693,12 @@ HTML;
 
             $copyRight = '2017';
             $copyYear = intval(date('Y'));
+            
             if ($copyYear > 2017) {
+                
                 $copyRight .= " - $copyYear";
             }
+            
             $copyRight .= " by " . Constants::AUTHOR_COMPANY;
 
             $authorName = Constants::AUTHOR_NAME;
@@ -777,13 +714,12 @@ HTML;
             $version = Package::getInstance('ion', 'wp-devhelper')->getVersion()->toString();
             
             $content = WP::applyTemplate(Constants::ABOUT_CONTENT, [
-                        'wp-devhelper-version' => $version,
-                        'state-link' => WP::getAdminUrl('admin') . '?page=wp-devhelper-state',
-                        'maintainer-link' => $maintainerUrl,
-                        'site-name' => 'this site' //FIXME: Need the actual site name here
+                
+                'wp-devhelper-version' => $version,
+                'state-link' => WP::getAdminUrl('admin') . '?page=wp-devhelper-state',
+                'maintainer-link' => $maintainerUrl,
+                'site-name' => 'this site' //FIXME: Need the actual site name here
             ]);
-
-            
 
             echo <<<HTML
 
@@ -817,17 +753,8 @@ HTML;
     }
     
 
-    public function __construct(IHelperContext $context, array $wpHelperSettings = null) {
+    public function __construct(HelperContextInterface$context, array $wpHelperSettings = null) {
 
-        //print_r(static::isDisabled());
-        //die("X");
-        //var_dump(WP::getOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false));
-        //exit;
-        //print_r($context);
-        //global $wp_admin_bar;
-        //var_dump($wp_admin_bar);
-        //exit;
-        
         WP::addFilter('admin_footer_text', function () {
             
             $serverTime = strftime('%a %e %b %G, %R');
@@ -837,6 +764,7 @@ HTML;
             $wordPressVersion = get_bloginfo('version'); //TODO: Need a wrapper function for bloginfo?
 
             if (WP::isDebugMode() === true) {
+                
                 echo '<span class="debug-mode">Debug mode</span> ';
             }
 
@@ -974,17 +902,8 @@ HTML;
 
                 }, true, false);                
 
-
-
-    //                echo "<pre>";                
-    //                var_Dump(WordPressHelper::getLogs());
-    //                echo "</pre>";            
-    //exit;
-
                 $icon = null;
                 $iconDir = WP::getHelperDirectory() . 'assets/images/icon.svg';
-
-                //die($iconDir);
 
                 if (file_exists($iconDir)) {
                     $icon = 'data:image/svg+xml;base64,';
@@ -1037,11 +956,9 @@ HTML;
                 }        
             }        
         });
-        
-        //WP::AddRewriteRule("/?red-i/property/([0-9]+)(/([^/]+))?/?\$", "?red-i=true&load=single&label=\$1&function=\$3");
     }
     
-    private static function getCronStateView(IHelperContext $context) {
+    private static function getCronStateView(HelperContextInterface$context) {
         
         return function () use ($context) {
 
@@ -1088,117 +1005,113 @@ HTML;
 
             $list->onRead(function () {
 
-                        $rows = [];
-                        
-                        $cronArray = WP::getCronArray();
-                        
-                        $jobs = [];
-                        
-                        foreach($cronArray as $key1 => $tmp1) {                                                      
-                            
-                            foreach($tmp1 as $key2 => $tmp2) {
-                                
-                                foreach($tmp2 as $key3 => $tmp3) {
-                                    
-                                    $jobs[$key2 . ' ' . md5(implode($tmp3['args']))] = [
-                                        'slug' => $key2,
-                                        'schedule' => $tmp3['schedule'],
-                                        'args' => $tmp3['args'],
-                                        'interval' => (array_key_exists('interval', $tmp3) ? $tmp3['interval'] : null),
-                                        'time' => $key1
-                                    ];
-                                }
+                    $rows = [];
+
+                    $cronArray = WP::getCronArray();
+
+                    $jobs = [];
+
+                    foreach($cronArray as $key1 => $tmp1) {                                                      
+
+                        foreach($tmp1 as $key2 => $tmp2) {
+
+                            foreach($tmp2 as $key3 => $tmp3) {
+
+                                $jobs[$key2 . ' ' . md5(implode($tmp3['args']))] = [
+                                    'slug' => $key2,
+                                    'schedule' => $tmp3['schedule'],
+                                    'args' => $tmp3['args'],
+                                    'interval' => (array_key_exists('interval', $tmp3) ? $tmp3['interval'] : null),
+                                    'time' => $key1
+                                ];
                             }
                         }
-                           
-//                        echo '<pre>';
-//                        var_dump($cronArray);
-//                        echo '</pre>';
-                        
-                        foreach($jobs as $key => $job) {
-                            
-                            $slug = $job['slug'];
-                            $args = null;
-                            
-                            if(PHP::count($job['args']) > 0) {
-                                
-                                $args = implode('<br />', $job['args']);
-                            }
-                            
-                            
-                            $when = 'In queue';
-                            
-                            $seconds = ($job['time'] - time());
-                            
-                            if($seconds > 0) {
-                                
-                            
-                                $minutes = floor($seconds / 60);
-                                $hours = floor($minutes / 60);
-                                $days = floor($hours / 24);
+                    }
 
-                                if($seconds < 60) {
+                    foreach($jobs as $key => $job) {
 
-                                    $when = 'In ' . $seconds . ' seconds';
-                                }                                 
-                                
-                                if($seconds >= 60 && $minutes < 60) {
+                        $slug = $job['slug'];
+                        $args = null;
 
-                                    $rem = floor($seconds - ($minutes * 60));
-                                    $when = 'In ' . $minutes . ($minutes === 1 ? ' minute' : ' minutes') . ($rem > 0 ? ' ' . (string) $rem . ' second' . ($rem <= 1 && $rem !== 0 ? '' : 's'): '');
-                                }                                  
-                            
-                                if($minutes >= 60 && $hours < 24) {
+                        if(PHP::count($job['args']) > 0) {
 
-                                    $rem = floor($minutes - ($hours * 60));
-                                    $when = 'In ' . $hours . ($hours === 1 ? ' hour' : ' hours') . ($rem > 0 ? ' ' . (string) $rem . ' minute' . ($rem <= 1 && $rem !== 0 ? '' : 's'): '');
-                                }                                
-                                
-                                if($hours >= 24 && $days >= 1) {
-
-                                    $rem = floor($hours - ($days * 24));
-                                    $when = 'In ' . $days . ($days === 1 ? ' day' : ' days') . ($rem > 0 ? ' ' . (string) $rem . ' hour' . ($rem <= 1 && $rem !== 0 ? '' : 's'): '');
-                                }                                    
-                                
-                            } else {
-                                
-                                $when = 'Overdue';
-                            }
-
-                            $nextRun = implode('<br />', [
-
-                                "<strong>{$when}</strong>",
-
-                                date_i18n("j F Y", $job['time']),
-
-                                date_i18n("g:i a", $job['time'])
-
-                            ]);
-
-                            $schedule = null;
-                            $intervals = array_flip(WP::getCronIntervals());
-                            
-                            if(PHP::isString($job['schedule']) && array_key_exists($job['schedule'], $intervals)) {
-                                
-                                $schedule = $intervals[$job['schedule']];
-                            }                         
-                                                   
-                            $jobExecute = WP::button('Run', 'run', "", null, false, false, "window.location = window.location + '&task={$slug}';", false, false);
-                            
-                            $rows[] = [
-                              
-                                'job-slug' => $slug,
-                                'job-action' => WP::hasAction($slug),
-                                'job-args' => $args,                                
-                                'job-schedule' => $schedule,
-                                'job-next-run' => $nextRun,
-                                'job-execute' => $jobExecute['html']()
-                            ];
+                            $args = implode('<br />', $job['args']);
                         }
-                        
-                        return $rows;
-                    })
-                    ->render();
+
+
+                        $when = 'In queue';
+
+                        $seconds = ($job['time'] - time());
+
+                        if($seconds > 0) {
+
+
+                            $minutes = floor($seconds / 60);
+                            $hours = floor($minutes / 60);
+                            $days = floor($hours / 24);
+
+                            if($seconds < 60) {
+
+                                $when = 'In ' . $seconds . ' seconds';
+                            }                                 
+
+                            if($seconds >= 60 && $minutes < 60) {
+
+                                $rem = floor($seconds - ($minutes * 60));
+                                $when = 'In ' . $minutes . ($minutes === 1 ? ' minute' : ' minutes') . ($rem > 0 ? ' ' . (string) $rem . ' second' . ($rem <= 1 && $rem !== 0 ? '' : 's'): '');
+                            }                                  
+
+                            if($minutes >= 60 && $hours < 24) {
+
+                                $rem = floor($minutes - ($hours * 60));
+                                $when = 'In ' . $hours . ($hours === 1 ? ' hour' : ' hours') . ($rem > 0 ? ' ' . (string) $rem . ' minute' . ($rem <= 1 && $rem !== 0 ? '' : 's'): '');
+                            }                                
+
+                            if($hours >= 24 && $days >= 1) {
+
+                                $rem = floor($hours - ($days * 24));
+                                $when = 'In ' . $days . ($days === 1 ? ' day' : ' days') . ($rem > 0 ? ' ' . (string) $rem . ' hour' . ($rem <= 1 && $rem !== 0 ? '' : 's'): '');
+                            }                                    
+
+                        } else {
+
+                            $when = 'Overdue';
+                        }
+
+                        $nextRun = implode('<br />', [
+
+                            "<strong>{$when}</strong>",
+
+                            date_i18n("j F Y", $job['time']),
+
+                            date_i18n("g:i a", $job['time'])
+
+                        ]);
+
+                        $schedule = null;
+                        $intervals = array_flip(WP::getCronIntervals());
+
+                        if(PHP::isString($job['schedule']) && array_key_exists($job['schedule'], $intervals)) {
+
+                            $schedule = $intervals[$job['schedule']];
+                        }                         
+
+                        $jobExecute = WP::button('Run', 'run', "", null, false, false, "window.location = window.location + '&task={$slug}';", false, false);
+
+                        $rows[] = [
+
+                            'job-slug' => $slug,
+                            'job-action' => WP::hasAction($slug),
+                            'job-args' => $args,                                
+                            'job-schedule' => $schedule,
+                            'job-next-run' => $nextRun,
+                            'job-execute' => $jobExecute['html']()
+                        ];
+                    }
+
+                    return $rows;
+                })
+                ->render();
         };
     }
 

@@ -9,7 +9,7 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
-class WordPressPostType implements IWordPressPostType
+class WordPressPostType implements WordPressPostTypeInterface
 {
     private $slug;
     //    private $pluralItemName;
@@ -96,9 +96,9 @@ class WordPressPostType implements IWordPressPostType
      * method
      * 
      * 
-     * @return IWordPressPostType
+     * @return WordPressPostTypeInterface
      */
-    public function pluralLabel(string $pluralLabel) : IWordPressPostType
+    public function pluralLabel(string $pluralLabel) : WordPressPostTypeInterface
     {
         $this->setPluralLabel($pluralLabel);
         return $this;
@@ -488,9 +488,9 @@ class WordPressPostType implements IWordPressPostType
      * method
      * 
      * 
-     * @return IWordPressPostType
+     * @return WordPressPostTypeInterface
      */
-    public function addTaxonomy(string $taxonomy) : IWordPressPostType
+    public function addTaxonomy(string $taxonomy) : WordPressPostTypeInterface
     {
         $this->parent['taxonomies'][] = $taxonomy;
         return $this;
