@@ -10,7 +10,7 @@ namespace ion\WordPress\Helper;
 use Psr\Log\AbstractLogger;
 use \ion\WordPress\WordPressHelper;
 
-abstract class WordPressHelperLogger extends AbstractLogger implements WordPressHelperLoggerInterface{
+abstract class WordPressHelperLogger extends AbstractLogger implements WordPressHelperLoggerInterface {
     private $slug = null;
     private $entries = [];
     private $purgeAge = null;

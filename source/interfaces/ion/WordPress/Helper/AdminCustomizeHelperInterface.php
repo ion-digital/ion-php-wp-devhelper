@@ -26,7 +26,7 @@ interface AdminCustomizeHelperInterface {
         string $label,
         string $key,
         $default = null,
-        array $options = [[  ]],
+        array $options = [],
         int $priority = null,
         string $transport = "refresh"
 

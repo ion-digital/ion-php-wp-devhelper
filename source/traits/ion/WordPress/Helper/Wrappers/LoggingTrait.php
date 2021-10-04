@@ -6,9 +6,9 @@
 
 namespace ion\WordPress\Helper\Wrappers;
 
-use \ion\WordPress\Helper\IWordPressHelperLog;
+use \ion\WordPress\Helper\WordPressHelperLogInterface;
 use \ion\WordPress\Helper\WordPressHelperLog;
-use \ion\WordPress\IWordPressHelper;
+use \ion\WordPress\WordPressHelperInterface;
 use \ion\WordPress\Helper\Constants;
 use \ion\WordPress\Helper\WordPressHelperException;
 
@@ -28,7 +28,7 @@ trait LoggingTrait {
         
     }    
     
-    public static function registerLog(string $slug, string $name = null): IWordPressHelperLog {
+    public static function registerLog(string $slug, string $name = null): WordPressHelperLogInterface {
         
         $slug = static::slugify($slug);
 
@@ -54,7 +54,7 @@ trait LoggingTrait {
         return $log;
     }
     
-    public static function log(string $message, int $level = null, string $slug = null, array $logContext = null): IWordPressHelperLog {
+    public static function log(string $message, int $level = null, string $slug = null, array $logContext = null): WordPressHelperLogInterface {
         $log = null;
 
         if ($slug === null) {

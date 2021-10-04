@@ -2,13 +2,13 @@
 
 namespace ion\WordPress\Helper;
 
-use \ion\IPackage;
-use \ion\WordPress\Helper\IHelperContext;
+use \ion\PackageInterface;
+use \ion\WordPress\Helper\HelperContextInterface;
 
 interface ContextInterface {
 
-    function getHelperContext(): IHelperContext;
+    function getHelperContext(): HelperContextInterface;
 
-    function getPackage(): IPackage;
+    function getPackage(): PackageInterface;
 
 }

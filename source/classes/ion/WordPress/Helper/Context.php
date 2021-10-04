@@ -17,7 +17,7 @@ use \ion\Package;
 use \ion\IPackage;
 
 
-abstract class Context implements ContextInterface{
+abstract class Context implements ContextInterface {
         
     use \ion\WordPress\Helper\ContextTrait;
     

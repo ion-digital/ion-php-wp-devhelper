@@ -11,7 +11,7 @@ interface AdminNavMenuEditWalkerInterface extends Walker_Nav_Menu_EditInterface 
         &$output,
         $item,
         $depth = 0,
-        $args = [[  ]],
+        $args = [],
         $id = 0
 
     );

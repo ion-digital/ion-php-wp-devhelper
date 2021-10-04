@@ -22,7 +22,7 @@ interface AdminTableHelperInterface {
 
     function addColumn(array $columnDescriptor): AdminTableHelperInterface;
 
-    function addColumnGroup(string $label = null, string $id = null, array $columns = [[  ]]): AdminTableHelperInterface;
+    function addColumnGroup(string $label = null, string $id = null, array $columns = []): AdminTableHelperInterface;
 
     function processAndRender(bool $echo = true): string;
 

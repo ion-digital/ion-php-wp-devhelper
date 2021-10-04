@@ -14,7 +14,7 @@ namespace ion\WordPress\Helper;
 
 use \ion\WordPress\WordPressHelper as WP;
 use \ion\Package;
-use \ion\IPackage;
+use \ion\PackageInterface;
 
 
 
@@ -22,7 +22,7 @@ trait ContextTrait {
             
     private static $contextInstances = [];
     
-    protected static function getContextInstance(): ?IContext {
+    protected static function getContextInstance(): ?ContextInterface {
         
         if(!array_key_exists(static::class, self::$contextInstances)) {
             
@@ -42,7 +42,7 @@ trait ContextTrait {
     private $helperContext = null;
     private $package = null;
     
-    final protected function __construct_ContextTrait(IPackage $package, array $helperSettings = null): void {
+    final protected function __construct_ContextTrait(PackageInterface$package, array $helperSettings = null): void {
         
 //        if(static::getContextInstance() === null) {
 //            
@@ -59,26 +59,26 @@ trait ContextTrait {
                         
         $helper
                 
-        ->initialize(function(IHelperContext $context) {
+        ->initialize(function(HelperContextInterface$context) {
             
             $this->initialize();      
             $this->onInitialized();
             return;
         })
-        ->activate(function(IHelperContext $context) {         
+        ->activate(function(HelperContextInterface$context) {         
             
             $this->activate();
             $this->onActivated();
             return;
         })
-        ->deactivate(function(IHelperContext $context) {         
+        ->deactivate(function(HelperContextInterface$context) {         
             
             $this->deactivate();
             $this->onDeactivated();
             return;
         })
         ->uninstall([ static::class, 'doUninstall' ])      
-        ->finalize(function(IHelperContext $context) {         
+        ->finalize(function(HelperContextInterface$context) {         
             
             $this->finalize();
             //$this->onFinalized();
@@ -87,7 +87,7 @@ trait ContextTrait {
                
     }
     
-    final public function getHelperContext(): IHelperContext {
+    final public function getHelperContext(): HelperContextInterface {
         
         if($this->helperContext === null) {
             
@@ -97,7 +97,7 @@ trait ContextTrait {
         return $this->helperContext;
     }
     
-    final public function getPackage(): IPackage {
+    final public function getPackage(): PackageInterface {
                 
         if($this->package === null) {
             

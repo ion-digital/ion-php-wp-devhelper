@@ -11,7 +11,7 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
-class AdminCustomizeHelper implements AdminCustomizeHelperInterface{
+class AdminCustomizeHelper implements AdminCustomizeHelperInterface {
     
     private $descriptor;
     
@@ -54,7 +54,7 @@ class AdminCustomizeHelper implements AdminCustomizeHelperInterface{
             int $priority = null,
             string $transport = 'refresh'
             
-        ): AdminCustomizeHelperInterface{
+        ): AdminCustomizeHelperInterface {
         
         $this->descriptor[$key] = [
             
@@ -81,7 +81,7 @@ class AdminCustomizeHelper implements AdminCustomizeHelperInterface{
             int $priority = null,
             string $transport = 'refresh'
             
-        ): AdminCustomizeHelperInterface{
+        ): AdminCustomizeHelperInterface {
         
         $this->descriptor[$key] = [
             
@@ -107,7 +107,7 @@ class AdminCustomizeHelper implements AdminCustomizeHelperInterface{
             int $priority = null,
             string $transport = 'refresh'
             
-        ): AdminCustomizeHelperInterface{
+        ): AdminCustomizeHelperInterface {
         
         $this->descriptor[$key] = [
             
@@ -133,7 +133,7 @@ class AdminCustomizeHelper implements AdminCustomizeHelperInterface{
             int $priority = null,
             string $transport = 'refresh'
             
-        ): AdminCustomizeHelperInterface{
+        ): AdminCustomizeHelperInterface {
         
         $this->descriptor[$key] = [
             
@@ -159,7 +159,7 @@ class AdminCustomizeHelper implements AdminCustomizeHelperInterface{
 //            int $priority = null,
 //            string $transport = 'refresh'
 //            
-//        ): AdminCustomizeHelperInterface{
+//        ): AdminCustomizeHelperInterface {
 //
 //        $this->descriptor[$key] = [
 //            

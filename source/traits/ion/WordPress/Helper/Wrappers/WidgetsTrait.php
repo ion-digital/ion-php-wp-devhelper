@@ -7,8 +7,8 @@
 namespace ion\WordPress\Helper\Wrappers;
 
 
-use \ion\WordPress\Helper\IWordPressWidget;
-use \ion\WordPress\IWordPressHelper;
+use \ion\WordPress\Helper\WordPressWidgetInterface;
+use \ion\WordPress\WordPressHelperInterface;
 
 /**
  * Description of WidgetsTrait*
@@ -62,14 +62,14 @@ trait WidgetsTrait {
         ];
     }    
     
-    public static function addWidget(IWordPressWidget $widget): IWordPressWidget {
+    public static function addWidget(WordPressWidgetInterface$widget): WordPressWidgetInterface {
 
         static::$widgets[$widget->getId()] = $widget;
         
         return $widget;
     }
     
-    public static function getWidget(string $id): IWordPressWidget {
+    public static function getWidget(string $id): WordPressWidgetInterface {
 
         return static::$widgets[$id];
     }        

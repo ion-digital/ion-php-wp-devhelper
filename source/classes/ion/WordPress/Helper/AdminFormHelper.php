@@ -17,7 +17,7 @@ use \ion\WordPress\WordPressHelper as WP;
 use \ion\PhpHelper as PHP;
 use \ion\WordPress\Helper\Wrappers\OptionMetaType;
 
-class AdminFormHelper implements AdminFormHelperInterface{
+class AdminFormHelper implements AdminFormHelperInterface {
     
     private const WP_HELPER_LEGACY = 'WP_HELPER_LEGACY';
     
@@ -73,7 +73,7 @@ class AdminFormHelper implements AdminFormHelperInterface{
         $this->rendered = false;
     }
     
-    public function onRead(callable $onRead = null): AdminFormHelperInterface{
+    public function onRead(callable $onRead = null): AdminFormHelperInterface {
         
         if($this->rendered) {
             
@@ -84,7 +84,7 @@ class AdminFormHelper implements AdminFormHelperInterface{
         return $this;
     }
     
-    public function onCreate(callable $onCreate = null): AdminFormHelperInterface{
+    public function onCreate(callable $onCreate = null): AdminFormHelperInterface {
         
         if($this->rendered) {
             
@@ -95,7 +95,7 @@ class AdminFormHelper implements AdminFormHelperInterface{
         return $this;        
     }
     
-    public function onUpdate(callable $onUpdate = null): AdminFormHelperInterface{
+    public function onUpdate(callable $onUpdate = null): AdminFormHelperInterface {
                 
         
         if($this->rendered) {
@@ -111,7 +111,7 @@ class AdminFormHelper implements AdminFormHelperInterface{
         return $this->descriptor['id'];
     }
     
-    public function addGroup(string $title = null, string $description = null, string $id = null, int $columns = null): AdminFormHelperInterface{
+    public function addGroup(string $title = null, string $description = null, string $id = null, int $columns = null): AdminFormHelperInterface {
 
         if($this->rendered) {
             
@@ -131,7 +131,7 @@ class AdminFormHelper implements AdminFormHelperInterface{
         return $this;
     }
     
-    public function addField(array $fieldDescriptor): AdminFormHelperInterface{
+    public function addField(array $fieldDescriptor): AdminFormHelperInterface {
         
         if($this->rendered) {
             
@@ -142,7 +142,7 @@ class AdminFormHelper implements AdminFormHelperInterface{
         return $this;
     }
     
-    public function addForeignKey(string $name, int $value): AdminFormHelperInterface{
+    public function addForeignKey(string $name, int $value): AdminFormHelperInterface {
         
         if($this->rendered) {
             
@@ -783,7 +783,7 @@ TEMPLATE;
         }
     }        
     
-    public function setOptionPrefix(string $optionPrefix = null): AdminFormHelperInterface{
+    public function setOptionPrefix(string $optionPrefix = null): AdminFormHelperInterface {
         
         $this->optionPrefix = $optionPrefix;
         return $this;
@@ -794,7 +794,7 @@ TEMPLATE;
         return $this->optionPrefix;
     }
     
-    public function setUseSerialization(bool $useSerialization): AdminFormHelperInterface{
+    public function setUseSerialization(bool $useSerialization): AdminFormHelperInterface {
         
         $this->useSerialization = $useSerialization;
         return $this;
@@ -806,7 +806,7 @@ TEMPLATE;
     }    
    
     
-    public function readFromOptions(string $optionName = null): AdminFormHelperInterface{
+    public function readFromOptions(string $optionName = null): AdminFormHelperInterface {
         
         $self = $this;
 
@@ -859,7 +859,7 @@ TEMPLATE;
         });
     }
     
-    public function updateToOptions(string $optionName = null): AdminFormHelperInterface{
+    public function updateToOptions(string $optionName = null): AdminFormHelperInterface {
         $self = $this;
 
         if($optionName !== null) {
@@ -933,7 +933,7 @@ TEMPLATE;
     
 
     
-    public function createToOptions(string $optionName = null): AdminFormHelperInterface{
+    public function createToOptions(string $optionName = null): AdminFormHelperInterface {
         $self = $this;
 
         if($optionName !== null) {
@@ -976,7 +976,7 @@ TEMPLATE;
         });
     }         
         
-    public function redirect(callable $redirect): AdminFormHelperInterface{
+    public function redirect(callable $redirect): AdminFormHelperInterface {
         $this->redirectProcessor = $redirect;
         return $this;
     }   
@@ -1305,7 +1305,7 @@ TEMPLATE;
 
     //TODO: Verify if the following methods are working
     
-    public function readFromSqlQuery(string $query): AdminFormHelperInterface{
+    public function readFromSqlQuery(string $query): AdminFormHelperInterface {
 
         return $this->onRead(function(/* string */ $record = null) use ($query) {
 
@@ -1345,7 +1345,7 @@ TEMPLATE;
                 });
     }   
 
-    public function readFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null, string $recordField = null, int $recordId = null): AdminFormHelperInterface{
+    public function readFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null, string $recordField = null, int $recordId = null): AdminFormHelperInterface {
         global $wpdb;
 
         $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
@@ -1422,7 +1422,7 @@ SQL
         );
     }
     
-    public function updateToSqlTable(string $tableNameWithoutPrefix,  string $tableNamePrefix = null, string $recordField = null, int $recordId = null): AdminFormHelperInterface{
+    public function updateToSqlTable(string $tableNameWithoutPrefix,  string $tableNamePrefix = null, string $recordField = null, int $recordId = null): AdminFormHelperInterface {
 
         $self = $this;
 
@@ -1522,7 +1522,7 @@ SQL
                 });
     }
     
-    public function createToSqlTable(string $tableNameWithoutPrefix,  string $tableNamePrefix = null): AdminFormHelperInterface{
+    public function createToSqlTable(string $tableNameWithoutPrefix,  string $tableNamePrefix = null): AdminFormHelperInterface {
         return $this->onCreate(function ($values, $key, int $metaId = null) use ($tableNameWithoutPrefix, $tableNamePrefix) {
 
                     global $wpdb;

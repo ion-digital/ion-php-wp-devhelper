@@ -195,7 +195,7 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
     }
     
 
-//    public function onAddObserved(ObservableInterface$observable, MapInterface$data = null): ObserverInterface{
+//    public function onAddObserved(ObservableInterface$observable, MapInterface$data = null): ObserverInterface {
 //        
 //        if($observable === $this->children) {
 //        
@@ -210,30 +210,30 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
 //        return $this;
 //    }    
     
-    public function getLog(): WordPressHelperLogInterface{
+    public function getLog(): WordPressHelperLogInterface {
         
         return $this->log;
     }         
     
-//    public function initialize(callable $call = null): WordPressHelperInterface{
+//    public function initialize(callable $call = null): WordPressHelperInterface {
 //        
 //        $this->initialize = $call;
 //        return $this;
 //    }
 //    
-//    public function activate(callable $call = null): WordPressHelperInterface{
+//    public function activate(callable $call = null): WordPressHelperInterface {
 //        
 //        $this->activate = $call;
 //        return $this;
 //    }
 //    
-//    public function deactivate(callable $call = null): WordPressHelperInterface{
+//    public function deactivate(callable $call = null): WordPressHelperInterface {
 //        
 //        $this->deactivate = $call;
 //        return $this;
 //    }
 //    
-//    public function uninstall(callable $call = null): WordPressHelperInterface{
+//    public function uninstall(callable $call = null): WordPressHelperInterface {
 //        
 //        $this->uninstall = $call;
 //        return $this;
@@ -371,31 +371,31 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
         return $this->finalize;
     }     
     
-    public function setInitializeOperation(callable $operation = null) : HelperContextInterface{
+    public function setInitializeOperation(callable $operation = null) : HelperContextInterface {
         
         $this->initialize = $operation;
         return $this;
     }
     
-    public function setActivateOperation(callable $operation = null) : HelperContextInterface{
+    public function setActivateOperation(callable $operation = null) : HelperContextInterface {
         
         $this->activate = $operation;
         return $this;
     }
     
-    public function setDeactivateOperation(callable $operation = null) : HelperContextInterface{
+    public function setDeactivateOperation(callable $operation = null) : HelperContextInterface {
         
         $this->deactivate = $operation;
         return $this;
     }
 
-    public function setUninstallOperation(array $operation = null) : HelperContextInterface{
+    public function setUninstallOperation(array $operation = null) : HelperContextInterface {
         
         $this->uninstall = $operation;
         return $this;
     }
     
-    public function setFinalizeOperation(callable $operation = null) : ?HelperContextInterface{
+    public function setFinalizeOperation(callable $operation = null) : ?HelperContextInterface {
         
         $this->finalize = $operation;
         return $this;
@@ -690,12 +690,12 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
         return $this->activationTimeStamp;                   
     }
 
-    public function getVersion(): ?SemVerInterface{
+    public function getVersion(): ?SemVerInterface {
        
         return $this->version;
     }
     
-    public function getActivationVersion(): ?SemVerInterface{
+    public function getActivationVersion(): ?SemVerInterface {
         
         if($this->activationVersion !== null) {
             
@@ -719,13 +719,13 @@ final class HelperContext implements HelperContextInterface/*, ObserverInterface
         return $this->activationVersion;                
     }    
     
-    public function setParent(HelperContextInterface$context = null): HelperContextInterface{
+    public function setParent(HelperContextInterface$context = null): HelperContextInterface {
         
         $this->parent = $context;
         return $this;
     }
     
-    public function getParent(): ?HelperContextInterface{
+    public function getParent(): ?HelperContextInterface {
         
         return $this->parent;
     }

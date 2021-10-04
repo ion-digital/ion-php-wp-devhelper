@@ -15,7 +15,7 @@ use \ion\PhpHelper as PHP;
  *
  * @author Justus
  */
-class AdminTableHelper implements AdminTableHelperInterface{
+class AdminTableHelper implements AdminTableHelperInterface {
     
     private static function createGroupDescriptorInstance(/* string */ $title = null, /* string */ $id = null, array $columns = []) {
         return [
@@ -58,19 +58,19 @@ class AdminTableHelper implements AdminTableHelperInterface{
     }
     
     
-    public function onRead(callable $onRead): AdminTableHelperInterface{
+    public function onRead(callable $onRead): AdminTableHelperInterface {
                         
         $this->onReadHandlers[] = $onRead;
         return $this;
     }
     
-    public function onDelete(callable $onDelete): AdminTableHelperInterface{
+    public function onDelete(callable $onDelete): AdminTableHelperInterface {
         
         $this->onDeleteHandlers[] = $onDelete;
         return $this;        
     }    
     
-    public function read(callable $read): AdminTableHelperInterface{
+    public function read(callable $read): AdminTableHelperInterface {
         
         
         
@@ -93,7 +93,7 @@ class AdminTableHelper implements AdminTableHelperInterface{
         return $this->parent;
     }
     
-    public function addColumn(array $columnDescriptor): AdminTableHelperInterface{
+    public function addColumn(array $columnDescriptor): AdminTableHelperInterface {
         $this->columnGroup["columns"][] = $columnDescriptor;
 
         if ($this->parent["key"] === null) {
@@ -103,7 +103,7 @@ class AdminTableHelper implements AdminTableHelperInterface{
         return $this;
     }
 
-    public function addColumnGroup(string $label = null, string $id = null, array $columns = []): AdminTableHelperInterface{
+    public function addColumnGroup(string $label = null, string $id = null, array $columns = []): AdminTableHelperInterface {
 
         $groupDescriptor = static::createGroupDescriptorInstance($label, $id, $columns);
 
@@ -284,12 +284,12 @@ class AdminTableHelper implements AdminTableHelperInterface{
     }
 
     
-//    public function read(callable $read): AdminTableHelperInterface{
+//    public function read(callable $read): AdminTableHelperInterface {
 //        $this->readProcessor = $read;
 //        return $this;
 //    }
     
-    public function readFromSqlTable(string $tableNameWithoutPrefix, array $where = null, string $tableNamePrefix = null): AdminTableHelperInterface{
+    public function readFromSqlTable(string $tableNameWithoutPrefix, array $where = null, string $tableNamePrefix = null): AdminTableHelperInterface {
         $self = $this;
         
         global $wpdb;
@@ -344,7 +344,7 @@ SQL
 );
     }    
     
-    public function readFromSqlQuery(string $query): AdminTableHelperInterface{
+    public function readFromSqlQuery(string $query): AdminTableHelperInterface {
         
         return $this->onRead(function($record, $key = null) use ($query) {
             
@@ -352,12 +352,12 @@ SQL
         });
     }
     
-//    public function delete(callable $delete): AdminTableHelperInterface{
+//    public function delete(callable $delete): AdminTableHelperInterface {
 //        $this->deleteProcessor = $delete;
 //        return $this;
 //    }
     
-    public function deleteFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null): AdminTableHelperInterface{
+    public function deleteFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null): AdminTableHelperInterface {
         $self = $this;
 
         return $this->onDelete(function (array $items, $key) use ($self, $tableNameWithoutPrefix, $tableNamePrefix) {
@@ -389,7 +389,7 @@ SQL
         }); 
     }
     
-    public function readFromOptions(string $optionName): AdminTableHelperInterface{
+    public function readFromOptions(string $optionName): AdminTableHelperInterface {
         
         return $this->onRead(function($record, $key) use ($optionName) {
             
@@ -404,7 +404,7 @@ SQL
         });
     }
     
-    public function deleteFromOptions(string $optionName): AdminTableHelperInterface{
+    public function deleteFromOptions(string $optionName): AdminTableHelperInterface {
         
         return $this->onDelete(function(array $items, $key) use ($optionName) {
             

@@ -24,7 +24,7 @@ interface NavMenuWalkerInterface extends Walker_Nav_MenuInterface {
         &$output,
         $item,
         $depth = 0,
-        $args = [[  ]],
+        $args = [],
         $id = 0
 
     );

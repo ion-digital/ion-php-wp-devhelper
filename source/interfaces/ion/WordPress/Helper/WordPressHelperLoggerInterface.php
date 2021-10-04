@@ -20,7 +20,7 @@ interface WordPressHelperLoggerInterface extends AbstractLoggerInterface {
 
     function getFlushImmediately();
 
-    function log($level, $message, array $context = [[  ]]);
+    function log($level, $message, array $context = []);
 
     function isFlushed();
 

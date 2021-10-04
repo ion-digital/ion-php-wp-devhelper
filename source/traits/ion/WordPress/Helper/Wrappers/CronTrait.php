@@ -8,14 +8,14 @@ namespace ion\WordPress\Helper\Wrappers;
 
 use \Throwable;
 use \WP_Post;
-use \ion\WordPress\IWordPressHelper;
+use \ion\WordPress\WordPressHelperInterface;
 use \ion\WordPress\WordPressHelper as WP;
 use \ion\WordPress\Helper\WordPressHelperException;
 use \ion\WordPress\Helper\Tools;
 use \ion\WordPress\Helper\Constants;
 use \ion\PhpHelper as PHP;
 use \ion\Package;
-use \ion\ISemVer;
+use \ion\SemVerInterface;
 use \ion\SemVer;
 
 

@@ -9,14 +9,14 @@ namespace ion\WordPress\Helper\Wrappers;
 use \Throwable;
 use \WP_Post;
 use \WP_Term;
-use \ion\WordPress\IWordPressHelper;
+use \ion\WordPress\WordPressHelperInterface;
 use \ion\WordPress\Helper\Tools;
 use \ion\WordPress\Helper\Constants;
 use \ion\PhpHelper as PHP;
 use \ion\Package;
-use \ion\ISemVer;
+use \ion\SemVerInterface;
 use \ion\SemVer;
-use \ion\WordPress\Helper\IWordPressPostType;
+use \ion\WordPress\Helper\WordPressPostTypeInterface;
 use \ion\WordPress\Helper\WordPressPostType;
 use \ion\WordPress\Helper\Wrappers\OptionMetaType;
 
@@ -118,7 +118,7 @@ trait PostsTrait {
         bool $showInRest = null,
         string $restBase = null,
         string $restControllerClass = null  
-    ): IWordPressPostType {
+    ): WordPressPostTypeInterface {
         
         if($labels === null) {
                    
@@ -285,7 +285,9 @@ SQL;
         return $result;
     }
     
-    //ODOTraitpublic static function getPostParentPost(int $postId): ?WP_Post {
+    //TODO
+    
+    public static function getPostParentPost(int $postId): ?WP_Post {
 
         $post = get_post($postId);        
         

@@ -9,12 +9,12 @@ namespace ion\WordPress\Helper\Wrappers;
 use \Throwable;
 use \WP_Post;
 use \DateTime;
-use \ion\WordPress\IWordPressHelper;
+use \ion\WordPress\WordPressHelperInterface;
 use \ion\WordPress\Helper\Tools;
 use \ion\WordPress\Helper\Constants;
 use \ion\PhpHelper as PHP;
 use \ion\Package;
-use \ion\ISemVer;
+use \ion\SemVerInterface;
 use \ion\SemVer;
 
 /**
@@ -328,7 +328,7 @@ JS;
         return static::getUrl($url, $controllers, $parameters);
     }        
 
-    public static function addScript(string $id, string $src, bool $backEnd = true, bool $frontEnd = false, bool $inline = false, bool $addToEnd = false, int $priority = 1, ISemVer $version = null, array $dependencies = []): void {
+    public static function addScript(string $id, string $src, bool $backEnd = true, bool $frontEnd = false, bool $inline = false, bool $addToEnd = false, int $priority = 1, SemVerInterface$version = null, array $dependencies = []): void {
 
         static::$scripts[$id] = [
             "id" => (string) $id,
@@ -348,7 +348,7 @@ JS;
         return array_key_exists($id, static::$scripts);
     }
 
-    public static function addStyle(string $id, string $src, bool $backEnd = true, bool $frontEnd = false, bool $inline = false, string $media = "screen", int $priority = 1, ISemVer $version = null, array $dependencies = []): void {
+    public static function addStyle(string $id, string $src, bool $backEnd = true, bool $frontEnd = false, bool $inline = false, string $media = "screen", int $priority = 1, SemVerInterface$version = null, array $dependencies = []): void {
 
         static::$styles[$id] = [
             

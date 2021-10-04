@@ -394,7 +394,7 @@ final class WordPressHelper implements WordPressHelperInterface {
         return array_values(static::getContexts())[$index];
     }
 
-    public static function getContext(string $slug = null): HelperContextInterface{
+    public static function getContext(string $slug = null): HelperContextInterface {
         
         if($slug === null) {
             
@@ -409,7 +409,7 @@ final class WordPressHelper implements WordPressHelperInterface {
         throw new WordPressHelperException("Could not find a context named '{$slug}.'");
     }
     
-    public static function getCurrentContext(): HelperContextInterface{
+    public static function getCurrentContext(): HelperContextInterface {
         
         return static::getContextByIndex(count(static::getContexts()) - 1);
     }
@@ -498,7 +498,7 @@ TEMPLATE;
         return static::$contexts;
     }    
     
-//    public static function context(): WordPressHelperInterface{
+//    public static function context(): WordPressHelperInterface {
 //        return static::getCurrentContext();
 //    }    
 
@@ -616,7 +616,7 @@ TEMPLATE;
             callable $finalize = null,
             array $uninstall = null
             
-    ): WordPressHelperInterface{
+    ): WordPressHelperInterface {
         
         set_exception_handler(function(Throwable $throwable) {
             
@@ -722,31 +722,31 @@ TEMPLATE;
             });        
     }
     
-    public function initialize(callable $call = null): WordPressHelperInterface{
+    public function initialize(callable $call = null): WordPressHelperInterface {
         
         $this->getCurrentContext()->setInitializeOperation($call);
         return $this;
     }
     
-    public function activate(callable $call = null): WordPressHelperInterface{
+    public function activate(callable $call = null): WordPressHelperInterface {
         
         $this->getCurrentContext()->setActivateOperation($call);
         return $this;
     }
     
-    public function deactivate(callable $call = null): WordPressHelperInterface{
+    public function deactivate(callable $call = null): WordPressHelperInterface {
         
         $this->getCurrentContext()->setDeactivateOperation($call);
         return $this;
     }
     
-    public function uninstall(array $call = null): WordPressHelperInterface{
+    public function uninstall(array $call = null): WordPressHelperInterface {
         
         $this->getCurrentContext()->setUninstallOperation($call);
         return $this;        
     }
     
-    public function finalize(callable $call = null): WordPressHelperInterface{
+    public function finalize(callable $call = null): WordPressHelperInterface {
     
        $this->getCurrentContext()->setFinalizeOperation($call); 
        

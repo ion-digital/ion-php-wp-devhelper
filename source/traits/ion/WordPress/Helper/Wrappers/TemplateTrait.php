@@ -12,14 +12,14 @@ use \WP_User;
 use \WP_Term;
 use \WP_Comment;
 use \WP_Post_Type;
-use \ion\WordPress\IWordPressHelper;
+use \ion\WordPress\WordPressHelperInterface;
 use \ion\WordPress\Helper\Tools;
 use \ion\WordPress\Helper\Constants;
 use \ion\PhpHelper as PHP;
 use \ion\Package;
-use \ion\ISemVer;
+use \ion\SemVerInterface;
 use \ion\SemVer;
-use \ion\WordPress\Helper\IWordPressWidget;
+use \ion\WordPress\Helper\WordPressWidgetInterface;
 
 /**
  * Description of RewriteApiTrait*
@@ -299,7 +299,7 @@ trait TemplateTrait {
         return $url;
     }    
     
-    public static function widget(IWordPressWidget $widget, array $values = null, string $beforeWidget = null, string $afterWidget = null, string $beforeTitle = null, string $afterTitle = null, bool $echo = true): string {    
+    public static function widget(WordPressWidgetInterface$widget, array $values = null, string $beforeWidget = null, string $afterWidget = null, string $beforeTitle = null, string $afterTitle = null, bool $echo = true): string {    
 
         $id = $widget->GetId();
         $class = $widget->GetBaseId();

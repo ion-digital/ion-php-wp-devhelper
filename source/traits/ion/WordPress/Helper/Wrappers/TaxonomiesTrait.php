@@ -12,14 +12,14 @@ use \WP_Error;
 use \WP_Term;
 use \ion\WordPress\Helper\WordPressHelperException;
 //use \ion\WordPress\Helper\WordPressException;
-use \ion\WordPress\IWordPressHelper;
+use \ion\WordPress\WordPressHelperInterface;
 use \ion\WordPress\Helper\Tools;
 use \ion\WordPress\Helper\Constants;
 use \ion\PhpHelper as PHP;
 use \ion\Package;
-use \ion\ISemVer;
+use \ion\SemVerInterface;
 use \ion\SemVer;
-use \ion\WordPress\Helper\IWordPressTaxonomy;
+use \ion\WordPress\Helper\WordPressTaxonomyInterface;
 use \ion\WordPress\Helper\WordPressTaxonomy;
 use \ion\WordPress\Helper\WordPressTerm;
 
@@ -122,7 +122,7 @@ trait TaxonomiesTrait {
         string $restBase = null,
         string $restControllerClass = null,        
         callable $updateCountCallback = null                        
-    ): IWordPressTaxonomy {
+    ): WordPressTaxonomyInterface {
         
         if($labels === null) {
                    

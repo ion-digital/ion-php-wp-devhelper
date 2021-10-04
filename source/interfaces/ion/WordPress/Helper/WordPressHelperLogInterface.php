@@ -28,7 +28,7 @@ interface WordPressHelperLogInterface {
      *
      * @return WordPressHelperLogInterface*/
 
-    function emergency(string $message, array $logContext = [[  ]]): WordPressHelperLogInterface;
+    function emergency(string $message, array $logContext = []): WordPressHelperLogInterface;
 
     /**
      * Action must be taken immediately.
@@ -41,7 +41,7 @@ interface WordPressHelperLogInterface {
      *
      * @return WordPressHelperLogInterface*/
 
-    function alert(string $message, array $logContext = [[  ]]): WordPressHelperLogInterface;
+    function alert(string $message, array $logContext = []): WordPressHelperLogInterface;
 
     /**
      * Critical conditions.
@@ -53,7 +53,7 @@ interface WordPressHelperLogInterface {
      *
      * @return WordPressHelperLogInterface*/
 
-    function critical(string $message, array $logContext = [[  ]]): WordPressHelperLogInterface;
+    function critical(string $message, array $logContext = []): WordPressHelperLogInterface;
 
     /**
      * Runtime errors that do not require immediate action but should typically
@@ -64,7 +64,7 @@ interface WordPressHelperLogInterface {
      *
      * @return WordPressHelperLogInterface*/
 
-    function error(string $message, array $logContext = [[  ]]): WordPressHelperLogInterface;
+    function error(string $message, array $logContext = []): WordPressHelperLogInterface;
 
     /**
      * Exceptional occurrences that are not errors.
@@ -77,7 +77,7 @@ interface WordPressHelperLogInterface {
      *
      * @return WordPressHelperLogInterface*/
 
-    function warning(string $message, array $logContext = [[  ]]): WordPressHelperLogInterface;
+    function warning(string $message, array $logContext = []): WordPressHelperLogInterface;
 
     /**
      * Normal but significant events.
@@ -87,7 +87,7 @@ interface WordPressHelperLogInterface {
      *
      * @return WordPressHelperLogInterface*/
 
-    function notice(string $message, array $logContext = [[  ]]): WordPressHelperLogInterface;
+    function notice(string $message, array $logContext = []): WordPressHelperLogInterface;
 
     /**
      * Interesting events.
@@ -99,7 +99,7 @@ interface WordPressHelperLogInterface {
      *
      * @return WordPressHelperLogInterface*/
 
-    function info(string $message, array $logContext = [[  ]]): WordPressHelperLogInterface;
+    function info(string $message, array $logContext = []): WordPressHelperLogInterface;
 
     /**
      * Detailed debug information.
@@ -109,7 +109,7 @@ interface WordPressHelperLogInterface {
      *
      * @return WordPressHelperLogInterface*/
 
-    function debug(string $message, array $logContext = [[  ]]): WordPressHelperLogInterface;
+    function debug(string $message, array $logContext = []): WordPressHelperLogInterface;
 
     /**
      * Logs with an arbitrary level.
@@ -120,6 +120,6 @@ interface WordPressHelperLogInterface {
      *
      * @return WordPressHelperLogInterface*/
 
-    function log(string $level, string $message, array $logContext = [[  ]]): WordPressHelperLogInterface;
+    function log(string $level, string $message, array $logContext = []): WordPressHelperLogInterface;
 
 }

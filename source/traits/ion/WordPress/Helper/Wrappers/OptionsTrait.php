@@ -8,19 +8,19 @@ namespace ion\WordPress\Helper\Wrappers;
 
 use \Throwable;
 use \WP_Post;
-use \ion\WordPress\IWordPressHelper;
+use \ion\WordPress\WordPressHelperInterface;
 use \ion\WordPress\Helper\Tools;
 use \ion\WordPress\Helper\Constants;
 use \ion\Logging\LogLevel;
 use \ion\PhpHelper as PHP;
 use \ion\PhpHelperException;
 use \ion\Package;
-use \ion\ISemVer;
+use \ion\SemVerInterface;
 use \ion\SemVer;
 use \ion\WordPress\Helper\Wrappers\OptionMetaType;
 use \WP_Customize_Manager;
 use \WP_Customize_Media_Control;
-use \ion\WordPress\Helper\IAdminCustomizeHelper;
+use \ion\WordPress\Helper\AdminCustomizeHelperInterface;
 use \ion\WordPress\Helper\AdminCustomizeHelper;
 
 /**
@@ -370,7 +370,7 @@ trait OptionsTrait {
         return;
     }
     
-    public static function addCustomizationSection(string $title, string $slug = null, int $priority = null, string $textDomain = null): IAdminCustomizeHelper {
+    public static function addCustomizationSection(string $title, string $slug = null, int $priority = null, string $textDomain = null): AdminCustomizeHelperInterface {
         
         $themeOption = [
             

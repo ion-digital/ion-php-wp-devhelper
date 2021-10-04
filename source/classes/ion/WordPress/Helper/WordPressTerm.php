@@ -14,7 +14,7 @@ namespace ion\WordPress\Helper;
 
 use \WP_Term;
 
-class WordPressTerm implements WordPressTermInterface{
+class WordPressTerm implements WordPressTermInterface {
     
     private $wpTerm;
     private $children;

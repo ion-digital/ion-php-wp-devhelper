@@ -15,7 +15,7 @@ namespace ion\WordPress\Helper;
  */
 
 
-class WordPressPostType implements WordPressPostTypeInterface{
+class WordPressPostType implements WordPressPostTypeInterface {
 
     private $slug;
 //    private $pluralItemName;
@@ -129,7 +129,7 @@ class WordPressPostType implements WordPressPostTypeInterface{
         return $this->parent['pluralLabel'];
     }
     
-    public function pluralLabel(string $pluralLabel): WordPressPostTypeInterface{
+    public function pluralLabel(string $pluralLabel): WordPressPostTypeInterface {
         $this->setPluralLabel($pluralLabel);
         return $this;
     }
@@ -324,7 +324,7 @@ class WordPressPostType implements WordPressPostTypeInterface{
         return $this->parent['taxonomies'];
     }
     
-    public function addTaxonomy(string $taxonomy): WordPressPostTypeInterface{
+    public function addTaxonomy(string $taxonomy): WordPressPostTypeInterface {
         $this->parent['taxonomies'][] = $taxonomy;
         return $this;
     }

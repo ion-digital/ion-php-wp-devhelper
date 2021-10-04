@@ -11,16 +11,16 @@ use \WP_Post;
 use \WP_User;
 use \WP_Term;
 use \WP_Comment;
-use \ion\WordPress\IWordPressHelper;
+use \ion\WordPress\WordPressHelperInterface;
 use \ion\WordPress\Helper\Tools;
 use \ion\WordPress\Helper\Constants;
 use \ion\PhpHelper as PHP;
 use \ion\Package;
-use \ion\ISemVer;
+use \ion\SemVerInterface;
 use \ion\SemVer;
-use \ion\WordPress\Helper\IAdminFormHelper;
-use \ion\WordPress\Helper\IAdminTableHelper;
-use \ion\WordPress\Helper\IAdminMenuPageHelper;
+use \ion\WordPress\Helper\AdminFormHelperInterface;
+use \ion\WordPress\Helper\AdminTableHelperInterface;
+use \ion\WordPress\Helper\AdminMenuPageHelperInterface;
 use \ion\WordPress\Helper\AdminFormHelper;
 use \ion\WordPress\Helper\AdminTableHelper;
 use \ion\WordPress\Helper\AdminMenuPageHelper;
@@ -1054,7 +1054,7 @@ TEMPLATE;
         };
     }
 
-    public static function addAdminMenuPage(string $title, callable $content, string $menuTitle = null, string $id = null, string $capability = null, string $iconUrl = null, int $position = null): IAdminMenuPageHelper {
+    public static function addAdminMenuPage(string $title, callable $content, string $menuTitle = null, string $id = null, string $capability = null, string $iconUrl = null, int $position = null): AdminMenuPageHelperInterface {
 
         //static::registerView($content);
 
@@ -1075,59 +1075,59 @@ TEMPLATE;
         return new AdminMenuPageHelper(static::$settingsMenus, null);
     }
 
-//    public static function getDashboardBackEndMenuPage(): IAdminMenuPageHelper {
+//    public static function getDashboardBackEndMenuPage(): AdminMenuPageHelperInterface {
 //        return $this->getAdminMenuPage('index.php');
 //    }
 //
-//    public static function getPostsBackEndMenuPage(): IAdminMenuPageHelper {
+//    public static function getPostsBackEndMenuPage(): AdminMenuPageHelperInterface {
 //        return $this->getAdminMenuPage('edit.php');
 //    }
 //
-//    public static function getMediaBackEndMenuPage(): IAdminMenuPageHelper {
+//    public static function getMediaBackEndMenuPage(): AdminMenuPageHelperInterface {
 //        return $this->getAdminMenuPage('upload.php');
 //    }
 //
-//    public static function getCommentsBackEndMenuPage(): IAdminMenuPageHelper {
+//    public static function getCommentsBackEndMenuPage(): AdminMenuPageHelperInterface {
 //        return $this->getAdminMenuPage('edit-comments.php');
 //    }
 //
-//    public static function getAppearanceBackEndMenuPage(): IAdminMenuPageHelper {
+//    public static function getAppearanceBackEndMenuPage(): AdminMenuPageHelperInterface {
 //        return $this->getAdminMenuPage('themes.php');
 //    }
 //
-//    public static function getPluginsBackEndMenuPage(): IAdminMenuPageHelper {
+//    public static function getPluginsBackEndMenuPage(): AdminMenuPageHelperInterface {
 //        return $this->getAdminMenuPage('plugins.php');
 //    }
 //
-//    public static function getPagesBackEndMenuPage(): IAdminMenuPageHelper {
+//    public static function getPagesBackEndMenuPage(): AdminMenuPageHelperInterface {
 //        return $this->getAdminMenuPage('edit.php?post_type=page');
 //    }
 //
-//    public static function getUsersBackEndMenuPage(): IAdminMenuPageHelper {
+//    public static function getUsersBackEndMenuPage(): AdminMenuPageHelperInterface {
 //        return $this->getAdminMenuPage('users.php');
 //    }
 //
-//    public static function getToolsBackEndMenuPage(): IAdminMenuPageHelper {
+//    public static function getToolsBackEndMenuPage(): AdminMenuPageHelperInterface {
 //        return $this->getAdminMenuPage('tools.php');
 //    }
 //
-//    public static function getSettingsBackEndMenuPage(): IAdminMenuPageHelper {
+//    public static function getSettingsBackEndMenuPage(): AdminMenuPageHelperInterface {
 //        return $this->getAdminMenuPage('options-general.php');
 //    }
 //
-//    public static function getNetworkBackEndMenuPage(): IAdminMenuPageHelper {
+//    public static function getNetworkBackEndMenuPage(): AdminMenuPageHelperInterface {
 //        return $this->getAdminMenuPage('settings.php');
 //    }
 //
-//    public static function getCustomPostBackEndMenuPage(string $postType): IAdminMenuPageHelper {
+//    public static function getCustomPostBackEndMenuPage(string $postType): AdminMenuPageHelperInterface {
 //        return $this->getAdminMenuPage('edit.php?post_type=' . $postType);
 //    }
 
-    public static function addPlugInAdminMenuPage(string $title, callable $content, string $menuTitle = null, string $id = null, string $iconUrl = null, int $position = null): IAdminMenuPageHelper {
+    public static function addPlugInAdminMenuPage(string $title, callable $content, string $menuTitle = null, string $id = null, string $iconUrl = null, int $position = null): AdminMenuPageHelperInterface {
         return static::addAdminMenuPage($title, $content, $menuTitle, $id, Constants::DEFAULT_PLUGIN_CAPABILITY, $iconUrl, $position);
     }
 
-    public static function addThemeAdminMenuPage(string $title, callable $content, string $menuTitle = null, string $id = null, string $iconUrl = null, int $position = null): IAdminMenuPageHelper {
+    public static function addThemeAdminMenuPage(string $title, callable $content, string $menuTitle = null, string $id = null, string $iconUrl = null, int $position = null): AdminMenuPageHelperInterface {
         return static::addAdminMenuPage($title, $content, $menuTitle, $id, Constants::DEFAULT_THEME_CAPABILITY, $iconUrl, $position);
     }
 
@@ -1140,7 +1140,7 @@ TEMPLATE;
 
 //    private static $calls = [];    
     
-    public static function addAdminForm(string $title, string $id, string $action = null, int $columns = 1, bool $hideKey = true): IAdminFormHelper {
+    public static function addAdminForm(string $title, string $id, string $action = null, int $columns = 1, bool $hideKey = true): AdminFormHelperInterface {
 
 //        self::$calls[$id][] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
@@ -1197,7 +1197,7 @@ TEMPLATE;
         return $form;
     }
 
-    public static function addAdminTable(string $title, string $id = null, string $singularItemName = "Item", string $pluralItemName = "Items", string $keyColumnId = null, callable $detailView = null, bool $allowNew = false, bool $allowDelete = false, bool $allowEdit = false, array $additionalActions = null, bool $ajax = false): IAdminTableHelper {
+    public static function addAdminTable(string $title, string $id = null, string $singularItemName = "Item", string $pluralItemName = "Items", string $keyColumnId = null, callable $detailView = null, bool $allowNew = false, bool $allowDelete = false, bool $allowEdit = false, array $additionalActions = null, bool $ajax = false): AdminTableHelperInterface {
 
         $id = ($id !== null) ? $id : static::slugify($title);
 
@@ -1989,7 +1989,7 @@ TEMPLATE;
         string $label,
         string $id = null,
         string $hint = null,
-        IAdminFormHelper $form = null,
+        AdminFormHelperInterface$form = null,
         bool $span = false,
         bool $disabled = false,
         string $javaScript = null,
