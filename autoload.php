@@ -40,7 +40,7 @@ if (!class_exists('\\ion\\WordPress\\WordPressHelper')) {
     if (class_exists('\\ion\\Package')) {
 
         \ion\Package::create(
-                'ion', 'wp-devhelper', [ 'source/classes/' ],    
+                'ion', 'wp-devhelper', [ 'source/classes/', 'source/interfaces/', 'source/traits/' ],    
                 [                    
                     'builds/' . PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION,
                     'builds/' . PHP_MAJOR_VERSION
