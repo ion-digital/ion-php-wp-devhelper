@@ -25,7 +25,7 @@ trait PathsTrait {
     private static $helperDir = null;
     private static $helperUri = null;    
     
-    protected static function initialize_TPaths() {    
+    protected static function initialize() {    
         
 //        static::registerWrapperAction('init', function() {
 //            

@@ -29,7 +29,7 @@ trait CronTrait {
     private static $cronIntervals = [];
     private static $cronJobs = [];    
     
-    protected static function initialize_TCron() {
+    protected static function initialize() {
         
         static::registerWrapperAction('init', function() {
             

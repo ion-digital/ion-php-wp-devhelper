@@ -27,7 +27,7 @@ trait CommonTrait {
     private static $styles = [];
     private static $imageSizes = [];
     
-    protected static function initialize_TCommon() {
+    protected static function initialize() {
 
         static::registerWrapperAction('admin_enqueue_scripts', function() {                    
 

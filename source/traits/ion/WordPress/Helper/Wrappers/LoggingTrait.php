@@ -20,7 +20,7 @@ trait LoggingTrait {
     
     private static $logs = [];
     
-    protected static function initialize_TLogging() {    
+    protected static function initialize() {    
         
 //        static::registerWrapperAction('init', function() {
 //            

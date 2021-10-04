@@ -25,7 +25,7 @@ trait RewritesTrait {
     
     private static $rewrites = [];    
 
-    protected static function initialize_TRewrites() {    
+    protected static function initialize() {    
         
         static::registerWrapperAction('init', function() {
 

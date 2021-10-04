@@ -33,7 +33,7 @@ trait TaxonomiesTrait {
     private static $taxonomiesToLink = []; 
     
     
-    protected static function initialize_TTaxonomies() {
+    protected static function initialize() {
         
         static::registerWrapperAction('init', function() {            
             

@@ -50,7 +50,7 @@ trait AdminTrait {
     private static $optionsReadingStateCnt = 0;
     
 
-    protected static function initialize_TAdmin() {
+    protected static function initialize() {
         
         if(!static::isAdmin()) {
             

@@ -28,7 +28,7 @@ trait PostsTrait {
     
     private static $customPostTypes = [];    
     
-    protected static function initialize_TPosts() {    
+    protected static function initialize() {    
         
         static::registerWrapperAction('init', function() {
             

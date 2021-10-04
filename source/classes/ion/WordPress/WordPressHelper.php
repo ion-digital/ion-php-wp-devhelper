@@ -11,6 +11,7 @@ namespace ion\WordPress;
  *
  * @author Justus Meyer
  */
+
 use \Throwable;
 use \WP_Post;
 use \WP_Term;
@@ -29,23 +30,40 @@ use \ion\WordPress\Helper\WordPressHelperException;
 
 final class WordPressHelper implements WordPressHelperInterface {
 
-    use \ion\WordPress\Helper\Wrappers\ActionsTrait;
-    use \ion\WordPress\Helper\Wrappers\AdminTrait;
-    use \ion\WordPress\Helper\Wrappers\CommonTrait;
-    use \ion\WordPress\Helper\Wrappers\CronTrait;
-    use \ion\WordPress\Helper\Wrappers\DatabaseTrait;
-    use \ion\WordPress\Helper\Wrappers\FiltersTrait;
-    use \ion\WordPress\Helper\Wrappers\TemplateTrait;
-    use \ion\WordPress\Helper\Wrappers\LoggingTrait;
-    use \ion\WordPress\Helper\Wrappers\OptionsTrait;
-    use \ion\WordPress\Helper\Wrappers\PathsTrait;
-    use \ion\WordPress\Helper\Wrappers\PostsTrait;
-    use \ion\WordPress\Helper\Wrappers\RewritesTrait;
-    use \ion\WordPress\Helper\Wrappers\ShortCodesTrait;
-    use \ion\WordPress\Helper\Wrappers\TaxonomiesTrait;
-    use \ion\WordPress\Helper\Wrappers\WidgetsTrait;
+    use 
+        \ion\WordPress\Helper\Wrappers\ActionsTrait,
+        \ion\WordPress\Helper\Wrappers\AdminTrait,        
+        \ion\WordPress\Helper\Wrappers\CommonTrait,
+        \ion\WordPress\Helper\Wrappers\CronTrait,
+        \ion\WordPress\Helper\Wrappers\DatabaseTrait,
+        \ion\WordPress\Helper\Wrappers\FiltersTrait,
+        \ion\WordPress\Helper\Wrappers\TemplateTrait,
+        \ion\WordPress\Helper\Wrappers\LoggingTrait,
+        \ion\WordPress\Helper\Wrappers\OptionsTrait,
+        \ion\WordPress\Helper\Wrappers\PathsTrait,
+        \ion\WordPress\Helper\Wrappers\PostsTrait,
+        \ion\WordPress\Helper\Wrappers\RewritesTrait,
+        \ion\WordPress\Helper\Wrappers\ShortCodesTrait,
+        \ion\WordPress\Helper\Wrappers\TaxonomiesTrait,
+        \ion\WordPress\Helper\Wrappers\WidgetsTrait        
+    {
         
-//    private static $currentContextCycle = Constants::CONTEXT_PLUGIN;
+        \ion\WordPress\Helper\Wrappers\ActionsTrait::initialize as initializeActions;
+        \ion\WordPress\Helper\Wrappers\AdminTrait::initialize as initializeAdmin;
+        \ion\WordPress\Helper\Wrappers\CommonTrait::initialize as initializeCommon;
+        \ion\WordPress\Helper\Wrappers\CronTrait::initialize as initializeCron;
+        \ion\WordPress\Helper\Wrappers\DatabaseTrait::initialize as initializeDatabase;
+        \ion\WordPress\Helper\Wrappers\FiltersTrait::initialize as initializeFilters;
+        \ion\WordPress\Helper\Wrappers\TemplateTrait::initialize as initializeTemplate;
+        \ion\WordPress\Helper\Wrappers\LoggingTrait::initialize as initializeLogging;
+        \ion\WordPress\Helper\Wrappers\OptionsTrait::initialize as initializeOptions;
+        \ion\WordPress\Helper\Wrappers\PathsTrait::initialize as initializePaths;
+        \ion\WordPress\Helper\Wrappers\PostsTrait::initialize as initializePosts;
+        \ion\WordPress\Helper\Wrappers\RewritesTrait::initialize as initializeRewrites;
+        \ion\WordPress\Helper\Wrappers\ShortCodesTrait::initialize as initializeShortCodes;
+        \ion\WordPress\Helper\Wrappers\TaxonomiesTrait::initialize as initializeTaxonomies;
+        \ion\WordPress\Helper\Wrappers\WidgetsTrait::initialize as initializeWidgets;        
+    }
 
     private static $helperInitialized = false;
     private static $helperFinalized = false;
@@ -268,22 +286,21 @@ final class WordPressHelper implements WordPressHelperInterface {
             return $template;
         });
 
-        static::initialize_TLogging();
-        static::initialize_TDatabase();
-        static::initialize_TPaths();
-        static::initialize_TCommon();
-        static::initialize_TPosts();                
-        static::initialize_TTaxonomies(); 
-        static::initialize_TCron();
-        static::initialize_TOptions();       
-        static::initialize_TRewrites();
-        static::initialize_TWidgets();                
-        static::initialize_TTemplate();
-        static::initialize_TShortCodes();
-        static::initialize_TActions();
-        static::initialize_TFilters();                     
-
-        static::initialize_TAdmin();            
+        static::initializeLogging();
+        static::initializeDatabase();
+        static::initializePaths();
+        static::initializeCommon();
+        static::initializePosts();                
+        static::initializeTaxonomies(); 
+        static::initializeCron();
+        static::initializeOptions();       
+        static::initializeRewrites();
+        static::initializeWidgets();                
+        static::initializeTemplate();
+        static::initializeShortCodes();
+        static::initializeActions();
+        static::initializeFilters();                     
+        static::initializeAdmin();            
 
         static::invokeWrapperActions();             
 

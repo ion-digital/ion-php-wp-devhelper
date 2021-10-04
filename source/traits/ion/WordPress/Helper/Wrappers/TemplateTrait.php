@@ -31,7 +31,7 @@ trait TemplateTrait {
     private static $excerptSizes = [];
     private static $excerptSuffix = null;
     
-    protected static function initialize_TTemplate() {
+    protected static function initialize() {
         
         static::registerWrapperAction('init', function() {
 

@@ -24,7 +24,7 @@ trait ShortCodesTrait {
     
     private static $shortCodes = [];    
     
-    protected static function initialize_TShortCodes() {    
+    protected static function initialize() {    
         
         static::registerWrapperAction('init', function() {
             

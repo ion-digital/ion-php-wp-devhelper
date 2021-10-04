@@ -22,7 +22,7 @@ use \ion\SemVer;
  */
 trait DatabaseTrait {
     
-    protected static function initialize_TDatabase() {    
+    protected static function initialize() {    
         
 //        static::registerWrapperAction('init', function() {
 //            

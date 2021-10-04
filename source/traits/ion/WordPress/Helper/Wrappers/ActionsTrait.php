@@ -26,7 +26,7 @@ trait ActionsTrait {
     private static $ajaxActions = [];
     private static $formActions = [];
         
-    protected static function initialize_TActions() {
+    protected static function initialize() {
         
         static::registerWrapperAction('init', function() {
             

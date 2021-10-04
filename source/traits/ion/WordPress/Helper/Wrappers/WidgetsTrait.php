@@ -20,7 +20,7 @@ trait WidgetsTrait {
     private static $widgets = [];   
     private static $sideBars = [];
     
-    protected static function initialize_TWidgets() {    
+    protected static function initialize() {    
         
         static::registerWrapperAction('widgets_init', function() {
 

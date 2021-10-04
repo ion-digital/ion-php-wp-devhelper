@@ -32,7 +32,7 @@ trait OptionsTrait {
     
     private static $themeOptions = [];
     
-    protected static function initialize_TOptions() {    
+    protected static function initialize() {    
         
         static::registerWrapperAction('customize_register', function(WP_Customize_Manager $wpCustomize) {
 

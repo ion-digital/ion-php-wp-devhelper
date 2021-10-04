@@ -24,7 +24,7 @@ trait FiltersTrait {
 
     private static $filters = [];    
     
-    protected static function initialize_TFilters() {    
+    protected static function initialize() {    
         
         static::registerWrapperAction('init', function() {
             
