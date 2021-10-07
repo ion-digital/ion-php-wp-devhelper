@@ -42,7 +42,7 @@ trait ContextTrait {
     private $helperContext = null;
     private $package = null;
     
-    public function __construct(PackageInterface $package, array $helperSettings = null): void {
+    public function __construct(PackageInterface $package, array $helperSettings = null) {
         
 //        if(static::getContextInstance() === null) {
 //            
