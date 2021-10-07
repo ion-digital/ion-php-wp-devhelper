@@ -103,7 +103,7 @@ class Tools {
         };
     }
 
-    private static function getSettingsView(HelperContextInterface$context) {
+    private static function getSettingsView(HelperContextInterface $context) {
 
         return function () use ($context) {
 
@@ -145,12 +145,12 @@ class Tools {
         };
     }
 
-    private static function getStateDetailView(HelperContextInterface$context) {
+    private static function getStateDetailView(HelperContextInterface $context) {
         
         return null;
     }
 
-    private static function getStateView(HelperContextInterface$context) {
+    private static function getStateView(HelperContextInterface $context) {
         
         return function () use ($context) {
 
@@ -267,7 +267,7 @@ class Tools {
         };
     }
     
-    private static function getWordPressStateView(HelperContextInterface$context) {
+    private static function getWordPressStateView(HelperContextInterface $context) {
 
         return function () use ($context) {
 
@@ -385,7 +385,7 @@ class Tools {
         };
     }
     
-    private static function getPhpErrorLogView(HelperContextInterface$context) {
+    private static function getPhpErrorLogView(HelperContextInterface $context) {
         
         return function () use ($context) {
 
@@ -423,7 +423,7 @@ HTML;
         };
     }
 
-    private static function getLogListView(HelperContextInterface$context) {
+    private static function getLogListView(HelperContextInterface $context) {
         
         return function () use ($context) {
 
@@ -452,7 +452,7 @@ HTML;
         };
     }
 
-    private static function getLogDetailView(HelperContextInterface$context, WordPressHelperLogInterface$log = null) {
+    private static function getLogDetailView(HelperContextInterface $context, WordPressHelperLogInterface $log = null) {
         
         return function () use ($context, $log) {
 
@@ -560,7 +560,7 @@ JS
         };
     }
 
-    private static function getPhpInfoView(HelperContextInterface$context) {
+    private static function getPhpInfoView(HelperContextInterface $context) {
         
         return function () use ($context) {
 
@@ -576,7 +576,7 @@ HTML;
         };
     }
 
-    private static function getHtAccessView(HelperContextInterface$context) {
+    private static function getHtAccessView(HelperContextInterface $context) {
         
         return function () use ($context) {
 
@@ -595,7 +595,7 @@ HTML;
         };
     }
     
-    private static function getWordPressOptionDetailView(HelperContextInterface$context) {
+    private static function getWordPressOptionDetailView(HelperContextInterface $context) {
         
         return function () use ($context) {
 
@@ -663,7 +663,7 @@ HTML;
         };
     }
 
-    private static function getWordPressOptionsView(HelperContextInterface$context) {
+    private static function getWordPressOptionsView(HelperContextInterface $context) {
         
         return function () use ($context) {
 
@@ -685,7 +685,7 @@ HTML;
         };
     }
 
-    private static function getAboutView(HelperContextInterface$context) {
+    private static function getAboutView(HelperContextInterface $context) {
         
         return function () use ($context) {
 
@@ -753,7 +753,7 @@ HTML;
     }
     
 
-    public function __construct(HelperContextInterface$context, array $wpHelperSettings = null) {
+    public function __construct(HelperContextInterface $context, array $wpHelperSettings = null) {
 
         WP::addFilter('admin_footer_text', function () {
             
@@ -958,7 +958,7 @@ HTML;
         });
     }
     
-    private static function getCronStateView(HelperContextInterface$context) {
+    private static function getCronStateView(HelperContextInterface $context) {
         
         return function () use ($context) {
 

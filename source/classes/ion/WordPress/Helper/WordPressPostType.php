@@ -78,7 +78,7 @@ class WordPressPostType implements WordPressPostTypeInterface {
 //        bool $hierarchical = false,
 //        array $supports = null,
 //        callable $registerMetaBox = null,
-//        VectorInterface$taxonomies = null,
+//        VectorInterface $taxonomies = null,
 //        bool $rewriteWithFront = true,
 //        bool $rewriteFeeds = null,
 //        bool $rewritePages = true,

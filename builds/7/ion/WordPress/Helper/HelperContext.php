@@ -60,8 +60,8 @@ final class HelperContext implements HelperContextInterface {
         string $loadPath, 
         string $helperDir = null, 
         array $wpHelperSettings = null,
-        SemVerInterface$version = null,
-        HelperContextInterface$parent = null
+        SemVerInterface $version = null,
+        HelperContextInterface $parent = null
             
     ) {
 
@@ -621,7 +621,7 @@ final class HelperContext implements HelperContextInterface {
         return $this->activationVersion;                
     }    
     
-    public function setParent(HelperContextInterface$context = null): HelperContextInterface {
+    public function setParent(HelperContextInterface $context = null): HelperContextInterface {
         
         $this->parent = $context;
         return $this;
@@ -637,7 +637,7 @@ final class HelperContext implements HelperContextInterface {
         return $this->children;
     }        
     
-    public function addChild(HelperContextInterface$child): void {
+    public function addChild(HelperContextInterface $child): void {
         
         $this->children[] = $child;        
         $child->setParent($this);
