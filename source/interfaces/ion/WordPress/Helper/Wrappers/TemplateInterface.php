@@ -88,7 +88,7 @@ interface TemplateInterface {
 
     static function getPostsPerPage(): int;
 
-    static function getTotalPostCount(WP_Query $wpQuery = null): int;
+    static function getTotalPostCount(\WP_Query $wpQuery = null): int;
 
     static function getCurrentTemplateObject(bool $subject = false): ?object;
 

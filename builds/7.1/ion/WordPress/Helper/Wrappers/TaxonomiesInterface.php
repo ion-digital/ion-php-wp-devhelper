@@ -36,7 +36,7 @@ interface TaxonomiesInterface
      * 
      * @return ?WP_Term
      */
-    static function getTermParent(int $termId) : ?WP_Term;
+    static function getTermParent(int $termId) : ?\WP_Term;
     /**
      * method
      * 

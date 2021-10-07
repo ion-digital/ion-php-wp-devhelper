@@ -236,14 +236,14 @@ SQL;
 //            'hide_empty' => $hideEmpty
 //        ]);  
 //
-//        if($result instanceof WP_Error) {
+//        if($result instanceof \WP_Error) {
 //            
 //            throw new WordPressException($result);
 //        }        
 //        
 //    }
     
-    public static function getTermParent(int $termId): ?WP_Term {
+    public static function getTermParent(int $termId): ?\WP_Term {
         
         $term = get_term($termId);
         
@@ -287,7 +287,7 @@ SQL;
             'hide_empty' => $hideEmpty
         ]);       
         
-        if($result instanceof WP_Error) {
+        if($result instanceof \WP_Error) {
             
             throw new WordPressHelperException($result->get_error_message());
         }

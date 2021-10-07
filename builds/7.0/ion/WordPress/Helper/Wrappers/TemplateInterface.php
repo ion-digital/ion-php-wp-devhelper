@@ -160,7 +160,7 @@ interface TemplateInterface
      * 
      * @return int
      */
-    static function getTotalPostCount(WP_Query $wpQuery = null) : int;
+    static function getTotalPostCount(\WP_Query $wpQuery = null) : int;
     /**
      * method
      * 

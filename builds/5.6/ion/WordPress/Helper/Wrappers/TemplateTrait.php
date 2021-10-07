@@ -97,7 +97,7 @@ trait TemplateTrait
     public static function getUriPostId()
     {
         $obj = static::getUriObject();
-        if ($obj !== null && $obj instanceof WP_Post) {
+        if ($obj !== null && $obj instanceof \WP_Post) {
             return $obj->ID;
         }
         return null;
@@ -170,7 +170,7 @@ trait TemplateTrait
                 if ($generator !== null) {
                     $tmp = $generator($post);
                 } else {
-                    $tmp = function (WP_Post $post) {
+                    $tmp = function (\WP_Post $post) {
                         echo $post->post_content;
                         return true;
                     };
@@ -415,7 +415,7 @@ trait TemplateTrait
      * 
      * @return int
      */
-    public static function getTotalPostCount(WP_Query $wpQuery = null)
+    public static function getTotalPostCount(\WP_Query $wpQuery = null)
     {
         if ($wpQuery !== null) {
             return $wpQuery->found_posts;
@@ -440,10 +440,10 @@ trait TemplateTrait
         //        var_dump($wp_query);
         //        vaR_dump($obj);
         //        die ("</pre>");
-        if ($obj === null || $obj instanceof WP_Error) {
+        if ($obj === null || $obj instanceof \WP_Error) {
             return null;
         }
-        if (($obj instanceof WP_Post_Type || $obj instanceof WP_Term) && in_the_loop() && !$subject) {
+        if (($obj instanceof \WP_Post_Type || $obj instanceof \WP_Term) && in_the_loop() && !$subject) {
             $obj = get_post(get_the_ID());
         }
         return $obj;
@@ -475,10 +475,10 @@ trait TemplateTrait
             return null;
         }
         $objType = static::getCurrentTemplateObjectType($subject);
-        if ($objType === WP_Term::class) {
+        if ($objType === \WP_Term::class) {
             return $obj->term_id;
         }
-        if ($objType === WP_Post::class || $objType === WP_User::class) {
+        if ($objType === \WP_Post::class || $objType === \WP_User::class) {
             return $obj->ID;
         }
         return null;

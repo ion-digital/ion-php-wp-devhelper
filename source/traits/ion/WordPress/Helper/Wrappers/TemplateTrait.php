@@ -84,7 +84,7 @@ trait TemplateTrait {
         
         $obj = static::getUriObject();
         
-        if($obj !== null && $obj instanceof WP_Post) {
+        if($obj !== null && $obj instanceof \WP_Post) {
             
             return $obj->ID;
         }
@@ -147,7 +147,7 @@ trait TemplateTrait {
                     $tmp = $generator($post);
                 } else {
 
-                    $tmp = (function (WP_Post $post) {
+                    $tmp = (function (\WP_Post $post) {
 
                                 echo $post->post_content;
                                 return true;
@@ -407,7 +407,7 @@ trait TemplateTrait {
         return $tmp;
     }
     
-    public static function getTotalPostCount(WP_Query $wpQuery = null): int {
+    public static function getTotalPostCount(\WP_Query $wpQuery = null): int {
         
         if($wpQuery !== null) {
             
@@ -433,12 +433,12 @@ trait TemplateTrait {
 //        vaR_dump($obj);
 //        die ("</pre>");        
         
-        if($obj === null || $obj instanceof WP_Error) {
+        if($obj === null || $obj instanceof \WP_Error) {
             
             return null;
         }        
         
-        if(($obj instanceof WP_Post_Type || $obj instanceof WP_Term) && in_the_loop() && !$subject) {
+        if(($obj instanceof \WP_Post_Type || $obj instanceof \WP_Term) && in_the_loop() && !$subject) {
             
             $obj = get_post(get_the_ID());
         }
@@ -469,12 +469,12 @@ trait TemplateTrait {
         
         $objType = static::getCurrentTemplateObjectType($subject);
         
-        if($objType === WP_Term::class) {
+        if($objType === \WP_Term::class) {
             
             return $obj->term_id;
         }        
         
-        if($objType === WP_Post::class || $objType === WP_User::class) {
+        if($objType === \WP_Post::class || $objType === \WP_User::class) {
             
             return $obj->ID;
         }   

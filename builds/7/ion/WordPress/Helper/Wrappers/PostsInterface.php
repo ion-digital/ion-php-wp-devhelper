@@ -61,9 +61,9 @@ interface PostsInterface {
 
     static function getChildren(bool $depth = null, string $template = null, bool $echo = true): array;
 
-    static function getPostParentPost(int $postId): ?WP_Post;
+    static function getPostParentPost(int $postId): ?\WP_Post;
 
-    static function getPostParentTerm(int $postId, string $taxonomy = "category"): ?WP_Term;
+    static function getPostParentTerm(int $postId, string $taxonomy = "category"): ?\WP_Term;
 
     static function getPostParents(int $postId): array;
 
