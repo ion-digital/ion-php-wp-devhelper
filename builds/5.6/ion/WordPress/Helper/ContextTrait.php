@@ -44,7 +44,7 @@ trait ContextTrait
      * method
      * 
      * 
-     * @return void
+     * @return mixed
      */
     public function __construct(PackageInterface $package, array $helperSettings = null)
     {
