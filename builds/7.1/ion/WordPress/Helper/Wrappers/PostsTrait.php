@@ -138,7 +138,7 @@ SQL;
      * 
      * @return ?WP_Post
      */
-    public static function getPostParentPost(int $postId) : ?WP_Post
+    public static function getPostParentPost(int $postId) : ?\WP_Post
     {
         $post = get_post($postId);
         //        if(is_post_type_hierarchical($post->post_type)) {
@@ -156,7 +156,7 @@ SQL;
      * 
      * @return ?WP_Term
      */
-    public static function getPostParentTerm(int $postId, string $taxonomy = 'category') : ?WP_Term
+    public static function getPostParentTerm(int $postId, string $taxonomy = 'category') : ?\WP_Term
     {
         $post = get_post($postId);
         $terms = [];

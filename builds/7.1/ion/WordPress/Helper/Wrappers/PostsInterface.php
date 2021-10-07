@@ -44,14 +44,14 @@ interface PostsInterface
      * 
      * @return ?WP_Post
      */
-    static function getPostParentPost(int $postId) : ?WP_Post;
+    static function getPostParentPost(int $postId) : ?\WP_Post;
     /**
      * method
      * 
      * 
      * @return ?WP_Term
      */
-    static function getPostParentTerm(int $postId, string $taxonomy = "category") : ?WP_Term;
+    static function getPostParentTerm(int $postId, string $taxonomy = "category") : ?\WP_Term;
     /**
      * method
      * 
