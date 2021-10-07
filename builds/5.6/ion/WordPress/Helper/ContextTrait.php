@@ -46,7 +46,7 @@ trait ContextTrait
      * 
      * @return void
      */
-    protected final function __construct_ContextTrait(PackageInterface $package, array $helperSettings = null)
+    public function __construct(PackageInterface $package, array $helperSettings = null)
     {
         //        if(static::getContextInstance() === null) {
         //

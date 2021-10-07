@@ -151,7 +151,7 @@ final class WordPressHelper implements WordPressHelperInterface {
         }
     }        
     
-    private static function initializeHelper(HelperContextInterface$context, array $wpHelperSettings, string $helperDir = null): void {
+    private static function initializeHelper(HelperContextInterface $context, array $wpHelperSettings, string $helperDir = null): void {
         
         if (static::$helperInitialized) {   
             

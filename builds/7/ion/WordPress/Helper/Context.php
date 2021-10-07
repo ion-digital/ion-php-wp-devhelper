@@ -19,7 +19,10 @@ use \ion\PackageInterface;
 
 abstract class Context implements ContextInterface {
         
-    use \ion\WordPress\Helper\ContextTrait;
+    use \ion\WordPress\Helper\ContextTrait {
+        
+        \ion\WordPress\Helper\ContextTrait::__construct as private __construct_ContextTrait;
+    }
     
     public function __construct(PackageInterface $package, array $helperSettings = null) {
 
