@@ -627,7 +627,7 @@ trait AdminTrait {
 
                     });                        
 
-                    add_action($term . '_edit_form_fields', function(WP_Term $term, string $taxonomy = null) use ($termFieldBox, $cb) {
+                    add_action($term . '_edit_form_fields', function(\WP_Term $term, string $taxonomy = null) use ($termFieldBox, $cb) {
 
                         $cb($term, $taxonomy);
 
@@ -683,7 +683,7 @@ trait AdminTrait {
 
                 if($userFieldBox['visibleToOthers'] === true) {
 
-                    add_action('edit_user_profile', function(WP_User $user) use ($userFieldBox, $cb) {
+                    add_action('edit_user_profile', function(\WP_User $user) use ($userFieldBox, $cb) {
 
                         // Show for all users EXCEPT the current user
 
@@ -702,7 +702,7 @@ trait AdminTrait {
 
                 if($userFieldBox['visibleToSelf'] === true) {
 
-                    add_action('show_user_profile', function(WP_User $user) use ($userFieldBox, $cb) {
+                    add_action('show_user_profile', function(\WP_User $user) use ($userFieldBox, $cb) {
 
                         // Show only for the current user
 
@@ -2227,22 +2227,22 @@ JS;
         
         if($pagenow == 'post.php') {
             
-            return WP_Post::class;
+            return \WP_Post::class;
         }
         
         if($pagenow == 'term.php') {
             
-            return WP_Term::class;
+            return \WP_Term::class;
         }
 
         if($pagenow == 'profile.php' || $pagenow == 'user-edit.php') {
             
-            return WP_User::class;
+            return \WP_User::class;
         }
 
         if($pagenow == 'comment.php') {
             
-            return WP_Comment::class;
+            return \WP_Comment::class;
         }        
         
         return null;
@@ -2258,17 +2258,17 @@ JS;
         
         $objType = static::getCurrentAdminObjectType();
         
-        if($objType == WP_Post::class) {
+        if($objType == \WP_Post::class) {
             
             return PHP::toInt(PHP::filterInput('post', [ INPUT_GET ], FILTER_VALIDATE_INT));
         }
         
-        if($objType == WP_Term::class) {
+        if($objType == \WP_Term::class) {
             
             return PHP::toInt(PHP::filterInput('tag_ID', [ INPUT_GET ], FILTER_VALIDATE_INT));
         }        
         
-        if($objType == WP_User::class) {
+        if($objType == \WP_User::class) {
             
             global $pagenow;
             
@@ -2280,7 +2280,7 @@ JS;
             return PHP::toInt(PHP::filterInput('user_id', [ INPUT_GET ], FILTER_VALIDATE_INT));
         }
 
-        if($objType == WP_Comment::class) {
+        if($objType == \WP_Comment::class) {
             
             return PHP::toInt(PHP::filterInput('c', [ INPUT_GET ], FILTER_VALIDATE_INT));
         }
@@ -2302,22 +2302,22 @@ JS;
             return null;
         }
         
-        if(static::getCurrentAdminObjectType() == WP_Post::class) {
+        if(static::getCurrentAdminObjectType() == \WP_Post::class) {
             
             return PHP::toNull(get_post($objId));
         }
         
-        if(static::getCurrentAdminObjectType() == WP_Term::class) {
+        if(static::getCurrentAdminObjectType() == \WP_Term::class) {
             
             return PHP::toNull(get_term($objId));
         }        
         
-        if(static::getCurrentAdminObjectType() == WP_User::class) {
+        if(static::getCurrentAdminObjectType() == \WP_User::class) {
             
             return PHP::toNull(get_userdata($objId));
         }
 
-        if(static::getCurrentAdminObjectType() == WP_Comment::class) {
+        if(static::getCurrentAdminObjectType() == \WP_Comment::class) {
             
             return PHP::toNull(get_comment($objId));
         }

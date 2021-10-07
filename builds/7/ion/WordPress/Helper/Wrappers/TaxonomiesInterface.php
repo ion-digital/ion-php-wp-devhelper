@@ -51,7 +51,7 @@ interface TaxonomiesInterface {
 
     static function getTaxonomyFromTerm(string $termSlug): ?string;
 
-    static function getTermParent(int $termId): ?WP_Term;
+    static function getTermParent(int $termId): ?\WP_Term;
 
     static function getTermParents(int $termId): array;
 

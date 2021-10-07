@@ -120,7 +120,7 @@ SQL;
     //            'hide_empty' => $hideEmpty
     //        ]);
     //
-    //        if($result instanceof WP_Error) {
+    //        if($result instanceof \WP_Error) {
     //
     //            throw new WordPressException($result);
     //        }
@@ -132,7 +132,7 @@ SQL;
      * 
      * @return ?WP_Term
      */
-    public static function getTermParent(int $termId) : ?WP_Term
+    public static function getTermParent(int $termId) : ?\WP_Term
     {
         $term = get_term($termId);
         if (is_wp_error($term) || $term === null) {
@@ -170,7 +170,7 @@ SQL;
     public static function getTerms(array $taxonomies, bool $hierarchy = true, int $parent = null, bool $hideEmpty = false) : array
     {
         $result = get_terms(['taxonomy' => $taxonomies, 'hide_empty' => $hideEmpty]);
-        if ($result instanceof WP_Error) {
+        if ($result instanceof \WP_Error) {
             throw new WordPressHelperException($result->get_error_message());
         }
         if (!PHP::isArray($result)) {

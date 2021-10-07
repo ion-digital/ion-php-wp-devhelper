@@ -287,7 +287,7 @@ SQL;
     
     //TODO
     
-    public static function getPostParentPost(int $postId): ?WP_Post {
+    public static function getPostParentPost(int $postId): ?\WP_Post {
 
         $post = get_post($postId);        
         
@@ -306,7 +306,7 @@ SQL;
         return get_post($post->post_parent);        
     }
     
-    public static function getPostParentTerm(int $postId, string $taxonomy = 'category'): ?WP_Term {
+    public static function getPostParentTerm(int $postId, string $taxonomy = 'category'): ?\WP_Term {
         
         $post = get_post($postId);                
         
