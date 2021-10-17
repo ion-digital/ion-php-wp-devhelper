@@ -1,7 +1,7 @@
 <?php
 namespace ion\WordPress\Helper;
 
-use ion\WordPress\Helper\WP_Term;
+use WP_Term;
 interface WordPressTermInterface
 {
     /**

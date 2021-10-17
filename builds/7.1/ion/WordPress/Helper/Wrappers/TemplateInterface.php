@@ -2,7 +2,7 @@
 namespace ion\WordPress\Helper\Wrappers;
 
 use ion\WordPress\Helper\WordPressWidgetInterface;
-use ion\WordPress\Helper\Wrappers\WP_Query;
+use WP_Query;
 /**
  * Description of RewriteApiTrait*
  * @author Justus
