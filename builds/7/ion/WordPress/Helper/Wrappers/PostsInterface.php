@@ -2,8 +2,8 @@
 
 namespace ion\WordPress\Helper\Wrappers;
 
-use \ion\WordPress\Helper\Wrappers\WP_Post;
-use \ion\WordPress\Helper\Wrappers\WP_Term;
+use \WP_Post;
+use \WP_Term;
 use \ion\WordPress\Helper\WordPressPostTypeInterface;
 
 
