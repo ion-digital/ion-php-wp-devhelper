@@ -2,9 +2,7 @@
 
 namespace ion\WordPress\Helper;
 
-use \ion\WordPress\Helper\WP_WidgetInterface;
-
-interface WordPressWidgetInterface extends WP_WidgetInterface {
+interface WordPressWidgetInterface {
 
     function widget($args, $instance);
 
