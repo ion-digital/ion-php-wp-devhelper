@@ -1,7 +1,8 @@
 <?php
 namespace ion\WordPress\Helper;
 
-interface WordPressHelperLoggerInterface
+use Psr\Log\AbstractLoggerInterface;
+interface WordPressHelperLoggerInterface extends AbstractLoggerInterface
 {
     /**
      * method
