@@ -1,7 +1,8 @@
 <?php
 namespace ion\WordPress\Helper;
 
-interface WordPressWidgetInterface
+use ion\WordPress\Helper\WP_WidgetInterface;
+interface WordPressWidgetInterface extends WP_WidgetInterface
 {
     /**
      * method

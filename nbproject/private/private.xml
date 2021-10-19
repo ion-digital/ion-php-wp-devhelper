@@ -45,6 +45,7 @@
             <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/source/classes/ion/WordPress/Helper/HelperContext.php</file>
         </group>
         <group name="ION">
+            <file>file:/D:/prj/dev/ion/php/wp-devhelper/autoload.php</file>
             <file>file:/D:/prj/dev/ion/php/wp-devhelper/version.json</file>
         </group>
     </open-files>

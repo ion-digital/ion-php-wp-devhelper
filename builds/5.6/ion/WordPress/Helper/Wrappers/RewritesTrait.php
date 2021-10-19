@@ -64,7 +64,7 @@ trait RewritesTrait
         if (!is_multisite() || !$hard) {
             return;
         }
-        $path = static::getSitePath(is_multisite()) . DIRECTORY_SEPARAORTrait . '.htaccess';
+        $path = static::getSitePath(is_multisite()) . DIRECTORY_SEPARATOR . '.htaccess';
         $data = @file_get_contents($path);
         if ($data === false) {
             return;

@@ -286,16 +286,16 @@
         },
         {
             "name": "ion/dev",
-            "version": "v0.7.11+release/main",
+            "version": "v0.7.13+release/main",
             "source": {
                 "type": "git",
                 "url": "https://bitbucket.org/ion-digital-projects/dev.git",
-                "reference": "66414df48d1cdcb8fc5e7f09c5d7d489d1dd49a3"
+                "reference": "899f274205aa2b3b5c93f58340efb1e20829397c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/ion-digital-projects/dev/get/66414df48d1cdcb8fc5e7f09c5d7d489d1dd49a3.zip",
-                "reference": "66414df48d1cdcb8fc5e7f09c5d7d489d1dd49a3",
+                "url": "https://bitbucket.org/ion-digital-projects/dev/get/899f274205aa2b3b5c93f58340efb1e20829397c.zip",
+                "reference": "899f274205aa2b3b5c93f58340efb1e20829397c",
                 "shasum": ""
             },
             "require": {
@@ -349,9 +349,9 @@
             ],
             "support": {
                 "issues": "https://bitbucket.org/ion-digital-projects/dev/issues",
-                "source": "https://bitbucket.org/ion-digital-projects/dev/src/66414df48d1cdcb8fc5e7f09c5d7d489d1dd49a3/?at=v0.7.11+release/main"
+                "source": "https://bitbucket.org/ion-digital-projects/dev/src/899f274205aa2b3b5c93f58340efb1e20829397c/?at=v0.7.13+release/main"
             },
-            "time": "2021-10-17T21:43:39+00:00"
+            "time": "2021-10-19T00:04:34+00:00"
         },
         {
             "name": "ion/php-trans-porter",
@@ -2634,12 +2634,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "357dd3bcb34fb9073de52ed086115ed1c5a17a11"
+                "reference": "593465dcdada5c51383ae0995228d3b4ee2d33f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/357dd3bcb34fb9073de52ed086115ed1c5a17a11",
-                "reference": "357dd3bcb34fb9073de52ed086115ed1c5a17a11",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/593465dcdada5c51383ae0995228d3b4ee2d33f0",
+                "reference": "593465dcdada5c51383ae0995228d3b4ee2d33f0",
                 "shasum": ""
             },
             "require": {
@@ -2714,7 +2714,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-13T17:13:59+00:00"
+            "time": "2021-10-19T11:49:47+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -4125,12 +4125,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "a60e015a49db26dda873ca3ef74776db65f5e709"
+                "reference": "5247e8f61286a077d52e05833295dae5cb02f9cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/a60e015a49db26dda873ca3ef74776db65f5e709",
-                "reference": "a60e015a49db26dda873ca3ef74776db65f5e709",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/5247e8f61286a077d52e05833295dae5cb02f9cf",
+                "reference": "5247e8f61286a077d52e05833295dae5cb02f9cf",
                 "shasum": ""
             },
             "require": {
@@ -4206,7 +4206,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-06T12:45:54+00:00"
+            "time": "2021-10-19T08:33:42+00:00"
         },
         {
             "name": "symfony/var-exporter",
