@@ -215,7 +215,7 @@ class Tools
     private static function getWordPressStateView(HelperContextInterface $context)
     {
         return function () use($context) {
-            echo "<p>This page shows various configruation settings that are important to developers when debugging their projects.<br />More information can be found at <a target=\"_blank\" href=\"" . Constants::WP_CONFIG_DOCUMENTATION_URL . "\">the official documentation</a>.</p>";
+            echo "<p>This page shows various configuration settings that are important to developers when debugging their projects.<br />More information can be found at <a target=\"_blank\" href=\"" . Constants::WP_CONFIG_DOCUMENTATION_URL . "\">the official documentation</a>.</p>";
             //$errorLogPath = @ini_get(Constants::PHP_ERROR_LOG);
             //FIXME: Investigate: why are forms being added twice anyway?
             foreach (WP::getForms() as $form) {

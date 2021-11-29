@@ -53,32 +53,36 @@ trait ContextTrait {
         
         $this->package = $package;
         
+//echo "<h1>AAA</h1><pre>";
+//var_dump($package);
+//die("</pre>");          
+        
         $helper = WP::createContext($package->getVendor(), $package->getProject(), $package->getProjectEntry(), null, $helperSettings);
         
         $this->helperContext = $helper->getContext();
                         
         $helper
                 
-        ->initialize(function(HelperContextInterface$context) {
+        ->initialize(function(HelperContextInterface $context) {
             
             $this->initialize();      
             $this->onInitialized();
             return;
         })
-        ->activate(function(HelperContextInterface$context) {         
+        ->activate(function(HelperContextInterface $context) {         
             
             $this->activate();
             $this->onActivated();
             return;
         })
-        ->deactivate(function(HelperContextInterface$context) {         
+        ->deactivate(function(HelperContextInterface $context) {         
             
             $this->deactivate();
             $this->onDeactivated();
             return;
         })
         ->uninstall([ static::class, 'doUninstall' ])      
-        ->finalize(function(HelperContextInterface$context) {         
+        ->finalize(function(HelperContextInterface $context) {         
             
             $this->finalize();
             //$this->onFinalized();
