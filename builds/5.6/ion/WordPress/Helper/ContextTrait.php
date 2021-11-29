@@ -54,6 +54,9 @@ trait ContextTrait
         //        }
         self::$contextInstances[static::class] = $this;
         $this->package = $package;
+        //echo "<h1>AAA</h1><pre>";
+        //var_dump($package);
+        //die("</pre>");
         $helper = WP::createContext($package->getVendor(), $package->getProject(), $package->getProjectEntry(), null, $helperSettings);
         $this->helperContext = $helper->getContext();
         $helper->initialize(function (HelperContextInterface $context) {
