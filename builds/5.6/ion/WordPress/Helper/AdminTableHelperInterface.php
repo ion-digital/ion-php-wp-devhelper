@@ -31,13 +31,6 @@ interface AdminTableHelperInterface
     /**
      * method
      * 
-     * 
-     * @return AdminTableHelperInterface
-     */
-    function read(callable $read);
-    /**
-     * method
-     * 
      * @return array
      */
     function getDescriptor();

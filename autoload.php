@@ -49,6 +49,6 @@ if (!class_exists('\\ion\\WordPress\\WordPressHelper')) {
                 'builds/' . PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION,
                 'builds/' . PHP_MAJOR_VERSION
 
-            ], __DIR__);
+            ], __FILE__);
     }
 }

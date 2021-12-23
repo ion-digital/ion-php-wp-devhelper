@@ -49,10 +49,6 @@ class AdminTableHelper implements AdminTableHelperInterface
         $this->onDeleteHandlers[] = $onDelete;
         return $this;
     }
-    //FIXME: ???
-    public function read(callable $read) : AdminTableHelperInterface
-    {
-    }
     public function getDescriptor() : array
     {
         return $this->parent;

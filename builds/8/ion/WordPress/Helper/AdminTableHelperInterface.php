@@ -16,8 +16,6 @@ interface AdminTableHelperInterface {
 
     function onDelete(callable $onDelete): AdminTableHelperInterface;
 
-    function read(callable $read): AdminTableHelperInterface;
-
     function getDescriptor(): array;
 
     function addColumn(array $columnDescriptor): AdminTableHelperInterface;

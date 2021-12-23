@@ -11,7 +11,6 @@ interface AdminTableHelperInterface
     static function inDetailMode() : bool;
     function onRead(callable $onRead) : AdminTableHelperInterface;
     function onDelete(callable $onDelete) : AdminTableHelperInterface;
-    function read(callable $read) : AdminTableHelperInterface;
     function getDescriptor() : array;
     function addColumn(array $columnDescriptor) : AdminTableHelperInterface;
     function addColumnGroup(string $label = null, string $id = null, array $columns = []) : AdminTableHelperInterface;
