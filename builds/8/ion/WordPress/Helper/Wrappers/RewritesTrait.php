@@ -26,7 +26,7 @@ trait RewritesTrait {
     private static $rewrites = [];    
 
     protected static function initialize() {    
-        
+
         static::registerWrapperAction('init', function() {
 
             foreach (static::$rewrites as $rewrite) {
