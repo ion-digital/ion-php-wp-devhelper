@@ -64,16 +64,34 @@ trait RewritesTrait
             $endTag = "# END " . $siteUrl;
             $startPos = strpos($data, $startTag);
             $endPos = strpos($data, $endTag);
-            $rewrites = "\n\n{$startTag}\n\n<IfModule mod_rewrite.c>\n\n";
+            if ($endPos !== false) {
+                $endPos += strlen($endTag);
+            }
+            $rewrites = "\n\n{$startTag}\n\n";
             foreach ($wp_rewrite->non_wp_rules as $pattern => $target) {
                 $rewrites .= "RewriteRule {$pattern} {$target} [QSA,L]\n";
             }
-            $rewrites .= "\n</IfModule>\n\n{$endTag}\n\n";
+            $rewrites .= "\n{$endTag}\n\n";
             if ($startPos === false || $endPos === false) {
-                $data .= $rewrites;
-            } else {
-                $data = rtrim(substr($data, 0, $startPos)) . $rewrites . ltrim(substr($data, $endPos + strlen($endTag)));
+                $startPos = strpos($data, static::WORDPRESS_HTACCESS_START);
+                if ($startPos === false) {
+                    throw new WordPressHelperException("Could not find '" . static::WORDPRESS_HTACCESS_START . "' in .htaccess.");
+                }
+                $startPos += strlen(static::WORDPRESS_HTACCESS_START);
+                $startPos = strpos($data, "RewriteBase", $startPos);
+                if ($startPos === false) {
+                    throw new WordPressHelperException("Could not find 'RewriteBase' in .htaccess.");
+                }
+                $startPos += strlen("RewriteBase");
+                $startPos = strpos($data, "\n", $startPos);
+                if ($startPos === false) {
+                    throw new WordPressHelperException("Could not find the end of the 'RewriteBase' line in .htaccess.");
+                }
+                $startPos += 1;
+                $endPos = $startPos;
             }
+            $data = rtrim(substr($data, 0, $startPos)) . $rewrites . ltrim(substr($data, $endPos));
+            //            die("<pre>{$data}</pre>");
             if (@file_put_contents($path, $data) === false) {
                 throw new WordPressHelperException("Could not update .htaccess file (located at '{$path}').");
             }
