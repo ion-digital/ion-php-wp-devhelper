@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: WP Dev/helper
-  Version: 0.82.10 (main)
+  Version: 0.82.11 (main)
   Plugin URI: https://justusmeyer.com/b/wordpress-helper/
   Author: Justus Meyer
   Author URI: https://justusmeyer.com
