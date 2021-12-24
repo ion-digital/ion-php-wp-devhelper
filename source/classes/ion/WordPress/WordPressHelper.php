@@ -30,6 +30,9 @@ use \ion\WordPress\Helper\WordPressHelperException;
 
 final class WordPressHelper implements WordPressHelperInterface {
 
+    private const WORDPRESS_HTACCESS_START = "# BEGIN WordPress";
+    private const WORDPRESS_HTACCESS_END = "# END WordPress";    
+    
     use 
         \ion\WordPress\Helper\Wrappers\ActionsTrait,
         \ion\WordPress\Helper\Wrappers\AdminTrait,        

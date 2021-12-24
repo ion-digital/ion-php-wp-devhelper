@@ -811,6 +811,13 @@ HTML;
 
                     $data = file_get_contents(WP::getSitePath(is_multisite()) . '.htaccess');
                     
+                    if(!$data) {
+                        
+                        exit(404);
+                    }
+                    
+                    $data = htmlentities($data);
+                    
                     echo "<html><head></head><body><pre>{$data}</pre></body></html>";
                     exit(200);
 

@@ -14,6 +14,7 @@ use ion\PhpHelper as PHP;
 use ion\Package;
 use ion\SemVerInterface;
 use ion\SemVer;
+use ion\WordPress\Helper\WordPressHelperException;
 /**
  * Description of RewriteApiTrait*
  * @author Justus
@@ -24,6 +25,9 @@ trait RewritesTrait
     protected static function initialize()
     {
         static::registerWrapperAction('init', function () {
+            //            echo "<pre>";
+            //            var_dump(static::$rewrites);
+            //            die("</pre>");
             foreach (static::$rewrites as $rewrite) {
                 add_rewrite_rule($rewrite["pattern"], $rewrite["target"], $rewrite["top"] === true ? "top" : "bottom");
             }
@@ -42,7 +46,7 @@ trait RewritesTrait
     }
     public static function flushRewriteRules(bool $hard = true) : void
     {
-        //#ODOTrait: https://premium.wpmudev.org/forums/topic/301-redirects-on-multisite/
+        //#TODO: https://premium.wpmudev.org/forums/topic/301-redirects-on-multisite/
         flush_rewrite_rules($hard);
         if (!is_multisite() || !$hard) {
             return;
@@ -53,35 +57,23 @@ trait RewritesTrait
             return;
         }
         global $wp_rewrite;
+        //        echo "<pre>"; var_dump($wp_rewrite->non_wp_rules); echo "</pre>";
         if (PHP::isArray($wp_rewrite->non_wp_rules) && PHP::count($wp_rewrite->non_wp_rules) > 0) {
-            $startTag = "# BEGIN Helper";
-            $endTag = "# END Helper";
-            $startPos = PHP::toInt(strpos($data, $startTag));
-            $endPos = PHP::toInt(strpos($data, $endTag));
-            $rewrites = "{$startTag}\n\n";
+            $siteUrl = WP::getSiteLink();
+            $startTag = "# BEGIN " . $siteUrl;
+            $endTag = "# END " . $siteUrl;
+            $startPos = strpos($data, $startTag);
+            $endPos = strpos($data, $endTag);
+            $rewrites = "\n\n{$startTag}\n\n<IfModule mod_rewrite.c>\n\n";
             foreach ($wp_rewrite->non_wp_rules as $pattern => $target) {
                 $rewrites .= "RewriteRule {$pattern} {$target} [QSA,L]\n";
             }
-            $rewrites .= "\n{$endTag}";
-            if ($startPos !== null) {
-                if ($endPos !== null) {
-                    $data = substr($data, 0, $startPos) . $rewrites . substr($data, $endPos + strlen($endTag));
-                } else {
-                    $data = substr($data, 0, $startPos) . $rewrites . substr($data, $startPos + strlen($startTag));
-                }
+            $rewrites .= "\n</IfModule>\n\n{$endTag}\n\n";
+            if ($startPos === false || $endPos === false) {
+                $data .= $rewrites;
             } else {
-                $startPos = PHP::toInt(strpos($data, "RewriteBase"));
-                if ($startPos !== null) {
-                    $startPos = PHP::toInt(strpos($data, "\n", $startPos));
-                    if ($startPos === null) {
-                        throw new WordPressHelperException("Could not determine insert point in .htaccess file (located at '{$path}').");
-                    }
-                    $data = substr($data, 0, $startPos + 1) . "\n{$rewrites}\n\n" . substr($data, $startPos + 1);
-                } else {
-                    $data .= "\n{$rewrites}";
-                }
+                $data = rtrim(substr($data, 0, $startPos)) . $rewrites . ltrim(substr($data, $endPos + strlen($endTag)));
             }
-            //die("<pre>{$data}</pre>");
             if (@file_put_contents($path, $data) === false) {
                 throw new WordPressHelperException("Could not update .htaccess file (located at '{$path}').");
             }
