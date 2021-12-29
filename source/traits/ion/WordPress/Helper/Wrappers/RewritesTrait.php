@@ -90,8 +90,12 @@ trait RewritesTrait {
 
             $siteUrl = WP::getSiteLink();
             
-            $startTag = "# BEGIN " . $siteUrl;
-            $endTag = "# END " . $siteUrl;
+            // NOTE: The quotes around the URI's are essential to make sure
+            // we don't break the .htaccess file when finding the root site's 
+            // section.
+            
+            $startTag = "# BEGIN \"{$siteUrl}\"";
+            $endTag = "# END \"{$siteUrl}\"";
 
             $startPos = strpos($data, $startTag);
             $endPos = strpos($data, $endTag);            
@@ -139,7 +143,10 @@ trait RewritesTrait {
                 
                 $startPos += 1;
                 
-                $endPos = $startPos;
+                if($endPos === false) {
+                    
+                    $endPos = $startPos;
+                }
             }            
             
             $data = rtrim(substr($data, 0, $startPos)) . $rewrites . ltrim(substr($data, $endPos));
