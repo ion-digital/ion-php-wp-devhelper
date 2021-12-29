@@ -77,8 +77,11 @@ trait RewritesTrait
         //        echo "<pre>"; var_dump($wp_rewrite->non_wp_rules); echo "</pre>";
         if (PHP::isArray($wp_rewrite->non_wp_rules) && PHP::count($wp_rewrite->non_wp_rules) > 0) {
             $siteUrl = WP::getSiteLink();
-            $startTag = "# BEGIN " . $siteUrl;
-            $endTag = "# END " . $siteUrl;
+            // NOTE: The quotes around the URI's are essential to make sure
+            // we don't break the .htaccess file when finding the root site's
+            // section.
+            $startTag = "# BEGIN \"{$siteUrl}\"";
+            $endTag = "# END \"{$siteUrl}\"";
             $startPos = strpos($data, $startTag);
             $endPos = strpos($data, $endTag);
             if ($endPos !== false) {
@@ -105,7 +108,9 @@ trait RewritesTrait
                     throw new WordPressHelperException("Could not find the end of the 'RewriteBase' line in .htaccess.");
                 }
                 $startPos += 1;
-                $endPos = $startPos;
+                if ($endPos === false) {
+                    $endPos = $startPos;
+                }
             }
             $data = rtrim(substr($data, 0, $startPos)) . $rewrites . ltrim(substr($data, $endPos));
             //            die("<pre>{$data}</pre>");
