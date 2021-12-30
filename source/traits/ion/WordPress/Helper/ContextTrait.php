@@ -16,8 +16,6 @@ use \ion\WordPress\WordPressHelper as WP;
 use \ion\Package;
 use \ion\PackageInterface;
 
-
-
 trait ContextTrait {
             
     private static $contextInstances = [];
@@ -85,7 +83,6 @@ trait ContextTrait {
         ->finalize(function(HelperContextInterface $context) {         
             
             $this->finalize();
-            //$this->onFinalized();
             return;
         });
                
@@ -152,11 +149,5 @@ trait ContextTrait {
     protected function finalize(): void {
         
         // Empty, for now...
-    }
-    
-//    protected function onFinalized(): void {
-//        
-//        // Empty, for now...
-//    }      
-
+    }  
 }

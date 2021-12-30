@@ -326,13 +326,34 @@ final class WordPressHelper implements WordPressHelperInterface {
 
         static::$helperInitialized = true;
         
+        add_action('after_setup_theme', function() { // NOTE: This needs to fire before 'init'
+
+            foreach(static::getContexts() as $helperContext) {
+                
+                if($helperContext->hasParent()) {
+                    
+                    continue;
+                }
+                               
+                $helperContext->invokeInitializeOperation();            
+            }
+        });
+
         add_action('init', function() {
-            
+
             if(!session_id()) {
             
                 session_start();
             }            
         });
+        
+        add_action('wp_loaded', function() { // NOTE: 'wp' doesn't seem to fire for admin screens
+
+            foreach(static::getContexts() as $helperContext) {
+                
+                $helperContext->invokeFinalizeOperation();            
+            }                        
+        });           
         
     }
     
@@ -672,8 +693,7 @@ TEMPLATE;
     
     public function finalize(callable $call = null): WordPressHelperInterface {
     
-       $this->getCurrentContext()->setFinalizeOperation($call);        
-       $this->getCurrentContext()->invokeFinalizeOperation();
+       $this->getCurrentContext()->setFinalizeOperation($call);       
        return $this;
     }
     

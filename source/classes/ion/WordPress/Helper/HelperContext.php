@@ -141,8 +141,11 @@ final class HelperContext implements HelperContextInterface {
         
         if(array_key_exists($this->getPackageName(), WP::getContexts())) {
             
-            $tmp = WP::getContexts()[$this->getPackageName()]->getLoadPath();
-            throw new WordPressHelperException("Context '{$this->getPackageName()}' has already been defined in '{$tmp}' - context package names need to be unique.");
+            //$tmp = WP::getContexts()[$this->getPackageName()]->getLoadPath();
+            //throw new WordPressHelperException("Context '{$this->getPackageName()}' has already been defined in '{$tmp}' - context package names need to be unique.");
+            
+            // This context has already been loaded, so do nothing!
+            return;
         }
         
         WP::getContexts()[$this->getPackageName()] = $this;
@@ -187,7 +190,9 @@ final class HelperContext implements HelperContextInterface {
             }
         }
         
-        $this->version = $version;                   
+        $this->version = $version; 
+
+        return;
     }
     
     public function getLog(): WordPressHelperLogInterface {
@@ -376,30 +381,112 @@ final class HelperContext implements HelperContextInterface {
         if($this->isInitialized()) { 
             
             return;
-        }
+        }  
         
         foreach(array_values($this->getChildren()) as $childContext) {
-            
+
             $childContext->invokeInitializeOperation();
-        }             
+        }              
         
         if ($this->hasInitializeOperation() === false) {
             
 //            throw new WordPressHelperException('No initialize operation to invoke.');
             return;
-        }
+        }            
 
         $call = $this->getInitializeOperation();
-
+        
         if ($call !== null) {
+            
+//            if($this->getPackageName() == "ion/components-submodule") {
+//                
+//                var_dump($call);
+//                exit;
+//            }
             
             $call($this);
         }
+
         
         $this->initialized = true;
         
         return;        
     }    
+    
+    public function invokeFinalizeOperation(): void {
+
+        if($this->isFinalized()) {
+            
+            //throw new WordPressHelperException("Context '{$this->getProjectName()}' has already been finalized.");
+            return;
+        }        
+
+        $call = $this->getFinalizeOperation();
+
+        if($call !== null) {
+            
+            $this->finalize = $call;
+        }        
+        
+        if ($this->hasFinalizeOperation() === false) {
+            
+//            throw new WordPressHelperException('No finalize operation to invoke.');
+//            return;
+        }
+
+        if ($call !== null) {
+
+            $call($this);
+        }           
+
+        foreach(array_values($this->getChildren()) as $childContext) {
+
+            $childContext->invokeFinalizeOperation();
+        }           
+        
+        $this->finalized = true;
+        
+        if(WP::isAdmin()) {
+
+            if($this->getUninstallOperation() instanceof \Closure) {
+
+                throw new WordPressHelperException("The uninstall hook for context '{$this->getProjectName()}' cannot be a Closure - it must be unspecified (NULL), a function or a static method.");
+            }              
+
+            if($this->getType() === Constants::CONTEXT_PLUGIN) {
+
+                register_activation_hook($this->loadPath, function() {
+
+                    $this->invokeActivateOperation();  
+                });                
+
+                register_deactivation_hook($this->loadPath, function() {
+
+                    $this->invokeDeactivateOperation();       
+                });                
+
+                if($this->hasUninstallOperation()) {
+                    
+                    register_uninstall_hook($this->loadPath, $this->getUninstallOperation());                
+                }
+            }
+
+            else if($this->getType() === Constants::CONTEXT_THEME) {                
+                
+                add_action("after_switch_theme", function () {
+
+                    $this->invokeActivateOperation();  
+                });        
+
+                add_action("switch_theme", function () {                    
+                    
+                    $this->invokeDeactivateOperation();  
+
+                });                   
+            }  
+        }          
+    }        
+    
     
     public function invokeActivateOperation(): void {
         
@@ -495,91 +582,6 @@ final class HelperContext implements HelperContextInterface {
         }
     }
     
-    public function invokeFinalizeOperation(): void {
-
-        if($this->isFinalized()) {
-            
-            //throw new WordPressHelperException("Context '{$this->getProjectName()}' has already been finalized.");
-            return;
-        }
-
-        $this->finalized = true;         
-
-        add_action('after_setup_theme', function() { // NOTE: This needs to fire before 'init'
-            
-            $this->invokeInitializeOperation();
-        });
-        
-
-
-        $call = $this->getFinalizeOperation();
-
-        if($call !== null) {
-            
-            $this->finalize = $call;
-        }        
-        
-        if ($this->hasFinalizeOperation() === false) {
-            
-//            throw new WordPressHelperException('No finalize operation to invoke.');
-        }
-        
-        add_action('wp_loaded', function() use ($call) { // NOTE: 'wp' doesn't seem to fire for admin screens
-
-            if ($call !== null) {
-
-                $call($this);
-            }           
-
-            foreach(array_values($this->getChildren()) as $childContext) {
-
-                $childContext->invokeFinalizeOperation();
-            }           
-
-        }, 0);
-        
-        if(WP::isAdmin()) {
-
-            if($this->getUninstallOperation() instanceof \Closure) {
-
-                throw new WordPressHelperException("The uninstall hook for context '{$this->getProjectName()}' cannot be a Closure - it must be unspecified (NULL), a function or a static method.");
-            }              
-
-            if($this->getType() === Constants::CONTEXT_PLUGIN) {
-
-                register_activation_hook($this->loadPath, function() {
-
-                    $this->invokeActivateOperation();  
-                });                
-
-                register_deactivation_hook($this->loadPath, function() {
-
-                    $this->invokeDeactivateOperation();       
-                });                
-
-                if($this->hasUninstallOperation()) {
-                    
-                    register_uninstall_hook($this->loadPath, $this->getUninstallOperation());                
-                }
-            }
-
-            else if($this->getType() === Constants::CONTEXT_THEME) {                
-                
-                add_action("after_switch_theme", function () {
-
-                    $this->invokeActivateOperation();  
-                });        
-
-                add_action("switch_theme", function () {                    
-                    
-                    $this->invokeDeactivateOperation();  
-
-                });                   
-            }  
-        }                  
-    }        
-    
-    
     public function getType(): int {
         
         return (int) $this->contextType;
@@ -632,14 +634,24 @@ final class HelperContext implements HelperContextInterface {
         return $this->parent;
     }
     
+    public function hasParent(): bool {
+        
+        return ($this->getParent() !== null);
+    }
+    
     public function getChildren(): array {
         
-        return $this->children;
+        return array_values($this->children);
     }        
+    
+    public function hasChildren(): bool {
+        
+        return (PHP::count($this->getChildren()) > 0);
+    }
     
     public function addChild(HelperContextInterface $child): void {
         
-        $this->children[] = $child;        
+        $this->children[$child->getPackageName()] = $child;        
         $child->setParent($this);
         return;
     }
