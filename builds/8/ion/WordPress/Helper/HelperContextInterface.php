@@ -9,6 +9,18 @@ interface HelperContextInterface {
 
     static function uninstall(): void;
 
+    function setParent(HelperContextInterface $context = null): HelperContextInterface;
+
+    function getParent(): ?HelperContextInterface;
+
+    function hasParent(): bool;
+
+    function getChildren(): array;
+
+    function hasChildren(): bool;
+
+    function addChild(HelperContextInterface $child): void;
+
     function getLog(): WordPressHelperLogInterface;
 
     function isFinalized(): bool;
@@ -67,13 +79,13 @@ interface HelperContextInterface {
 
     function invokeInitializeOperation(): void;
 
+    function invokeFinalizeOperation(): void;
+
     function invokeActivateOperation(): void;
 
     function invokeDeactivateOperation(): void;
 
     function invokeUninstallOperation(): void;
-
-    function invokeFinalizeOperation(): void;
 
     function getType(): int;
 
@@ -82,14 +94,6 @@ interface HelperContextInterface {
     function getVersion(): ?SemVerInterface;
 
     function getActivationVersion(): ?SemVerInterface;
-
-    function setParent(HelperContextInterface $context = null): HelperContextInterface;
-
-    function getParent(): ?HelperContextInterface;
-
-    function getChildren(): array;
-
-    function addChild(HelperContextInterface $child): void;
 
     function getTemplates(
 
