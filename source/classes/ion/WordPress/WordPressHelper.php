@@ -351,6 +351,11 @@ final class WordPressHelper implements WordPressHelperInterface {
 
             foreach(static::getContexts() as $helperContext) {
                 
+                if($helperContext->hasParent()) {
+                    
+                    continue;
+                }                
+                
                 $helperContext->invokeFinalizeOperation();            
             }                        
         });           
@@ -379,11 +384,21 @@ final class WordPressHelper implements WordPressHelperInterface {
             
             return static::getCurrentContext();
         }
-        
-        if(array_key_exists($slug, static::getContexts())) {
+
+        foreach(array_values(static::getContexts()) as $context) {
             
-            return static::getContexts()[$slug];
+            if(static::slugify($context->getPackageName()) !== $slug) {
+                
+                continue;
+            }
+            
+            return $context;
         }
+        
+//        if(array_key_exists($slug, static::getContexts())) {
+//            
+//            return static::getContexts()[$slug];
+//        }
         
         throw new WordPressHelperException("Could not find a context named '{$slug}.'");
     }

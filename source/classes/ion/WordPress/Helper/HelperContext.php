@@ -139,16 +139,17 @@ final class HelperContext implements HelperContextInterface {
         $this->contextVendorName = PHP::strToDashedCase($vendorName);
         $this->contextProjectName = PHP::strToDashedCase($projectName);
         
-        if(array_key_exists($this->getPackageName(), WP::getContexts())) {
+        if(!array_key_exists($this->getPackageName(), WP::getContexts())) {
             
             //$tmp = WP::getContexts()[$this->getPackageName()]->getLoadPath();
             //throw new WordPressHelperException("Context '{$this->getPackageName()}' has already been defined in '{$tmp}' - context package names need to be unique.");
             
             // This context has already been loaded, so do nothing!
-            return;
+            //return;
+            
         }
         
-        WP::getContexts()[$this->getPackageName()] = $this;
+        WP::getContexts()[] = $this;
 
         $aliases = [
             'wp-devhelper' => 'WP Devhelper'
@@ -194,6 +195,47 @@ final class HelperContext implements HelperContextInterface {
 
         return;
     }
+    
+    public function setParent(HelperContextInterface $context = null): HelperContextInterface {
+        
+        $this->parent = $context;
+        return $this;
+    }
+    
+    public function getParent(): ?HelperContextInterface {
+        
+        return $this->parent;
+    }
+    
+    public function hasParent(): bool {
+        
+        return ($this->getParent() !== null);
+    }
+    
+    public function getChildren(): array {
+        
+        return array_values($this->children);
+    }        
+    
+    public function hasChildren(): bool {
+        
+        return (PHP::count($this->getChildren()) > 0);
+    }
+    
+    public function addChild(HelperContextInterface $child): void {
+        
+        $key = $child->getPackageName();
+        
+        if(array_key_exists($key, $this->children)) {
+            
+//            throw new \Exception("WHOOP");
+            return;
+        }
+        
+        $this->children[$key] = $child;        
+        $child->setParent($this);
+        return;
+    }    
     
     public function getLog(): WordPressHelperLogInterface {
         
@@ -377,7 +419,7 @@ final class HelperContext implements HelperContextInterface {
     }       
 
     public function invokeInitializeOperation(): void {
-        
+                
         if($this->isInitialized()) { 
             
             return;
@@ -398,15 +440,8 @@ final class HelperContext implements HelperContextInterface {
         
         if ($call !== null) {
             
-//            if($this->getPackageName() == "ion/components-submodule") {
-//                
-//                var_dump($call);
-//                exit;
-//            }
-            
             $call($this);
         }
-
         
         $this->initialized = true;
         
@@ -420,31 +455,6 @@ final class HelperContext implements HelperContextInterface {
             //throw new WordPressHelperException("Context '{$this->getProjectName()}' has already been finalized.");
             return;
         }        
-
-        $call = $this->getFinalizeOperation();
-
-        if($call !== null) {
-            
-            $this->finalize = $call;
-        }        
-        
-        if ($this->hasFinalizeOperation() === false) {
-            
-//            throw new WordPressHelperException('No finalize operation to invoke.');
-//            return;
-        }
-
-        if ($call !== null) {
-
-            $call($this);
-        }           
-
-        foreach(array_values($this->getChildren()) as $childContext) {
-
-            $childContext->invokeFinalizeOperation();
-        }           
-        
-        $this->finalized = true;
         
         if(WP::isAdmin()) {
 
@@ -484,7 +494,26 @@ final class HelperContext implements HelperContextInterface {
 
                 });                   
             }  
-        }          
+        }           
+
+        foreach(array_values($this->getChildren()) as $childContext) {
+
+            $childContext->invokeFinalizeOperation();
+        }            
+        
+        if ($this->hasFinalizeOperation() === false) {
+            
+            return;
+        }            
+
+        $call = $this->getFinalizeOperation();
+
+        if ($call !== null) {
+
+            $call($this);
+        }           
+
+        $this->finalized = true;
     }        
     
     
@@ -622,40 +651,7 @@ final class HelperContext implements HelperContextInterface {
         
         return $this->activationVersion;                
     }    
-    
-    public function setParent(HelperContextInterface $context = null): HelperContextInterface {
         
-        $this->parent = $context;
-        return $this;
-    }
-    
-    public function getParent(): ?HelperContextInterface {
-        
-        return $this->parent;
-    }
-    
-    public function hasParent(): bool {
-        
-        return ($this->getParent() !== null);
-    }
-    
-    public function getChildren(): array {
-        
-        return array_values($this->children);
-    }        
-    
-    public function hasChildren(): bool {
-        
-        return (PHP::count($this->getChildren()) > 0);
-    }
-    
-    public function addChild(HelperContextInterface $child): void {
-        
-        $this->children[$child->getPackageName()] = $child;        
-        $child->setParent($this);
-        return;
-    }
-    
     public function getTemplates(bool $flat = true, bool $themeOnly = false, bool $labels = false, string $nullItem = null, string $relativePath = null): array {        
 
         $wpTemplates = get_page_templates();
