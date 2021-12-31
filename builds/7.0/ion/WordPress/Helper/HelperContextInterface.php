@@ -14,6 +14,44 @@ interface HelperContextInterface
     /**
      * method
      * 
+     * 
+     * @return HelperContextInterface
+     */
+    function setParent(HelperContextInterface $context = null) : HelperContextInterface;
+    /**
+     * method
+     * 
+     * @return ?HelperContextInterface
+     */
+    function getParent();
+    /**
+     * method
+     * 
+     * @return bool
+     */
+    function hasParent() : bool;
+    /**
+     * method
+     * 
+     * @return array
+     */
+    function getChildren() : array;
+    /**
+     * method
+     * 
+     * @return bool
+     */
+    function hasChildren() : bool;
+    /**
+     * method
+     * 
+     * 
+     * @return void
+     */
+    function addChild(HelperContextInterface $child);
+    /**
+     * method
+     * 
      * @return WordPressHelperLogInterface
      */
     function getLog() : WordPressHelperLogInterface;
@@ -196,6 +234,12 @@ interface HelperContextInterface
      * 
      * @return void
      */
+    function invokeFinalizeOperation();
+    /**
+     * method
+     * 
+     * @return void
+     */
     function invokeActivateOperation();
     /**
      * method
@@ -209,12 +253,6 @@ interface HelperContextInterface
      * @return void
      */
     function invokeUninstallOperation();
-    /**
-     * method
-     * 
-     * @return void
-     */
-    function invokeFinalizeOperation();
     /**
      * method
      * 
@@ -239,32 +277,6 @@ interface HelperContextInterface
      * @return ?SemVerInterface
      */
     function getActivationVersion();
-    /**
-     * method
-     * 
-     * 
-     * @return HelperContextInterface
-     */
-    function setParent(HelperContextInterface $context = null) : HelperContextInterface;
-    /**
-     * method
-     * 
-     * @return ?HelperContextInterface
-     */
-    function getParent();
-    /**
-     * method
-     * 
-     * @return array
-     */
-    function getChildren() : array;
-    /**
-     * method
-     * 
-     * 
-     * @return void
-     */
-    function addChild(HelperContextInterface $child);
     /**
      * method
      * 

@@ -9,38 +9,37 @@ namespace ion\WordPress\Helper;
  *
  * @author Justus
  */
+use ion\PhpHelper as PHP;
 use ion\WordPress\WordPressHelper as WP;
 use ion\Package;
 use ion\PackageInterface;
 trait ContextTrait
 {
     private static $contextInstances = [];
-    protected static function getContextInstance() : ?ContextInterface
+    protected static function getContextInstance(int $index = 0) : ?ContextInterface
     {
         if (!array_key_exists(static::class, self::$contextInstances)) {
             return null;
         }
-        return self::$contextInstances[static::class];
+        return self::$contextInstances[static::class][$index];
     }
     protected static final function doUninstall() : void
     {
         static::getContextInstance()->uninstall();
-        static::getContextInstance()->onUninstalled();
+        //        static::getContextInstance()->onUninstalled();
         return;
     }
     private $helperContext = null;
     private $package = null;
+    private $contextInstanceIndex = null;
     public function __construct(PackageInterface $package, array $helperSettings = null)
     {
-        //        if(static::getContextInstance() === null) {
-        //
-        //            throw new WordPressHelperException("Context is not initialized yet.")
-        //        }
-        self::$contextInstances[static::class] = $this;
+        if (!array_key_exists(static::class, self::$contextInstances)) {
+            self::$contextInstances[static::class] = [];
+        }
+        $this->contextInstanceIndex = PHP::count(self::$contextInstances[static::class]);
+        self::$contextInstances[static::class][] = $this;
         $this->package = $package;
-        //echo "<h1>AAA</h1><pre>";
-        //var_dump($package);
-        //die("</pre>");
         $helper = WP::createContext($package->getVendor(), $package->getProject(), $package->getProjectEntry(), null, $helperSettings);
         $this->helperContext = $helper->getContext();
         $helper->initialize(function (HelperContextInterface $context) {
@@ -57,7 +56,6 @@ trait ContextTrait
             return;
         })->uninstall([static::class, 'doUninstall'])->finalize(function (HelperContextInterface $context) {
             $this->finalize();
-            //$this->onFinalized();
             return;
         });
     }

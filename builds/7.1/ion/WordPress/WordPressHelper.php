@@ -247,9 +247,27 @@ final class WordPressHelper implements WordPressHelperInterface
             });
         }
         static::$helperInitialized = true;
+        add_action('after_setup_theme', function () {
+            // NOTE: This needs to fire before 'init'
+            foreach (static::getContexts() as $helperContext) {
+                if ($helperContext->hasParent()) {
+                    continue;
+                }
+                $helperContext->invokeInitializeOperation();
+            }
+        });
         add_action('init', function () {
             if (!session_id()) {
                 session_start();
+            }
+        });
+        add_action('wp_loaded', function () {
+            // NOTE: 'wp' doesn't seem to fire for admin screens
+            foreach (static::getContexts() as $helperContext) {
+                if ($helperContext->hasParent()) {
+                    continue;
+                }
+                $helperContext->invokeFinalizeOperation();
             }
         });
     }
@@ -280,9 +298,16 @@ final class WordPressHelper implements WordPressHelperInterface
         if ($slug === null) {
             return static::getCurrentContext();
         }
-        if (array_key_exists($slug, static::getContexts())) {
-            return static::getContexts()[$slug];
+        foreach (array_values(static::getContexts()) as $context) {
+            if (static::slugify($context->getPackageName()) !== $slug) {
+                continue;
+            }
+            return $context;
         }
+        //        if(array_key_exists($slug, static::getContexts())) {
+        //
+        //            return static::getContexts()[$slug];
+        //        }
         throw new WordPressHelperException("Could not find a context named '{$slug}.'");
     }
     /**
@@ -598,7 +623,6 @@ TEMPLATE;
     public function finalize(callable $call = null) : WordPressHelperInterface
     {
         $this->getCurrentContext()->setFinalizeOperation($call);
-        $this->getCurrentContext()->invokeFinalizeOperation();
         return $this;
     }
 }
