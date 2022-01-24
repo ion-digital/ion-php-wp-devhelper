@@ -30,9 +30,6 @@ trait OptionsTrait
     protected static function initialize()
     {
         static::registerWrapperAction('customize_register', function (\WP_Customize_Manager $wpCustomize) {
-            //            echo("<pre>");
-            //        var_dump(static::$themeOptions);
-            //            die("</pre>");
             foreach (static::$themeOptions as $sectionSlug => $themeOption) {
                 $wpCustomize->add_section($sectionSlug, ['title' => $themeOption['title'], 'priority' => $themeOption['priority']]);
                 foreach ($themeOption['settings'] as $settingSlug => $setting) {
