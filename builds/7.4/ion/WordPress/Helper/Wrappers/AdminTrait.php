@@ -377,11 +377,18 @@ trait AdminTrait
             }
             // Term fields
             foreach (static::$settingsTermFieldBoxes as $termFieldBox) {
-                if ($termFieldBox['render'] === true) {
-                    if ($termFieldBox['content'] !== null && is_callable($termFieldBox['content'])) {
-                        ob_start();
-                        $termFieldBox['content'](true);
-                        $termFieldBox['html'] = ob_get_clean();
+                global $pagenow;
+                if ($pagenow !== "term.php") {
+                    // We only display term fields on the edit page, not the add page
+                    $termFieldBox['html'] = "<div class=\"form-field term-description-wrap\"><p><strong>Please note!</strong> Additional fields are available for this term when editing.</p></div>";
+                    $termFieldBox['content'] = null;
+                } else {
+                    if ($termFieldBox['render'] === true) {
+                        if ($termFieldBox['content'] !== null && is_callable($termFieldBox['content'])) {
+                            ob_start();
+                            $termFieldBox['content'](true);
+                            $termFieldBox['html'] = ob_get_clean();
+                        }
                     }
                 }
                 $cb = function () {
