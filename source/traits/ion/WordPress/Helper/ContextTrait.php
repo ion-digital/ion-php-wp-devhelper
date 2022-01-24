@@ -42,7 +42,14 @@ trait ContextTrait {
     private $package = null;
     private $contextInstanceIndex = null;
     
-    public function __construct(PackageInterface $package, array $helperSettings = null) {
+    public function __construct(
+            
+        PackageInterface $package,
+        array $helperSettings = null,
+        callable $onConstructed = null,
+        callable $onInitialized = null
+            
+    ) {
 
         if(!array_key_exists(static::class, self::$contextInstances)) {
             
@@ -60,31 +67,39 @@ trait ContextTrait {
                         
         $helper
                 
-        ->initialize(function(HelperContextInterface $context) {
+        ->construct(function(HelperContextInterface $context) use ($onConstructed) {
             
-            $this->initialize();      
-            $this->onInitialized();
+            $this->construct();
+            
+            if($onConstructed !== null) {
+                
+                $onConstructed($this);
+            }
+            
             return;
         })
+        ->initialize(function(HelperContextInterface $context) use ($onInitialized) {         
+            
+            $this->initialize();
+            
+            if($onInitialized !== null) {
+                
+                $onInitialized($this);
+            }
+            
+            return;
+        })        
         ->activate(function(HelperContextInterface $context) {         
             
             $this->activate();
-            $this->onActivated();
             return;
         })
         ->deactivate(function(HelperContextInterface $context) {         
             
             $this->deactivate();
-            $this->onDeactivated();
             return;
         })
-        ->uninstall([ static::class, 'doUninstall' ])      
-        ->finalize(function(HelperContextInterface $context) {         
-            
-            $this->finalize();
-            return;
-        });
-               
+        ->uninstall([ static::class, 'doUninstall' ]);     
     }
     
     final public function getHelperContext(): HelperContextInterface {
@@ -107,46 +122,26 @@ trait ContextTrait {
         return $this->package;
     }
     
-    
-    abstract protected function initialize(): void;
-    
-    protected function onInitialized(): void {
+    protected function construct(): void {
         
         // Empty, for now...
-    }
+    }       
     
+    abstract protected function initialize(): void;
+
     protected function activate(): void {
         
         // Empty, for now...
     }
-    
-    protected function onActivated(): void {
-        
-        // Empty, for now...
-    }    
-    
+
     protected function deactivate(): void {
         
         // Empty, for now...
     }
     
-    protected function onDeactivated(): void {
-        
-        // Empty, for now...
-    }    
-    
     protected function uninstall(): void {
         
         // Empty, for now...
     }
-    
-    protected function onUninstalled(): void {
-        
-        // Empty, for now...
-    }      
-    
-    protected function finalize(): void {
-        
-        // Empty, for now...
-    }  
+
 }
