@@ -34,11 +34,7 @@ trait OptionsTrait {
     
     protected static function initialize() {    
         
-        static::registerWrapperAction('customize_register', function(\WP_Customize_Manager $wpCustomize) {
-
-//            echo("<pre>");
-//        var_dump(static::$themeOptions);
-//            die("</pre>");
+        static::registerWrapperAction('customize_register', function(\WP_Customize_Manager $wpCustomize) {      
             
             foreach(static::$themeOptions as $sectionSlug => $themeOption) {
                 
