@@ -85,7 +85,7 @@ trait ActionsTrait {
 //            'priority' => ($priority === null ? 10 : $priority)
 //        ];
         
-        add_action($key, $function, $priority ?? 10);
+        add_action($name, $function, $priority ?? 10);
     }
 
     
