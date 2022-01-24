@@ -31,7 +31,8 @@ use \ion\WordPress\Helper\WordPressHelperException;
 final class WordPressHelper implements WordPressHelperInterface {
 
     private const WORDPRESS_HTACCESS_START = "# BEGIN WordPress";
-    private const WORDPRESS_HTACCESS_END = "# END WordPress";    
+    private const WORDPRESS_HTACCESS_END = "# END WordPress";   
+    private const DEFAULT_WRAPPER_PRIORITY = 1000000;
     
     use 
         \ion\WordPress\Helper\Wrappers\ActionsTrait,
@@ -76,7 +77,7 @@ final class WordPressHelper implements WordPressHelperInterface {
 
     private static $tools = null;
        
-    private static function registerWrapperAction(string $actionName, callable $init, int $priority = 0, bool $returnFirstResult = false): void {
+    private static function registerWrapperAction(string $actionName, callable $init, int $priority = self::DEFAULT_WRAPPER_PRIORITY, bool $returnFirstResult = false): void {
         
         if(!array_key_exists($actionName, static::$wrapperActions)) {
         
@@ -329,12 +330,12 @@ final class WordPressHelper implements WordPressHelperInterface {
         add_action('after_setup_theme', function() { // NOTE: This needs to fire before 'init'
 
             foreach(static::getContexts() as $helperContext) {
-                
+
                 if($helperContext->hasParent()) {
-                    
+
                     continue;
                 }
-                               
+
                 $helperContext->invokeConstructOperation();            
             }
         });
@@ -342,17 +343,17 @@ final class WordPressHelper implements WordPressHelperInterface {
         add_action('init', function() {
 
             if(!session_id()) {
-            
+
                 session_start();
             }            
-            
+
             foreach(static::getContexts() as $helperContext) {
-                
+
                 if($helperContext->hasParent()) {
-                    
+
                     continue;
                 }                
-                
+
                 $helperContext->invokeInitializeOperation();            
             }                        
         });           
