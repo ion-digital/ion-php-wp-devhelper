@@ -66,7 +66,7 @@ trait ActionsTrait
         //            'function' => $function,
         //            'priority' => ($priority === null ? 10 : $priority)
         //        ];
-        add_action($key, $function, $priority ?? 10);
+        add_action($name, $function, $priority ?? 10);
     }
     public static function removeAction(string $name, callable $function, int $priority = null)
     {
