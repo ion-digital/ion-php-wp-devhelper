@@ -29,7 +29,7 @@ final class HelperContext implements HelperContextInterface
     {
         // empty for now!
     }
-    private $finalized = false;
+    private $constructed = false;
     private $initialized = false;
     private $workingDir = null;
     private $workingUri = null;
@@ -43,11 +43,11 @@ final class HelperContext implements HelperContextInterface
     private $activationVersion = null;
     private $children = null;
     private $parent = null;
+    private $construct = null;
     private $initialize = null;
     private $activate = null;
     private $deactivate = null;
     private $uninstall = null;
-    private $finalize = null;
     /**
      * method
      * 
@@ -57,6 +57,9 @@ final class HelperContext implements HelperContextInterface
     public final function __construct($vendorName, $projectName, $loadPath, $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, HelperContextInterface $parent = null)
     {
         //        $this->setParent($parent);
+        $this->setConstructOperation(function () {
+            /* empty for now! */
+        });
         $this->setInitializeOperation(function () {
             /* empty for now! */
         });
@@ -67,9 +70,6 @@ final class HelperContext implements HelperContextInterface
             /* empty for now! */
         });
         $this->setUninstallOperation(null);
-        $this->setFinalizeOperation(function () {
-            /* empty for now! */
-        });
         $workingUri = null;
         $this->children = [];
         $loadPath = realpath($loadPath);
@@ -125,6 +125,31 @@ final class HelperContext implements HelperContextInterface
             }
         }
         $this->version = $version;
+        add_action('admin_init', function () {
+            if ($this->getUninstallOperation() instanceof \Closure) {
+                throw new WordPressHelperException("The uninstall hook for context '{$this->getProjectName()}' cannot be a Closure - it must be unspecified (NULL), a function or a static method.");
+            }
+            if ($this->getType() === Constants::CONTEXT_PLUGIN) {
+                register_activation_hook($this->loadPath, function () {
+                    $this->invokeActivateOperation();
+                });
+                register_deactivation_hook($this->loadPath, function () {
+                    $this->invokeDeactivateOperation();
+                });
+                if ($this->hasUninstallOperation()) {
+                    register_uninstall_hook($this->loadPath, $this->getUninstallOperation());
+                }
+            } else {
+                if ($this->getType() === Constants::CONTEXT_THEME) {
+                    add_action("after_switch_theme", function () {
+                        $this->invokeActivateOperation();
+                    });
+                    add_action("switch_theme", function () {
+                        $this->invokeDeactivateOperation();
+                    });
+                }
+            }
+        });
         return;
     }
     /**
@@ -205,9 +230,9 @@ final class HelperContext implements HelperContextInterface
      * 
      * @return bool
      */
-    public function isFinalized()
+    public function isConstructed()
     {
-        return $this->finalized;
+        return $this->constructed;
     }
     /**
      * method
@@ -333,6 +358,15 @@ final class HelperContext implements HelperContextInterface
      * 
      * @return ?callable
      */
+    public function getConstructOperation()
+    {
+        return $this->construct;
+    }
+    /**
+     * method
+     * 
+     * @return ?callable
+     */
     public function getInitializeOperation()
     {
         return $this->initialize;
@@ -367,17 +401,19 @@ final class HelperContext implements HelperContextInterface
     /**
      * method
      * 
-     * @return ?callable
+     * 
+     * @return HelperContextInterface
      */
-    public function getFinalizeOperation()
+    public function setConstructOperation(callable $operation = null)
     {
-        return $this->finalize;
+        $this->construct = $operation;
+        return $this;
     }
     /**
      * method
      * 
      * 
-     * @return HelperContextInterface
+     * @return ?HelperContextInterface
      */
     public function setInitializeOperation(callable $operation = null)
     {
@@ -420,13 +456,11 @@ final class HelperContext implements HelperContextInterface
     /**
      * method
      * 
-     * 
-     * @return ?HelperContextInterface
+     * @return bool
      */
-    public function setFinalizeOperation(callable $operation = null)
+    public function hasConstructOperation()
     {
-        $this->finalize = $operation;
-        return $this;
+        return $this->getConstructOperation() !== null;
     }
     /**
      * method
@@ -467,11 +501,26 @@ final class HelperContext implements HelperContextInterface
     /**
      * method
      * 
-     * @return bool
+     * @return void
      */
-    public function hasFinalizeOperation()
+    public function invokeConstructOperation()
     {
-        return $this->getFinalizeOperation() !== null;
+        if ($this->isConstructed()) {
+            return;
+        }
+        foreach (array_values($this->getChildren()) as $childContext) {
+            $childContext->invokeConstructOperation();
+        }
+        if ($this->hasConstructOperation() === false) {
+            //            throw new WordPressHelperException('No construct operation to invoke.');
+            return;
+        }
+        $call = $this->getConstructOperation();
+        if ($call !== null) {
+            $call($this);
+        }
+        $this->constructed = true;
+        return;
     }
     /**
      * method
@@ -481,13 +530,13 @@ final class HelperContext implements HelperContextInterface
     public function invokeInitializeOperation()
     {
         if ($this->isInitialized()) {
+            //throw new WordPressHelperException("Context '{$this->getProjectName()}' has already been initialized.");
             return;
         }
         foreach (array_values($this->getChildren()) as $childContext) {
             $childContext->invokeInitializeOperation();
         }
         if ($this->hasInitializeOperation() === false) {
-            //            throw new WordPressHelperException('No initialize operation to invoke.');
             return;
         }
         $call = $this->getInitializeOperation();
@@ -495,55 +544,6 @@ final class HelperContext implements HelperContextInterface
             $call($this);
         }
         $this->initialized = true;
-        return;
-    }
-    /**
-     * method
-     * 
-     * @return void
-     */
-    public function invokeFinalizeOperation()
-    {
-        if ($this->isFinalized()) {
-            //throw new WordPressHelperException("Context '{$this->getProjectName()}' has already been finalized.");
-            return;
-        }
-        if (WP::isAdmin()) {
-            if ($this->getUninstallOperation() instanceof \Closure) {
-                throw new WordPressHelperException("The uninstall hook for context '{$this->getProjectName()}' cannot be a Closure - it must be unspecified (NULL), a function or a static method.");
-            }
-            if ($this->getType() === Constants::CONTEXT_PLUGIN) {
-                register_activation_hook($this->loadPath, function () {
-                    $this->invokeActivateOperation();
-                });
-                register_deactivation_hook($this->loadPath, function () {
-                    $this->invokeDeactivateOperation();
-                });
-                if ($this->hasUninstallOperation()) {
-                    register_uninstall_hook($this->loadPath, $this->getUninstallOperation());
-                }
-            } else {
-                if ($this->getType() === Constants::CONTEXT_THEME) {
-                    add_action("after_switch_theme", function () {
-                        $this->invokeActivateOperation();
-                    });
-                    add_action("switch_theme", function () {
-                        $this->invokeDeactivateOperation();
-                    });
-                }
-            }
-        }
-        foreach (array_values($this->getChildren()) as $childContext) {
-            $childContext->invokeFinalizeOperation();
-        }
-        if ($this->hasFinalizeOperation() === false) {
-            return;
-        }
-        $call = $this->getFinalizeOperation();
-        if ($call !== null) {
-            $call($this);
-        }
-        $this->finalized = true;
     }
     /**
      * method

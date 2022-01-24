@@ -48,9 +48,9 @@ interface WordPressHelperInterface extends
 
     static function getCurrentContext(): HelperContextInterface;
 
-    static function isHelperInitialized(): bool;
+    static function isHelperConstructed(): bool;
 
-    static function isHelperFinalized(): bool;
+    static function isHelperInitialized(): bool;
 
     static function slugify(string $s): string;
 
@@ -76,13 +76,15 @@ interface WordPressHelperInterface extends
         string $helperDir = null,
         array $wpHelperSettings = null,
         SemVerInterface $version = null,
+        callable $construct = null,
         callable $initialize = null,
         callable $activate = null,
         callable $deactivate = null,
-        callable $finalize = null,
         array $uninstall = null
 
     ): WordPressHelperInterface;
+
+    function construct(callable $call = null): WordPressHelperInterface;
 
     function initialize(callable $call = null): WordPressHelperInterface;
 
@@ -91,7 +93,5 @@ interface WordPressHelperInterface extends
     function deactivate(callable $call = null): WordPressHelperInterface;
 
     function uninstall(array $call = null): WordPressHelperInterface;
-
-    function finalize(callable $call = null): WordPressHelperInterface;
 
 }

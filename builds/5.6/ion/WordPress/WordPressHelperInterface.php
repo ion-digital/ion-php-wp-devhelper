@@ -50,13 +50,13 @@ interface WordPressHelperInterface extends ActionsInterface, AdminInterface, Com
      * 
      * @return bool
      */
-    static function isHelperInitialized();
+    static function isHelperConstructed();
     /**
      * method
      * 
      * @return bool
      */
-    static function isHelperFinalized();
+    static function isHelperInitialized();
     /**
      * method
      * 
@@ -117,7 +117,14 @@ interface WordPressHelperInterface extends ActionsInterface, AdminInterface, Com
      * 
      * @return WordPressHelperInterface
      */
-    static function createContext($vendorName, $projectName, $loadPath, $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, callable $finalize = null, array $uninstall = null);
+    static function createContext($vendorName, $projectName, $loadPath, $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $construct = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, array $uninstall = null);
+    /**
+     * method
+     * 
+     * 
+     * @return WordPressHelperInterface
+     */
+    function construct(callable $call = null);
     /**
      * method
      * 
@@ -146,11 +153,4 @@ interface WordPressHelperInterface extends ActionsInterface, AdminInterface, Com
      * @return WordPressHelperInterface
      */
     function uninstall(array $call = null);
-    /**
-     * method
-     * 
-     * 
-     * @return WordPressHelperInterface
-     */
-    function finalize(callable $call = null);
 }
