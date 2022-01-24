@@ -28,6 +28,7 @@ final class WordPressHelper implements WordPressHelperInterface
 {
     const WORDPRESS_HTACCESS_START = "# BEGIN WordPress";
     const WORDPRESS_HTACCESS_END = "# END WordPress";
+    const DEFAULT_WRAPPER_PRIORITY = 1000000;
     use \ion\WordPress\Helper\Wrappers\ActionsTrait, \ion\WordPress\Helper\Wrappers\AdminTrait, \ion\WordPress\Helper\Wrappers\CommonTrait, \ion\WordPress\Helper\Wrappers\CronTrait, \ion\WordPress\Helper\Wrappers\DatabaseTrait, \ion\WordPress\Helper\Wrappers\FiltersTrait, \ion\WordPress\Helper\Wrappers\TemplateTrait, \ion\WordPress\Helper\Wrappers\LoggingTrait, \ion\WordPress\Helper\Wrappers\OptionsTrait, \ion\WordPress\Helper\Wrappers\PathsTrait, \ion\WordPress\Helper\Wrappers\PostsTrait, \ion\WordPress\Helper\Wrappers\RewritesTrait, \ion\WordPress\Helper\Wrappers\ShortCodesTrait, \ion\WordPress\Helper\Wrappers\TaxonomiesTrait, \ion\WordPress\Helper\Wrappers\WidgetsTrait {
         \ion\WordPress\Helper\Wrappers\ActionsTrait::initialize as initializeActions;
         \ion\WordPress\Helper\Wrappers\AdminTrait::initialize as initializeAdmin;
@@ -57,7 +58,7 @@ final class WordPressHelper implements WordPressHelperInterface
      * 
      * @return void
      */
-    private static function registerWrapperAction(string $actionName, callable $init, int $priority = 0, bool $returnFirstResult = false) : void
+    private static function registerWrapperAction(string $actionName, callable $init, int $priority = self::DEFAULT_WRAPPER_PRIORITY, bool $returnFirstResult = false) : void
     {
         if (!array_key_exists($actionName, static::$wrapperActions)) {
             static::$wrapperActions[$actionName] = [];
