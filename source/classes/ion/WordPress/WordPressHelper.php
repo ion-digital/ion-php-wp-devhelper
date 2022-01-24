@@ -345,10 +345,7 @@ final class WordPressHelper implements WordPressHelperInterface {
             
                 session_start();
             }            
-        });
-        
-        add_action('wp_loaded', function() { // NOTE: 'wp' doesn't seem to fire for admin screens
-
+            
             foreach(static::getContexts() as $helperContext) {
                 
                 if($helperContext->hasParent()) {
