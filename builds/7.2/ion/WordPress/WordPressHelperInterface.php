@@ -24,8 +24,8 @@ interface WordPressHelperInterface extends ActionsInterface, AdminInterface, Com
     static function getContentDirectory();
     static function getContext(string $slug = null) : HelperContextInterface;
     static function getCurrentContext() : HelperContextInterface;
+    static function isHelperConstructed() : bool;
     static function isHelperInitialized() : bool;
-    static function isHelperFinalized() : bool;
     static function slugify(string $s) : string;
     static function isDebugMode() : bool;
     static function panic(string $errorMessage, int $httpCode = null, string $title = null) : void;
@@ -34,10 +34,10 @@ interface WordPressHelperInterface extends ActionsInterface, AdminInterface, Com
     static function hasEditThemeOptionsCapability(int $user = null) : bool;
     static function hasManageNetworkCapability(int $user = null) : bool;
     static function isLoggedIn() : bool;
-    static function createContext(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, callable $finalize = null, array $uninstall = null) : WordPressHelperInterface;
+    static function createContext(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $construct = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, array $uninstall = null) : WordPressHelperInterface;
+    function construct(callable $call = null) : WordPressHelperInterface;
     function initialize(callable $call = null) : WordPressHelperInterface;
     function activate(callable $call = null) : WordPressHelperInterface;
     function deactivate(callable $call = null) : WordPressHelperInterface;
     function uninstall(array $call = null) : WordPressHelperInterface;
-    function finalize(callable $call = null) : WordPressHelperInterface;
 }

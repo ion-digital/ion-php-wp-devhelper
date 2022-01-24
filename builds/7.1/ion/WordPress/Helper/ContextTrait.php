@@ -49,7 +49,7 @@ trait ContextTrait
      * 
      * @return mixed
      */
-    public function __construct(PackageInterface $package, array $helperSettings = null)
+    public function __construct(PackageInterface $package, array $helperSettings = null, callable $onConstructed = null, callable $onInitialized = null)
     {
         if (!array_key_exists(static::class, self::$contextInstances)) {
             self::$contextInstances[static::class] = [];
@@ -59,22 +59,25 @@ trait ContextTrait
         $this->package = $package;
         $helper = WP::createContext($package->getVendor(), $package->getProject(), $package->getProjectEntry(), null, $helperSettings);
         $this->helperContext = $helper->getContext();
-        $helper->initialize(function (HelperContextInterface $context) {
+        $helper->construct(function (HelperContextInterface $context) use($onConstructed) {
+            $this->construct();
+            if ($onConstructed !== null) {
+                $onConstructed($this);
+            }
+            return;
+        })->initialize(function (HelperContextInterface $context) use($onInitialized) {
             $this->initialize();
-            $this->onInitialized();
+            if ($onInitialized !== null) {
+                $onInitialized($this);
+            }
             return;
         })->activate(function (HelperContextInterface $context) {
             $this->activate();
-            $this->onActivated();
             return;
         })->deactivate(function (HelperContextInterface $context) {
             $this->deactivate();
-            $this->onDeactivated();
             return;
-        })->uninstall([static::class, 'doUninstall'])->finalize(function (HelperContextInterface $context) {
-            $this->finalize();
-            return;
-        });
+        })->uninstall([static::class, 'doUninstall']);
     }
     /**
      * method
@@ -105,31 +108,22 @@ trait ContextTrait
      * 
      * @return void
      */
+    protected function construct() : void
+    {
+        // Empty, for now...
+    }
+    /**
+     * method
+     * 
+     * @return void
+     */
     protected abstract function initialize() : void;
     /**
      * method
      * 
      * @return void
      */
-    protected function onInitialized() : void
-    {
-        // Empty, for now...
-    }
-    /**
-     * method
-     * 
-     * @return void
-     */
     protected function activate() : void
-    {
-        // Empty, for now...
-    }
-    /**
-     * method
-     * 
-     * @return void
-     */
-    protected function onActivated() : void
     {
         // Empty, for now...
     }
@@ -147,34 +141,7 @@ trait ContextTrait
      * 
      * @return void
      */
-    protected function onDeactivated() : void
-    {
-        // Empty, for now...
-    }
-    /**
-     * method
-     * 
-     * @return void
-     */
     protected function uninstall() : void
-    {
-        // Empty, for now...
-    }
-    /**
-     * method
-     * 
-     * @return void
-     */
-    protected function onUninstalled() : void
-    {
-        // Empty, for now...
-    }
-    /**
-     * method
-     * 
-     * @return void
-     */
-    protected function finalize() : void
     {
         // Empty, for now...
     }

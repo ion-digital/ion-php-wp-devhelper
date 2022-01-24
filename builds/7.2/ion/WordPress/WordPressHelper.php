@@ -45,8 +45,8 @@ final class WordPressHelper implements WordPressHelperInterface
         \ion\WordPress\Helper\Wrappers\TaxonomiesTrait::initialize as initializeTaxonomies;
         \ion\WordPress\Helper\Wrappers\WidgetsTrait::initialize as initializeWidgets;
     }
+    private static $helperConstructed = false;
     private static $helperInitialized = false;
-    private static $helperFinalized = false;
     private static $settings = [];
     private static $contexts = [];
     private static $wrapperActions = [];
@@ -105,7 +105,7 @@ final class WordPressHelper implements WordPressHelperInterface
     }
     private static function initializeHelper(HelperContextInterface $context, array $wpHelperSettings, string $helperDir = null) : void
     {
-        if (static::$helperInitialized) {
+        if (static::$helperConstructed) {
             return;
         }
         static::$helperUri = null;
@@ -203,14 +203,14 @@ final class WordPressHelper implements WordPressHelperInterface
                 return $settings;
             });
         }
-        static::$helperInitialized = true;
+        static::$helperConstructed = true;
         add_action('after_setup_theme', function () {
             // NOTE: This needs to fire before 'init'
             foreach (static::getContexts() as $helperContext) {
                 if ($helperContext->hasParent()) {
                     continue;
                 }
-                $helperContext->invokeInitializeOperation();
+                $helperContext->invokeConstructOperation();
             }
         });
         add_action('init', function () {
@@ -221,14 +221,14 @@ final class WordPressHelper implements WordPressHelperInterface
                 if ($helperContext->hasParent()) {
                     continue;
                 }
-                $helperContext->invokeFinalizeOperation();
+                $helperContext->invokeInitializeOperation();
             }
         });
     }
     private static function getContextByIndex(int $index)
     {
         if (PHP::count(array_values(static::getContexts())) === 0) {
-            throw new WordPressHelperException('There are currently no instances of WordPress Helper initialized.');
+            throw new WordPressHelperException('There are currently no instances of WordPress DevHelper initialized.');
         }
         if ($index >= PHP::count(array_values(static::getContexts()))) {
             throw new WordPressHelperException("There is no instance at index {$index} - index is out of range.");
@@ -313,13 +313,13 @@ TEMPLATE;
         }
         return static::$contexts;
     }
+    public static function isHelperConstructed() : bool
+    {
+        return (bool) static::$helperConstructed;
+    }
     public static function isHelperInitialized() : bool
     {
         return (bool) static::$helperInitialized;
-    }
-    public static function isHelperFinalized() : bool
-    {
-        return (bool) static::$helperFinalized;
     }
     public static function slugify(string $s) : string
     {
@@ -382,7 +382,7 @@ TEMPLATE;
     {
         return PHP::isAssociativeArray($array);
     }
-    public static function createContext(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, callable $finalize = null, array $uninstall = null) : WordPressHelperInterface
+    public static function createContext(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $construct = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, array $uninstall = null) : WordPressHelperInterface
     {
         set_exception_handler(function (Throwable $throwable) {
             static::handleError('Exception / Error', $throwable->getMessage(), $throwable->getCode(), $throwable->getFile(), $throwable->getLine(), $throwable->getTrace());
@@ -390,15 +390,19 @@ TEMPLATE;
         if ($wpHelperSettings === null) {
             $wpHelperSettings = [];
         }
-        $helper = new static($vendorName, $projectName, $loadPath, $helperDir, $wpHelperSettings, $version, $initialize, $activate, $deactivate, $finalize, $uninstall);
+        $helper = new static($vendorName, $projectName, $loadPath, $helperDir, $wpHelperSettings, $version, $construct, $initialize, $activate, $deactivate, $uninstall);
         static::initializeHelper(static::getContext(null), $wpHelperSettings, $helperDir);
         return $helper;
     }
-    protected function __construct(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, callable $finalize = null, array $uninstall = null)
+    protected function __construct(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $construct = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, array $uninstall = null)
     {
         $context = new HelperContext($vendorName, $projectName, $loadPath, $helperDir, $wpHelperSettings, $version);
         $this->context = $context;
-        $this->context->setInitializeOperation(function () use($initialize, $context) {
+        $this->context->setConstructOperation(function () use($construct, $context) {
+            if ($construct !== null) {
+                $construct($context);
+            }
+        })->setInitializeOperation(function () use($initialize, $context) {
             if ($initialize !== null) {
                 $initialize($context);
             }
@@ -410,11 +414,12 @@ TEMPLATE;
             if ($deactivate !== null) {
                 $deactivate($context);
             }
-        })->setUninstallOperation($uninstall)->setFinalizeOperation(function () use($finalize, $context) {
-            if ($finalize !== null) {
-                $finalize($context);
-            }
-        });
+        })->setUninstallOperation($uninstall);
+    }
+    public function construct(callable $call = null) : WordPressHelperInterface
+    {
+        $this->getCurrentContext()->setConstructOperation($call);
+        return $this;
     }
     public function initialize(callable $call = null) : WordPressHelperInterface
     {
@@ -434,11 +439,6 @@ TEMPLATE;
     public function uninstall(array $call = null) : WordPressHelperInterface
     {
         $this->getCurrentContext()->setUninstallOperation($call);
-        return $this;
-    }
-    public function finalize(callable $call = null) : WordPressHelperInterface
-    {
-        $this->getCurrentContext()->setFinalizeOperation($call);
         return $this;
     }
 }

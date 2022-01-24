@@ -60,7 +60,7 @@ interface HelperContextInterface
      * 
      * @return bool
      */
-    function isFinalized() : bool;
+    function isConstructed() : bool;
     /**
      * method
      * 
@@ -133,6 +133,12 @@ interface HelperContextInterface
      * 
      * @return ?callable
      */
+    function getConstructOperation() : ?callable;
+    /**
+     * method
+     * 
+     * @return ?callable
+     */
     function getInitializeOperation() : ?callable;
     /**
      * method
@@ -155,16 +161,17 @@ interface HelperContextInterface
     /**
      * method
      * 
-     * @return ?callable
+     * 
+     * @return HelperContextInterface
      */
-    function getFinalizeOperation() : ?callable;
+    function setConstructOperation(callable $operation = null) : HelperContextInterface;
     /**
      * method
      * 
      * 
-     * @return HelperContextInterface
+     * @return ?HelperContextInterface
      */
-    function setInitializeOperation(callable $operation = null) : HelperContextInterface;
+    function setInitializeOperation(callable $operation = null) : ?HelperContextInterface;
     /**
      * method
      * 
@@ -189,10 +196,9 @@ interface HelperContextInterface
     /**
      * method
      * 
-     * 
-     * @return ?HelperContextInterface
+     * @return bool
      */
-    function setFinalizeOperation(callable $operation = null) : ?HelperContextInterface;
+    function hasConstructOperation() : bool;
     /**
      * method
      * 
@@ -220,21 +226,15 @@ interface HelperContextInterface
     /**
      * method
      * 
-     * @return bool
+     * @return void
      */
-    function hasFinalizeOperation() : bool;
+    function invokeConstructOperation() : void;
     /**
      * method
      * 
      * @return void
      */
     function invokeInitializeOperation() : void;
-    /**
-     * method
-     * 
-     * @return void
-     */
-    function invokeFinalizeOperation() : void;
     /**
      * method
      * 
