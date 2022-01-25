@@ -997,49 +997,51 @@ trait AdminTrait {
 
                 $currentTab = &$tabs[$currentTabIndex];
                 
-                echo <<<TEMPLATE
+                if(PHP::count($tabs) > 1) {
+                
+                    echo <<<TEMPLATE
     <h2 class="nav-tab-wrapper">
 TEMPLATE;
 
-                $page = $tmp["menuSlug"];
+                    $page = $tmp["menuSlug"];
 
 
-                for ($t = 0; $t < count($tabs); $t++) {
+                    for ($t = 0; $t < PHP::count($tabs); $t++) {
 
-                    $tab = $tabs[$t];
+                        $tab = $tabs[$t];
 
-                    $form = null;
+                        $form = null;
 
-                    if ($t > 0) {
-                        $form = $tab["menuSlug"];
-                    }
+                        if ($t > 0) {
+                            $form = $tab["menuSlug"];
+                        }
 
-                    $currentClass = "";
+                        $currentClass = "";
 
-                    if ($t === $currentTabIndex) {
-                        $currentClass = " nav-tab-active";
-                    }
+                        if ($t === $currentTabIndex) {
+                            $currentClass = " nav-tab-active";
+                        }
 
-                    $menuTitle = $tab["menuTitle"];
+                        $menuTitle = $tab["menuTitle"];
 
-                    if ($form === null) {
+                        if ($form === null) {
 
-                        echo <<<TEMPLATE
+                            echo <<<TEMPLATE
             <a href="?page=$page" class="nav-tab$currentClass">$menuTitle</a>
 TEMPLATE;
-                    } else {
+                        } else {
 
-                        echo <<<TEMPLATE
+                            echo <<<TEMPLATE
             <a href="?page=$page&form=$form" class="nav-tab$currentClass">$menuTitle</a>
 TEMPLATE;
+                        }
                     }
-                }
 
-                echo <<<TEMPLATE
+                    echo <<<TEMPLATE
     </h2>
 
 TEMPLATE;
-
+                }
 
                 //echo '<pre>'; var_dump($currentTab); '</pre>';
                 
