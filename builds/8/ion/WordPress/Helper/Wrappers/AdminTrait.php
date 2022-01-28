@@ -160,33 +160,37 @@ trait AdminTrait {
 //        });        
 
 //        if(static::isAdmin()) {
-            
+
+
+
+        static::registerWrapperAction('after_setup_theme', function() {
+        
             global $pagenow;
 
-            if($pagenow === 'options-reading.php') {
-
+            if($pagenow === 'options-reading.php') {            
+            
                 // Replace the Home / Posts page settings with new dropdowns
                 // to allow selection of pages or custom posts.
-                
+
                 static::addFilter("wp_dropdown_pages", function(string $output = null) {
 
                     $html = '';
                     $name = null;
                     $id = null;
-                    
+
                     if(static::$optionsReadingStateCnt === 1) {
-                    
+
                         $name = "page_for_posts";
                         $id = $name;
-                        
+
                         static::$optionsReadingStateCnt++;
                     }
 
                     if(static::$optionsReadingStateCnt === 0) {
-                    
+
                         $name = "page_on_front";
                         $id = $name;
-                        
+
                         static::$optionsReadingStateCnt++;
                     }
 
@@ -203,7 +207,7 @@ trait AdminTrait {
                                 'hierarchical' => true
 
                             ], 'objects'),
-                                
+
                             get_post_types([
 
                                 'public' => true,
@@ -214,26 +218,26 @@ trait AdminTrait {
 
                             ], 'objects')                               
                         );
-                        
+
                         $items = [];
-                        
+
                         $pages = [];
-                        
+
                         foreach(get_pages() as $page) {
-                            
+
                             $pages[$page->post_title] = $page->ID;
                         }
-                        
+
                         $items['Pages'] = $pages;
-                        
+
                         foreach($postTypes as $postType) {
-                            
+
                             $postTypeLabel = "{$postType->label}";
-                            
+
                             $items[$postTypeLabel] = []; 
-                            
+
                             $posts = get_posts([ 'post_type' => $postType->name ]);
-                            
+
                             foreach($posts as $post) {
 
                                  $items[$postTypeLabel][$post->post_title] = $post->ID;
@@ -241,251 +245,239 @@ trait AdminTrait {
                         }
 
                         $html .= "<option value=\"0\">— Select —</option>";
-                        
+
                         foreach($items as $postTypeLabel => $posts) {
 
+                            if(PHP::count($posts) === 0) {
+                                
+                                continue;
+                            }
+                            
                             $html .= "<optgroup label=\"{$postTypeLabel}\">\n";
 
                             foreach($posts as $postLabel => $postId) {                              
-                                
+
                                 $selected = '';
-                                
+
                                 if(static::isFrontPage($postId) && $name === 'page_on_front') {
-                                    
+
                                     $selected = ' selected';
                                 }
 
                                 if(static::isPostsPage($postId) && $name === 'page_for_posts') {
-                                    
+
                                     $selected = ' selected';
                                 }
-                                
+
                                 $html .= "\t<option class=\"level-0\" value=\"{$postId}\"{$selected}>{$postTypeLabel} &gt; {$postLabel}</option>\n";
-                                
+
                             }
 
                             $html .= "</optgroup>\n";
                         }
-                        
+
                         $html = "<select id=\"{$id}\" name=\"{$name}\">\n{$html}</select>\n";                   
-                        
+
                     }
 
                     return $html;
                 });
+            }
+            
+        });
+        //}        
+        
+        static::registerWrapperAction('admin_init', function() {
+
+            // Run through each settings menu and metabox to trigger any registrations of forms, etc.
+
+            foreach (static::$settingsMenus as $settingsMenu) {
+
+                static::$currentAdminPage = $settingsMenu['menuSlug'];
+
+                if ($settingsMenu['render'] === true) {
+
+                    if ($settingsMenu['content'] !== null && is_callable($settingsMenu['content'])) {
+
+                        ob_start();
+                        $settingsMenu['content'](false);
+                        ob_end_clean();
+                    }
+
+                    //exit;
+
+
+                    if (key_exists("subMenus", $settingsMenu) && count($settingsMenu["subMenus"]) > 0) {
+
+                        $settingsSubMenus = $settingsMenu["subMenus"];
+
+                        foreach ($settingsSubMenus as $position => $settingsSubMenu) {
+
+                            static::$currentAdminPage = $settingsSubMenu['menuSlug'];
+
+                            //echo($settingsSubMenu['menuSlug']);
+
+                            if ($settingsSubMenu['render'] === true) {
+
+                                //if ($settingsMenu["menuSlug"] !== $settingsSubMenu["menuSlug"]) {
+                                    if ($settingsSubMenu['content'] !== null && is_callable($settingsSubMenu['content'])) {
+                                        ob_start();
+//                                            $settingsSubMenu['content']();
+//                                            $settingsSubMenu['html'] = ob_get_clean();
+                                        $settingsSubMenu['content'](false);
+
+                                        ob_end_clean();
+
+                                    }
+
+                                    foreach($settingsSubMenu['tabs'] as $settingsTab) {
+
+                                        if ($settingsTab['content'] !== null && is_callable($settingsTab['content'])) {
+
+                                            ob_start();
+                                            $settingsTab['content'](false);
+                                            ob_end_clean();
+                                        }
+                                    }                                    
+                                //}
+
+                            }
+                        }
+
+                        static::$currentAdminPage = null; //TODO: $_GET['page']?
+                    }
+                }
+            }
+
+            //die("B");
+
+            // Metaboxes
+
+            foreach(static::$settingsMetaBoxes as $metaBox) {
+
+                if($metaBox['render'] === true) {
+
+                    if ($metaBox['content'] !== null && is_callable($metaBox['content'])) {
+                        ob_start();
+                        $metaBox['content'](false);
+                        ob_end_clean();
+                    }                        
+                }                   
+            }
+
+            // Term fields
+
+            foreach(static::$settingsTermFieldBoxes as $termFieldBox) {
+
+                if($termFieldBox['render'] === true) {
+
+                    if ($termFieldBox['content'] !== null && is_callable($termFieldBox['content'])) {
+                        ob_start();
+                        $termFieldBox['content'](false);
+                        ob_end_clean();
+                    }                        
+                }                         
+            }
+
+            // User fields
+
+            foreach(static::$settingsUserFieldBoxes as $userFieldBox) {
+
+                if($userFieldBox['render'] === true) {
+
+                    if ($userFieldBox['content'] !== null && is_callable($userFieldBox['content'])) {
+                        ob_start();
+                        $userFieldBox['content'](false);
+                        ob_end_clean();
+                    }                        
+                }          
+            }
+
+            //echo "<pre>";
+
+            foreach (static::getTables() as $table) {
+
+                $table->process();     
+
+                if($table->getDescriptor()['detailView'] !== null && is_callable($table->getDescriptor()['detailView'])) {
+
+                    ob_start();
+                    $table->getDescriptor()['detailView'](false);
+                    ob_end_clean();                        
+                }
 
             }
-        
-            static::registerWrapperAction('admin_init', function() {
-
-                // Run through each settings menu and metabox to trigger any registrations of forms, etc.
-                
-                foreach (static::$settingsMenus as $settingsMenu) {
-
-                    static::$currentAdminPage = $settingsMenu['menuSlug'];
-                    
-                    if ($settingsMenu['render'] === true) {
-
-                        if ($settingsMenu['content'] !== null && is_callable($settingsMenu['content'])) {
-                            
-                            ob_start();
-                            $settingsMenu['content'](false);
-                            ob_end_clean();
-                        }
-
-                        //exit;
-
-
-                        if (key_exists("subMenus", $settingsMenu) && count($settingsMenu["subMenus"]) > 0) {
-
-                            $settingsSubMenus = $settingsMenu["subMenus"];
-
-                            foreach ($settingsSubMenus as $position => $settingsSubMenu) {
-
-                                static::$currentAdminPage = $settingsSubMenu['menuSlug'];
-                                
-                                //echo($settingsSubMenu['menuSlug']);
-                                
-                                if ($settingsSubMenu['render'] === true) {
-
-                                    //if ($settingsMenu["menuSlug"] !== $settingsSubMenu["menuSlug"]) {
-                                        if ($settingsSubMenu['content'] !== null && is_callable($settingsSubMenu['content'])) {
-                                            ob_start();
-    //                                            $settingsSubMenu['content']();
-    //                                            $settingsSubMenu['html'] = ob_get_clean();
-                                            $settingsSubMenu['content'](false);
-
-                                            ob_end_clean();
-
-                                        }
-
-                                        foreach($settingsSubMenu['tabs'] as $settingsTab) {
-
-                                            if ($settingsTab['content'] !== null && is_callable($settingsTab['content'])) {
-
-                                                ob_start();
-                                                $settingsTab['content'](false);
-                                                ob_end_clean();
-                                            }
-                                        }                                    
-                                    //}
-
-                                }
-                            }
-                            
-                            static::$currentAdminPage = null; //TODO: $_GET['page']?
-                        }
-                    }
-                }
-
-                //die("B");
-                
-                // Metaboxes
-
-                foreach(static::$settingsMetaBoxes as $metaBox) {
-
-                    if($metaBox['render'] === true) {
-
-                        if ($metaBox['content'] !== null && is_callable($metaBox['content'])) {
-                            ob_start();
-                            $metaBox['content'](false);
-                            ob_end_clean();
-                        }                        
-                    }                   
-                }
-
-                // Term fields
-
-                foreach(static::$settingsTermFieldBoxes as $termFieldBox) {
-
-                    if($termFieldBox['render'] === true) {
-
-                        if ($termFieldBox['content'] !== null && is_callable($termFieldBox['content'])) {
-                            ob_start();
-                            $termFieldBox['content'](false);
-                            ob_end_clean();
-                        }                        
-                    }                         
-                }
-
-                // User fields
-
-                foreach(static::$settingsUserFieldBoxes as $userFieldBox) {
-
-                    if($userFieldBox['render'] === true) {
-
-                        if ($userFieldBox['content'] !== null && is_callable($userFieldBox['content'])) {
-                            ob_start();
-                            $userFieldBox['content'](false);
-                            ob_end_clean();
-                        }                        
-                    }          
-                }
-
-                //echo "<pre>";
-
-                foreach (static::getTables() as $table) {
-
-                    $table->process();     
-
-                    if($table->getDescriptor()['detailView'] !== null && is_callable($table->getDescriptor()['detailView'])) {
-                                                
-                        ob_start();
-                        $table->getDescriptor()['detailView'](false);
-                        ob_end_clean();                        
-                    }
-                    
-                }
 
 //                add_action('admin_post', function() {
 //                    
 //                    die('admin_post');
 //                });
-                
 
-                $postHooks = [];
-                $postAdmin = PHP::toBool(PHP::filterInput('__postAdmin', [ INPUT_POST ], FILTER_VALIDATE_BOOLEAN)) === true;
-                        
-                foreach (static::getForms() as $form) {
 
-                    $hookName = 'admin_post_' . Constants::FORM_ACTION_PREFIX . '_' . $form->getId();
-                    
-                    add_action($hookName, function () use ($form) {
+            $postHooks = [];
+            $postAdmin = PHP::toBool(PHP::filterInput('__postAdmin', [ INPUT_POST ], FILTER_VALIDATE_BOOLEAN)) === true;
 
-                        $form->process(null, null);
-                    });
+            foreach (static::getForms() as $form) {
 
-                    //var_Dump();
-                    if(static::isDebugMode() && $postAdmin) {
-                        
-                        $postHooks[] = $hookName;
-                    }
-                    
+                $hookName = 'admin_post_' . Constants::FORM_ACTION_PREFIX . '_' . $form->getId();
+
+                add_action($hookName, function () use ($form) {
+
+                    $form->process(null, null);
+                });
+
+                //var_Dump();
+                if(static::isDebugMode() && $postAdmin) {
+
+                    $postHooks[] = $hookName;
+                }
+
 //                    var_Dump($form->getId());
-                }          
-                
+            }          
 
-                
-                if(static::isDebugMode()) {
-                
-                    $uri = parse_url(PHP::getServerRequestUri(),  PHP_URL_PATH);
-                                        
-                    if(!PHP::isEmpty($uri)) {
-                        
-                        $pathInfo = pathinfo($uri, PATHINFO_BASENAME);
-                        
-                        $action = PHP::filterInput('action', [ INPUT_GET, INPUT_POST ]);
-                        $form = PHP::filterInput('form', [ INPUT_GET, INPUT_POST ]);
-                        
-                        if(!PHP::isEmpty($pathInfo) && ($pathInfo === 'admin-post.php')) {
-                   
-                            if((!in_array("admin_post_{$action}", $postHooks) && $postAdmin) || (!static::hasAction("admin_post_nopriv_{$action}") && !$postAdmin)) {                         
 
-                                $error = '';
 
-                                $error .= "<h1>No 'admin_post" . ($postAdmin ? "" : "_nopriv") . "_*' hook specified for action</h1>";
+            if(static::isDebugMode()) {
 
-                                $error .= "<h2>Action</h2>";
+                $uri = parse_url(PHP::getServerRequestUri(),  PHP_URL_PATH);
 
-                                $error .= (PHP::isEmpty($action) ? "<em>Missing!</em>" : $action);
+                if(!PHP::isEmpty($uri)) {
 
-                                if($postAdmin) {
+                    $pathInfo = pathinfo($uri, PATHINFO_BASENAME);
 
-                                    $error .= "<h2>Form</h2>";
+                    $action = PHP::filterInput('action', [ INPUT_GET, INPUT_POST ]);
+                    $form = PHP::filterInput('form', [ INPUT_GET, INPUT_POST ]);
 
-                                    $error .= (PHP::isEmpty($form) ? "<em>Missing!</em>" : $form);                           
+                    if(!PHP::isEmpty($pathInfo) && ($pathInfo === 'admin-post.php')) {
 
-                                    $error .= "<h2>Registered Forms</h2><ul>";
+                        if((!in_array("admin_post_{$action}", $postHooks) && $postAdmin) || (!static::hasAction("admin_post_nopriv_{$action}") && !$postAdmin)) {                         
 
-                                    foreach (static::getForms() as $form) {
+                            $error = '';
 
-                                        $error .= "<li>{$form->getId()}</li>\n";
-                                    }    
+                            $error .= "<h1>No 'admin_post" . ($postAdmin ? "" : "_nopriv") . "_*' hook specified for action</h1>";
 
-                                    $error .= "</ul>";                                
+                            $error .= "<h2>Action</h2>";
 
-                                    $error .= "<h2>Processed Admin Form Hooks</h2>";
+                            $error .= (PHP::isEmpty($action) ? "<em>Missing!</em>" : $action);
 
-                                    if(PHP::count($postHooks) === 0) {
+                            if($postAdmin) {
 
-                                        $error .= "None!";
+                                $error .= "<h2>Form</h2>";
 
-                                    } else {
+                                $error .= (PHP::isEmpty($form) ? "<em>Missing!</em>" : $form);                           
 
-                                        $error .= "<ul>";
+                                $error .= "<h2>Registered Forms</h2><ul>";
 
-                                        foreach($postHooks as $postHook) {
+                                foreach (static::getForms() as $form) {
 
-                                            $error .= "<li>{$postHook}</li>\n";
-                                        }                
+                                    $error .= "<li>{$form->getId()}</li>\n";
+                                }    
 
-                                        $error .= "</ul>";
-                                    }                                
-                                }
+                                $error .= "</ul>";                                
 
-                                $error .= "<h2>Registered Hooks</h2>";
+                                $error .= "<h2>Processed Admin Form Hooks</h2>";
 
-                                if(PHP::count(static::$formActions) === 0) {
+                                if(PHP::count($postHooks) === 0) {
 
                                     $error .= "None!";
 
@@ -493,55 +485,74 @@ trait AdminTrait {
 
                                     $error .= "<ul>";
 
-                                    foreach(static::$formActions as $postHook) {
+                                    foreach($postHooks as $postHook) {
 
-                                        if($postHook['frontEnd'] && !$postAdmin) {
-
-                                            $error .= "<li>admin_post_nopriv_{$postHook['name']}</li>\n";
-                                            continue;
-                                        }
-
-                                        if($postHook['backEnd'] && $postAdmin) {
-
-                                            $error .= "<li>admin_post_{$postHook['name']}</li>\n";
-                                        }                                    
+                                        $error .= "<li>{$postHook}</li>\n";
                                     }                
 
                                     $error .= "</ul>";
-                                }
+                                }                                
+                            }
 
-                                $error .= "<h2>\$_POST</h2><pre>";
+                            $error .= "<h2>Registered Hooks</h2>";
 
-                                $error .= PHP::obGet(function() {
+                            if(PHP::count(static::$formActions) === 0) {
 
-                                    var_dump($_POST);
-                                });
+                                $error .= "None!";
 
-                                $error .= "</pre><h2>\$_GET</h2><pre>";
+                            } else {
 
-                                $error .= PHP::obGet(function() {
+                                $error .= "<ul>";
 
-                                    var_dump($_GET);
-                                });
+                                foreach(static::$formActions as $postHook) {
 
-                                $error .= "</pre>";
+                                    if($postHook['frontEnd'] && !$postAdmin) {
 
-                                wp_die($error);
-                            }                      
-                        }
-                    
+                                        $error .= "<li>admin_post_nopriv_{$postHook['name']}</li>\n";
+                                        continue;
+                                    }
+
+                                    if($postHook['backEnd'] && $postAdmin) {
+
+                                        $error .= "<li>admin_post_{$postHook['name']}</li>\n";
+                                    }                                    
+                                }                
+
+                                $error .= "</ul>";
+                            }
+
+                            $error .= "<h2>\$_POST</h2><pre>";
+
+                            $error .= PHP::obGet(function() {
+
+                                var_dump($_POST);
+                            });
+
+                            $error .= "</pre><h2>\$_GET</h2><pre>";
+
+                            $error .= PHP::obGet(function() {
+
+                                var_dump($_GET);
+                            });
+
+                            $error .= "</pre>";
+
+                            wp_die($error);
+                        }                      
                     }
 
-                }                
+                }
 
-                //die("</pre>");
+            }                
 
-                add_filter('wp_edit_nav_menu_walker', function() {
+            //die("</pre>");
 
-                    return AdminNavMenuEditWalker::class;
+            add_filter('wp_edit_nav_menu_walker', function() {
 
-                }, 10, 3);            
-            }, 5);
+                return AdminNavMenuEditWalker::class;
+
+            }, 10, 3);            
+        }, 5);
 
 //        }
 
