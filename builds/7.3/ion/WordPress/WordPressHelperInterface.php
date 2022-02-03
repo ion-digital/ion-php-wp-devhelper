@@ -34,9 +34,10 @@ interface WordPressHelperInterface extends ActionsInterface, AdminInterface, Com
     static function hasEditThemeOptionsCapability(int $user = null) : bool;
     static function hasManageNetworkCapability(int $user = null) : bool;
     static function isLoggedIn() : bool;
-    static function createContext(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $construct = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, array $uninstall = null) : WordPressHelperInterface;
+    static function createContext(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $construct = null, callable $initialize = null, callable $finalize = null, callable $activate = null, callable $deactivate = null, array $uninstall = null) : WordPressHelperInterface;
     function construct(callable $call = null) : WordPressHelperInterface;
     function initialize(callable $call = null) : WordPressHelperInterface;
+    function finalize(callable $call = null) : WordPressHelperInterface;
     function activate(callable $call = null) : WordPressHelperInterface;
     function deactivate(callable $call = null) : WordPressHelperInterface;
     function uninstall(array $call = null) : WordPressHelperInterface;

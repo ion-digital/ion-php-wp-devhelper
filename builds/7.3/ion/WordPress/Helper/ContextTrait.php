@@ -32,7 +32,7 @@ trait ContextTrait
     private $helperContext = null;
     private $package = null;
     private $contextInstanceIndex = null;
-    public function __construct(PackageInterface $package, array $helperSettings = null, callable $onConstructed = null, callable $onInitialized = null)
+    public function __construct(PackageInterface $package, array $helperSettings = null, callable $onConstructed = null, callable $onInitialized = null, callable $onFinalized = null)
     {
         if (!array_key_exists(static::class, self::$contextInstances)) {
             self::$contextInstances[static::class] = [];
@@ -52,6 +52,12 @@ trait ContextTrait
             $this->initialize();
             if ($onInitialized !== null) {
                 $onInitialized($this);
+            }
+            return;
+        })->finalize(function (HelperContextInterface $context) use($onFinalized) {
+            $this->finalize();
+            if ($onFinalized !== null) {
+                $onFinalized($this);
             }
             return;
         })->activate(function (HelperContextInterface $context) {
@@ -80,7 +86,14 @@ trait ContextTrait
     {
         // Empty, for now...
     }
-    protected abstract function initialize() : void;
+    protected function initialize() : void
+    {
+        // Empty, for now...
+    }
+    protected function finalize() : void
+    {
+        // Empty, for now...
+    }
     protected function activate() : void
     {
         // Empty, for now...

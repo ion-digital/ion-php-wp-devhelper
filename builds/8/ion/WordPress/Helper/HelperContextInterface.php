@@ -27,6 +27,8 @@ interface HelperContextInterface {
 
     function isInitialized(): bool;
 
+    function isFinalized(): bool;
+
     function getId(): int;
 
     function getPackageName(): string;
@@ -51,6 +53,8 @@ interface HelperContextInterface {
 
     function getInitializeOperation(): ?callable;
 
+    function getFinalizeOperation(): ?callable;
+
     function getActivateOperation(): ?callable;
 
     function getDeactivateOperation(): ?callable;
@@ -60,6 +64,8 @@ interface HelperContextInterface {
     function setConstructOperation(callable $operation = null): HelperContextInterface;
 
     function setInitializeOperation(callable $operation = null): ?HelperContextInterface;
+
+    function setFinalizeOperation(callable $operation = null): ?HelperContextInterface;
 
     function setActivateOperation(callable $operation = null): HelperContextInterface;
 
@@ -71,6 +77,8 @@ interface HelperContextInterface {
 
     function hasInitializeOperation(): bool;
 
+    function hasFinalizeOperation(): bool;
+
     function hasActivateOperation(): bool;
 
     function hasDeactivateOperation(): bool;
@@ -80,6 +88,8 @@ interface HelperContextInterface {
     function invokeConstructOperation(): void;
 
     function invokeInitializeOperation(): void;
+
+    function invokeFinalizeOperation(): void;
 
     function invokeActivateOperation(): void;
 

@@ -70,6 +70,12 @@ interface HelperContextInterface
     /**
      * method
      * 
+     * @return bool
+     */
+    function isFinalized() : bool;
+    /**
+     * method
+     * 
      * @return int
      */
     function getId() : int;
@@ -145,6 +151,12 @@ interface HelperContextInterface
      * 
      * @return ?callable
      */
+    function getFinalizeOperation();
+    /**
+     * method
+     * 
+     * @return ?callable
+     */
     function getActivateOperation();
     /**
      * method
@@ -172,6 +184,13 @@ interface HelperContextInterface
      * @return ?HelperContextInterface
      */
     function setInitializeOperation(callable $operation = null);
+    /**
+     * method
+     * 
+     * 
+     * @return ?HelperContextInterface
+     */
+    function setFinalizeOperation(callable $operation = null);
     /**
      * method
      * 
@@ -210,6 +229,12 @@ interface HelperContextInterface
      * 
      * @return bool
      */
+    function hasFinalizeOperation() : bool;
+    /**
+     * method
+     * 
+     * @return bool
+     */
     function hasActivateOperation() : bool;
     /**
      * method
@@ -235,6 +260,12 @@ interface HelperContextInterface
      * @return void
      */
     function invokeInitializeOperation();
+    /**
+     * method
+     * 
+     * @return void
+     */
+    function invokeFinalizeOperation();
     /**
      * method
      * 
