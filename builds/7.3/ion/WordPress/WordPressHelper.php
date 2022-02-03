@@ -28,7 +28,9 @@ final class WordPressHelper implements WordPressHelperInterface
 {
     private const WORDPRESS_HTACCESS_START = "# BEGIN WordPress";
     private const WORDPRESS_HTACCESS_END = "# END WordPress";
-    private const DEFAULT_WRAPPER_PRIORITY = 1000000;
+    private const WRAPPER_PRIORITY = 1000000;
+    private const CONSTRUCT_PRIORITY = 1;
+    private const INITIALIZE_PRIORITY = 1;
     use \ion\WordPress\Helper\Wrappers\ActionsTrait, \ion\WordPress\Helper\Wrappers\AdminTrait, \ion\WordPress\Helper\Wrappers\CommonTrait, \ion\WordPress\Helper\Wrappers\CronTrait, \ion\WordPress\Helper\Wrappers\DatabaseTrait, \ion\WordPress\Helper\Wrappers\FiltersTrait, \ion\WordPress\Helper\Wrappers\TemplateTrait, \ion\WordPress\Helper\Wrappers\LoggingTrait, \ion\WordPress\Helper\Wrappers\OptionsTrait, \ion\WordPress\Helper\Wrappers\PathsTrait, \ion\WordPress\Helper\Wrappers\PostsTrait, \ion\WordPress\Helper\Wrappers\RewritesTrait, \ion\WordPress\Helper\Wrappers\ShortCodesTrait, \ion\WordPress\Helper\Wrappers\TaxonomiesTrait, \ion\WordPress\Helper\Wrappers\WidgetsTrait {
         \ion\WordPress\Helper\Wrappers\ActionsTrait::initialize as initializeActions;
         \ion\WordPress\Helper\Wrappers\AdminTrait::initialize as initializeAdmin;
@@ -52,7 +54,7 @@ final class WordPressHelper implements WordPressHelperInterface
     private static $contexts = [];
     private static $wrapperActions = [];
     private static $tools = null;
-    private static function registerWrapperAction(string $actionName, callable $init, int $priority = self::DEFAULT_WRAPPER_PRIORITY, bool $returnFirstResult = false) : void
+    private static function registerWrapperAction(string $actionName, callable $init, int $priority = self::WRAPPER_PRIORITY, bool $returnFirstResult = false) : void
     {
         if (!array_key_exists($actionName, static::$wrapperActions)) {
             static::$wrapperActions[$actionName] = [];
@@ -213,18 +215,26 @@ final class WordPressHelper implements WordPressHelperInterface
                 }
                 $helperContext->invokeConstructOperation();
             }
-        });
+        }, self::CONSTRUCT_PRIORITY);
         add_action('init', function () {
             if (!session_id()) {
                 session_start();
             }
+            // First, do all initializations
             foreach (static::getContexts() as $helperContext) {
                 if ($helperContext->hasParent()) {
                     continue;
                 }
                 $helperContext->invokeInitializeOperation();
             }
-        });
+            // Then, do all finalizations
+            foreach (static::getContexts() as $helperContext) {
+                if ($helperContext->hasParent()) {
+                    continue;
+                }
+                $helperContext->invokeFinalizeOperation();
+            }
+        }, self::INITIALIZE_PRIORITY);
     }
     private static function getContextByIndex(int $index)
     {
@@ -383,7 +393,7 @@ TEMPLATE;
     {
         return PHP::isAssociativeArray($array);
     }
-    public static function createContext(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $construct = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, array $uninstall = null) : WordPressHelperInterface
+    public static function createContext(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $construct = null, callable $initialize = null, callable $finalize = null, callable $activate = null, callable $deactivate = null, array $uninstall = null) : WordPressHelperInterface
     {
         set_exception_handler(function (Throwable $throwable) {
             static::handleError('Exception / Error', $throwable->getMessage(), $throwable->getCode(), $throwable->getFile(), $throwable->getLine(), $throwable->getTrace());
@@ -391,11 +401,11 @@ TEMPLATE;
         if ($wpHelperSettings === null) {
             $wpHelperSettings = [];
         }
-        $helper = new static($vendorName, $projectName, $loadPath, $helperDir, $wpHelperSettings, $version, $construct, $initialize, $activate, $deactivate, $uninstall);
+        $helper = new static($vendorName, $projectName, $loadPath, $helperDir, $wpHelperSettings, $version, $construct, $initialize, $finalize, $activate, $deactivate, $uninstall);
         static::initializeHelper(static::getContext(null), $wpHelperSettings, $helperDir);
         return $helper;
     }
-    protected function __construct(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $construct = null, callable $initialize = null, callable $activate = null, callable $deactivate = null, array $uninstall = null)
+    protected function __construct(string $vendorName, string $projectName, string $loadPath, string $helperDir = null, array $wpHelperSettings = null, SemVerInterface $version = null, callable $construct = null, callable $initialize = null, callable $finalize = null, callable $activate = null, callable $deactivate = null, array $uninstall = null)
     {
         $context = new HelperContext($vendorName, $projectName, $loadPath, $helperDir, $wpHelperSettings, $version);
         $this->context = $context;
@@ -406,6 +416,10 @@ TEMPLATE;
         })->setInitializeOperation(function () use($initialize, $context) {
             if ($initialize !== null) {
                 $initialize($context);
+            }
+        })->setFinalizeOperation(function () use($finalize, $context) {
+            if ($finalize !== null) {
+                $finalize($context);
             }
         })->setActivateOperation(function () use($activate, $context) {
             if ($activate !== null) {
@@ -425,6 +439,11 @@ TEMPLATE;
     public function initialize(callable $call = null) : WordPressHelperInterface
     {
         $this->getCurrentContext()->setInitializeOperation($call);
+        return $this;
+    }
+    public function finalize(callable $call = null) : WordPressHelperInterface
+    {
+        $this->getCurrentContext()->setFinalizeOperation($call);
         return $this;
     }
     public function activate(callable $call = null) : WordPressHelperInterface

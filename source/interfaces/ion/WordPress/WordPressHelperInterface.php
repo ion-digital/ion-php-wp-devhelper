@@ -78,6 +78,7 @@ interface WordPressHelperInterface extends
         SemVerInterface $version = null,
         callable $construct = null,
         callable $initialize = null,
+        callable $finalize = null,
         callable $activate = null,
         callable $deactivate = null,
         array $uninstall = null
@@ -87,6 +88,8 @@ interface WordPressHelperInterface extends
     function construct(callable $call = null): WordPressHelperInterface;
 
     function initialize(callable $call = null): WordPressHelperInterface;
+
+    function finalize(callable $call = null): WordPressHelperInterface;
 
     function activate(callable $call = null): WordPressHelperInterface;
 

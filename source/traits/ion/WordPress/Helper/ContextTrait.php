@@ -47,7 +47,8 @@ trait ContextTrait {
         PackageInterface $package,
         array $helperSettings = null,
         callable $onConstructed = null,
-        callable $onInitialized = null
+        callable $onInitialized = null,
+        callable $onFinalized = null
             
     ) {
 
@@ -61,7 +62,14 @@ trait ContextTrait {
         
         $this->package = $package;
 
-        $helper = WP::createContext($package->getVendor(), $package->getProject(), $package->getProjectEntry(), null, $helperSettings);
+        $helper = WP::createContext(
+                
+            $package->getVendor(),
+            $package->getProject(),
+            $package->getProjectEntry(),
+            null,
+            $helperSettings
+        );
         
         $this->helperContext = $helper->getContext();
                         
@@ -88,7 +96,18 @@ trait ContextTrait {
             }
             
             return;
-        })        
+        })  
+        ->finalize(function(HelperContextInterface $context) use ($onFinalized) {         
+            
+            $this->finalize();
+            
+            if($onFinalized !== null) {
+                
+                $onFinalized($this);
+            }
+            
+            return;
+        })            
         ->activate(function(HelperContextInterface $context) {         
             
             $this->activate();
@@ -127,7 +146,15 @@ trait ContextTrait {
         // Empty, for now...
     }       
     
-    abstract protected function initialize(): void;
+    protected function initialize(): void {
+        
+        // Empty, for now...
+    }
+    
+    protected function finalize(): void {
+        
+        // Empty, for now...
+    }
 
     protected function activate(): void {
         

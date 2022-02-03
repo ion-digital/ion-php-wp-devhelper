@@ -31,7 +31,7 @@ trait CronTrait {
     
     protected static function initialize() {
         
-        static::registerWrapperAction('init', function() {
+        static::registerWrapperAction('init', function() {            
             
             foreach (static::$cronIntervals as $intervalName => $interval) {
 

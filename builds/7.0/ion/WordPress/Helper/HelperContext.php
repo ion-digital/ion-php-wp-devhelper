@@ -31,6 +31,7 @@ final class HelperContext implements HelperContextInterface
     }
     private $constructed = false;
     private $initialized = false;
+    private $finalized = false;
     private $workingDir = null;
     private $workingUri = null;
     private $loadPath = null;
@@ -45,6 +46,7 @@ final class HelperContext implements HelperContextInterface
     private $parent = null;
     private $construct = null;
     private $initialize = null;
+    private $finalize = null;
     private $activate = null;
     private $deactivate = null;
     private $uninstall = null;
@@ -61,6 +63,9 @@ final class HelperContext implements HelperContextInterface
             /* empty for now! */
         });
         $this->setInitializeOperation(function () {
+            /* empty for now! */
+        });
+        $this->setFinalizeOperation(function () {
             /* empty for now! */
         });
         $this->setActivateOperation(function () {
@@ -246,6 +251,15 @@ final class HelperContext implements HelperContextInterface
     /**
      * method
      * 
+     * @return bool
+     */
+    public function isFinalized() : bool
+    {
+        return $this->finalized;
+    }
+    /**
+     * method
+     * 
      * @return int
      */
     public function getId() : int
@@ -376,6 +390,15 @@ final class HelperContext implements HelperContextInterface
      * 
      * @return ?callable
      */
+    public function getFinalizeOperation()
+    {
+        return $this->finalize;
+    }
+    /**
+     * method
+     * 
+     * @return ?callable
+     */
     public function getActivateOperation()
     {
         return $this->activate;
@@ -418,6 +441,17 @@ final class HelperContext implements HelperContextInterface
     public function setInitializeOperation(callable $operation = null)
     {
         $this->initialize = $operation;
+        return $this;
+    }
+    /**
+     * method
+     * 
+     * 
+     * @return ?HelperContextInterface
+     */
+    public function setFinalizeOperation(callable $operation = null)
+    {
+        $this->finalize = $operation;
         return $this;
     }
     /**
@@ -470,6 +504,15 @@ final class HelperContext implements HelperContextInterface
     public function hasInitializeOperation() : bool
     {
         return $this->getInitializeOperation() !== null;
+    }
+    /**
+     * method
+     * 
+     * @return bool
+     */
+    public function hasFinalizeOperation() : bool
+    {
+        return $this->getFinalizeOperation() !== null;
     }
     /**
      * method
@@ -544,6 +587,28 @@ final class HelperContext implements HelperContextInterface
             $call($this);
         }
         $this->initialized = true;
+    }
+    /**
+     * method
+     * 
+     * @return void
+     */
+    public function invokeFinalizeOperation()
+    {
+        if ($this->isFinalized()) {
+            //throw new WordPressHelperException("Context '{$this->getProjectName()}' has already been initialized.");
+            return;
+        }
+        if ($this->hasFinalizeOperation()) {
+            $call = $this->getFinalizeOperation();
+            if ($call !== null) {
+                $call($this);
+            }
+        }
+        foreach (array_values($this->getChildren()) as $childContext) {
+            $childContext->invokeFinalizeOperation();
+        }
+        $this->finalized = true;
     }
     /**
      * method
