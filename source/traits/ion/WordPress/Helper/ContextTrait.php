@@ -46,8 +46,11 @@ trait ContextTrait {
             
         PackageInterface $package,
         array $helperSettings = null,
+        callable $onConstruct = null,
         callable $onConstructed = null,
+        callable $onInitialize = null,
         callable $onInitialized = null,
+        callable $onFinalize = null,
         callable $onFinalized = null
             
     ) {
@@ -75,7 +78,12 @@ trait ContextTrait {
                         
         $helper
                 
-        ->construct(function(HelperContextInterface $context) use ($onConstructed) {
+        ->construct(function(HelperContextInterface $context) use ($onConstruct, $onConstructed) {
+            
+            if($onConstruct !== null) {
+                
+                $onConstruct($this);
+            }            
             
             $this->construct();
             
@@ -86,7 +94,12 @@ trait ContextTrait {
             
             return;
         })
-        ->initialize(function(HelperContextInterface $context) use ($onInitialized) {         
+        ->initialize(function(HelperContextInterface $context) use ($onInitialize, $onInitialized) {         
+            
+            if($onInitialize !== null) {
+                
+                $onInitialize($this);
+            }            
             
             $this->initialize();
             
@@ -97,7 +110,12 @@ trait ContextTrait {
             
             return;
         })  
-        ->finalize(function(HelperContextInterface $context) use ($onFinalized) {         
+        ->finalize(function(HelperContextInterface $context) use ($onFinalize, $onFinalized) {         
+            
+            if($onFinalize !== null) {
+                
+                $onFinalize($this);
+            }            
             
             $this->finalize();
             
