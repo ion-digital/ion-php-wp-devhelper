@@ -49,7 +49,7 @@ trait ContextTrait
      * 
      * @return mixed
      */
-    public function __construct(PackageInterface $package, array $helperSettings = null, callable $onConstructed = null, callable $onInitialized = null, callable $onFinalized = null)
+    public function __construct(PackageInterface $package, array $helperSettings = null, callable $onConstruct = null, callable $onConstructed = null, callable $onInitialize = null, callable $onInitialized = null, callable $onFinalize = null, callable $onFinalized = null)
     {
         if (!array_key_exists(static::class, self::$contextInstances)) {
             self::$contextInstances[static::class] = [];
@@ -59,19 +59,28 @@ trait ContextTrait
         $this->package = $package;
         $helper = WP::createContext($package->getVendor(), $package->getProject(), $package->getProjectEntry(), null, $helperSettings);
         $this->helperContext = $helper->getContext();
-        $helper->construct(function (HelperContextInterface $context) use($onConstructed) {
+        $helper->construct(function (HelperContextInterface $context) use($onConstruct, $onConstructed) {
+            if ($onConstruct !== null) {
+                $onConstruct($this);
+            }
             $this->construct();
             if ($onConstructed !== null) {
                 $onConstructed($this);
             }
             return;
-        })->initialize(function (HelperContextInterface $context) use($onInitialized) {
+        })->initialize(function (HelperContextInterface $context) use($onInitialize, $onInitialized) {
+            if ($onInitialize !== null) {
+                $onInitialize($this);
+            }
             $this->initialize();
             if ($onInitialized !== null) {
                 $onInitialized($this);
             }
             return;
-        })->finalize(function (HelperContextInterface $context) use($onFinalized) {
+        })->finalize(function (HelperContextInterface $context) use($onFinalize, $onFinalized) {
+            if ($onFinalize !== null) {
+                $onFinalize($this);
+            }
             $this->finalize();
             if ($onFinalized !== null) {
                 $onFinalized($this);
