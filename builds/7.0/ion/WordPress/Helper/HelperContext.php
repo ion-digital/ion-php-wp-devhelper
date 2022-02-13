@@ -579,14 +579,14 @@ final class HelperContext implements HelperContextInterface
         foreach (array_values($this->getChildren()) as $childContext) {
             $childContext->invokeInitializeOperation();
         }
-        if ($this->hasInitializeOperation() === false) {
-            return;
-        }
-        $call = $this->getInitializeOperation();
-        if ($call !== null) {
-            $call($this);
+        if ($this->hasInitializeOperation()) {
+            $call = $this->getInitializeOperation();
+            if ($call !== null) {
+                $call($this);
+            }
         }
         $this->initialized = true;
+        return;
     }
     /**
      * method
@@ -599,16 +599,17 @@ final class HelperContext implements HelperContextInterface
             //throw new WordPressHelperException("Context '{$this->getProjectName()}' has already been initialized.");
             return;
         }
+        foreach (array_values($this->getChildren()) as $childContext) {
+            $childContext->invokeFinalizeOperation();
+        }
         if ($this->hasFinalizeOperation()) {
             $call = $this->getFinalizeOperation();
             if ($call !== null) {
                 $call($this);
             }
         }
-        foreach (array_values($this->getChildren()) as $childContext) {
-            $childContext->invokeFinalizeOperation();
-        }
         $this->finalized = true;
+        return;
     }
     /**
      * method
@@ -636,6 +637,7 @@ final class HelperContext implements HelperContextInterface
         if ($call !== null) {
             $call($this);
         }
+        return;
     }
     /**
      * method

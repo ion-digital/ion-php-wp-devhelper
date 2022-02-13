@@ -50,8 +50,7 @@ trait ContextTrait {
         callable $onConstructed = null,
         callable $onInitialize = null,
         callable $onInitialized = null,
-        callable $onFinalize = null,
-        callable $onFinalized = null
+        callable $onFinalize = null
             
     ) {
 
@@ -110,19 +109,12 @@ trait ContextTrait {
             
             return;
         })  
-        ->finalize(function(HelperContextInterface $context) use ($onFinalize, $onFinalized) {         
+        ->finalize(function(HelperContextInterface $context) use ($onFinalize) {         
             
             if($onFinalize !== null) {
                 
                 $onFinalize($this);
             }            
-            
-            $this->finalize();
-            
-            if($onFinalized !== null) {
-                
-                $onFinalized($this);
-            }
             
             return;
         })            
@@ -165,11 +157,6 @@ trait ContextTrait {
     }       
     
     protected function initialize(): void {
-        
-        // Empty, for now...
-    }
-    
-    protected function finalize(): void {
         
         // Empty, for now...
     }

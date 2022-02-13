@@ -532,19 +532,19 @@ final class HelperContext implements HelperContextInterface {
             $childContext->invokeInitializeOperation();
         }            
         
-        if ($this->hasInitializeOperation() === false) {
-            
-            return;
-        }            
+        if ($this->hasInitializeOperation()) {
 
-        $call = $this->getInitializeOperation();
+            $call = $this->getInitializeOperation();
 
-        if ($call !== null) {
+            if ($call !== null) {
 
-            $call($this);
-        }           
-
+                $call($this);
+            }           
+        }
+        
         $this->initialized = true;
+        
+        return;
     }     
     
     public function invokeFinalizeOperation(): void {
@@ -553,7 +553,12 @@ final class HelperContext implements HelperContextInterface {
             
             //throw new WordPressHelperException("Context '{$this->getProjectName()}' has already been initialized.");
             return;
-        }        
+        }      
+        
+        foreach(array_values($this->getChildren()) as $childContext) {
+
+            $childContext->invokeFinalizeOperation();
+        }  
 
         if($this->hasFinalizeOperation()) {
             
@@ -564,13 +569,10 @@ final class HelperContext implements HelperContextInterface {
                 $call($this);
             }           
         }            
-
-        foreach(array_values($this->getChildren()) as $childContext) {
-
-            $childContext->invokeFinalizeOperation();
-        }  
         
         $this->finalized = true;
+        
+        return;
     }            
     
     
@@ -605,6 +607,8 @@ final class HelperContext implements HelperContextInterface {
             
             $call($this);      
         }
+        
+        return;
     }    
     
     public function invokeDeactivateOperation(): void {
