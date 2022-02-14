@@ -2,8 +2,10 @@
 
 namespace ion\WordPress\Helper;
 
+use \WP_Error;
+
 interface WordPressHelperExceptionInterface {
 
-    // No public methods!
+    function getError(): ?WP_Error;
 
 }

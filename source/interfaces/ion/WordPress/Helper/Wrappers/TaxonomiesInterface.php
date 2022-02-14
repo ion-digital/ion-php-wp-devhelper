@@ -3,7 +3,6 @@
 namespace ion\WordPress\Helper\Wrappers;
 
 use \WP_Term;
-use \ion\WordPress\Helper\WordPressTaxonomyInterface;
 
 
 /**
@@ -45,7 +44,7 @@ interface TaxonomiesInterface {
         string $restControllerClass = null,
         callable $updateCountCallback = null
 
-    ): WordPressTaxonomyInterface;
+    ): void;
 
     static function addPostTypesToTaxonomy(string $taxonomy, array $postTypes): void;
 

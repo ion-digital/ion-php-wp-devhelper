@@ -4,7 +4,6 @@ namespace ion\WordPress\Helper\Wrappers;
 
 use \WP_Post;
 use \WP_Term;
-use \ion\WordPress\Helper\WordPressPostTypeInterface;
 
 
 /**
@@ -53,7 +52,7 @@ interface PostsInterface {
         string $restBase = null,
         string $restControllerClass = null
 
-    ): WordPressPostTypeInterface;
+    ): void;
 
     static function postExists(string $slug, string $postType = "post"): bool;
 

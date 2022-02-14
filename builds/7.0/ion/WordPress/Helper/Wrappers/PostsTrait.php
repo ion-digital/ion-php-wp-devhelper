@@ -23,7 +23,7 @@ use ion\WordPress\Helper\Wrappers\OptionMetaType;
  */
 trait PostsTrait
 {
-    private static $customPostTypes = [];
+    //    private static $customPostTypes = [];
     /**
      * method
      * 
@@ -31,33 +31,27 @@ trait PostsTrait
      */
     protected static function initialize()
     {
-        static::registerWrapperAction('init', function () {
-            foreach (static::$customPostTypes as $postTypeSlug => $taxonomy) {
-                $publicQueryable = $taxonomy['publiclyQueryable'] === null ? false : $taxonomy['publiclyQueryable'];
-                $args = ['label' => $taxonomy['pluralLabel'], 'labels' => $taxonomy['labels'], 'description' => $taxonomy['description'], 'public' => $taxonomy['public'] === null ? true : $taxonomy['public'], 'exclude_from_search' => $taxonomy['excludeFromSearch'] === null ? false : $taxonomy['excludeFromSearch'], 'publicly_queryable' => $publicQueryable, 'show_ui' => $taxonomy['showUi'] === null ? true : $taxonomy['showUi'], 'show_in_nav_menus' => $taxonomy['showInNavMenus'] === null ? true : $taxonomy['showInNavMenus'], 'show_in_menu' => $taxonomy['showInMenu'] === null ? true : $taxonomy['showInMenu'], 'show_in_admin_bar' => $taxonomy['showInAdminBar'] ? $publicQueryable ? true : false : $taxonomy['showInAdminBar'], 'menu_position' => $taxonomy['menuPosition'] === null ? 25 : $taxonomy['menuPosition'], 'menu_icon' => $taxonomy['menuIcon'], 'capability_type' => PHP::isEmpty($taxonomy['singleCapabilityType']) ? (array) ['post', 'posts'] : (PHP::isEmpty($taxonomy['pluralCapabilityType']) ? $taxonomy['singleCapabilityType'] : (array) [$taxonomy['singleCapabilityType'], $taxonomy['pluralCapabilityType']]), 'capabilities' => $taxonomy['capabilities'] === null ? null : $taxonomy['capabilities'], 'map_meta_cap' => PHP::isEmpty($taxonomy['mapMetaCap']) ? true : $taxonomy['mapMetaCap'], 'hierarchical' => $taxonomy['hierarchical'] === null ? false : $taxonomy['hierarchical'], 'supports' => $taxonomy['supports'] === null ? null : (count($taxonomy['supports']) > 0 ? (array) $taxonomy['supports'] : false), 'register_meta_box_cb' => $taxonomy['registerMetaBox'], 'taxonomies' => $taxonomy['taxonomies'] === null ? [] : $taxonomy['taxonomies'], 'has_archive' => PHP::isEmpty($taxonomy['hasArchive']) ? false : (PHP::isEmpty($taxonomy['archiveSlug']) ? (bool) $taxonomy['hasArchive'] : (string) $taxonomy['archiveSlug']), 'rewrite' => PHP::isEmpty($taxonomy['rewrite']) ? null : ['slug' => $taxonomy['rewriteSlug'], 'with_front' => $taxonomy['rewriteWithFront'], 'feeds' => $taxonomy['rewriteFeeds'], 'pages' => $taxonomy['rewritePages'], 'ep_mask' => $taxonomy['rewriteEndPointMask']], 'query_var' => PHP::isEmpty((bool) $taxonomy['enableQueryVar']) ? false : (string) $taxonomy['queryVar'], 'can_export' => $taxonomy['canExport'], 'delete_with_user' => $taxonomy['deleteWithUser'] === null ? false : $taxonomy['deleteWithUser'], 'show_in_rest' => $taxonomy['showInRest'] === null ? true : $taxonomy['showInRest'], 'rest_base' => $taxonomy['restBase'], 'rest_controller_class' => $taxonomy['restControllerClass']];
-                // Remove all NULL values from the array to enforce defaults on WordPress' side
-                $args = array_filter($args, function ($value) {
-                    return $value !== null;
-                });
-                register_post_type($postTypeSlug, $args);
-            }
-        });
+        //
+        //        static::registerWrapperAction('init', function() {
+        //
+        //            foreach(static::$customPostTypes as $postTypeSlug => $taxonomy) {
+        //
+        //
+        //            }
+        //        });
     }
     /**
      * method
      * 
      * 
-     * @return WordPressPostTypeInterface
+     * @return void
      */
-    public static function addCustomPostType(string $slug, string $pluralLabel, string $singularLabel, string $description = null, string $menuIcon = null, array $supports = null, array $taxonomies = null, callable $registerMetaBox = null, bool $hierarchical = null, bool $hasArchive = null, string $archiveSlug = null, array $labels = null, bool $public = null, bool $excludeFromSearch = null, bool $publiclyQueryable = null, bool $showUi = null, bool $showInNavMenus = null, bool $showInMenu = null, bool $showInAdminBar = null, int $menuPosition = null, string $singleCapabilityType = null, string $pluralCapabilityType = null, array $capabilities = null, bool $mapMetaCap = null, bool $rewrite = null, string $rewriteSlug = null, bool $rewriteWithFront = null, bool $rewriteFeeds = null, bool $rewritePages = null, string $rewriteEndPointMask = null, bool $enableQueryVar = null, string $queryVar = null, bool $canExport = null, bool $deleteWithUser = null, bool $showInRest = null, string $restBase = null, string $restControllerClass = null) : WordPressPostTypeInterface
+    public static function addCustomPostType(string $slug, string $pluralLabel, string $singularLabel, string $description = null, string $menuIcon = null, array $supports = null, array $taxonomies = null, callable $registerMetaBox = null, bool $hierarchical = null, bool $hasArchive = null, string $archiveSlug = null, array $labels = null, bool $public = null, bool $excludeFromSearch = null, bool $publiclyQueryable = null, bool $showUi = null, bool $showInNavMenus = null, bool $showInMenu = null, bool $showInAdminBar = null, int $menuPosition = null, string $singleCapabilityType = null, string $pluralCapabilityType = null, array $capabilities = null, bool $mapMetaCap = null, bool $rewrite = null, string $rewriteSlug = null, bool $rewriteWithFront = null, bool $rewriteFeeds = null, bool $rewritePages = null, string $rewriteEndPointMask = null, bool $enableQueryVar = null, string $queryVar = null, bool $canExport = null, bool $deleteWithUser = null, bool $showInRest = null, string $restBase = null, string $restControllerClass = null)
     {
+        if (PHP::isEmpty($slug)) {
+            throw new WordPressHelperException("Please provide a slug for the custom post.");
+        }
         if ($labels === null) {
-            if ($pluralLabel === null) {
-                $pluralLabel = 'Custom Posts';
-            }
-            if ($singularLabel === null) {
-                $singularLabel = 'Custom Post';
-            }
             $labels = ['name' => $pluralLabel, 'singular_name' => $singularLabel, 'add_new' => _x('Add New', $slug), 'add_new_item' => "Add New {$singularLabel}", 'edit_item' => "Edit {$singularLabel}", 'new_item' => "New {$singularLabel}", 'view_item' => "View {$singularLabel}", 'view_items' => "View {$pluralLabel}", 'search_items' => "Search {$pluralLabel}", 'not_found' => "No {$pluralLabel} found.", 'not_found_in_trash' => "No {$pluralLabel} found in Trash", 'parent_item_colon' => "Parent {$singularLabel}", 'all_items' => "All {$pluralLabel}", 'archives' => "{$singularLabel} Archives", 'attributes' => "{$singularLabel} Attributes", 'insert_into_item' => "Insert into {$singularLabel}", 'uploaded_to_this_item' => "Uploaded to this {$singularLabel}", 'featured_image' => "Image", 'set_featured_image' => "Set Image", 'remove_featured_image' => "Remove Image", 'use_featured_image' => "Use as image", 'menu_name' => $pluralLabel];
         } else {
             if (!array_key_exists('name', $labels)) {
@@ -67,8 +61,62 @@ trait PostsTrait
                 $labels['singular_name'] = $singularLabel;
             }
         }
-        static::$customPostTypes[$slug] = ['slug' => $slug, 'pluralLabel' => $pluralLabel, 'labels' => $labels, 'description' => $description, 'public' => $public, 'excludeFromSearch' => $excludeFromSearch, 'publiclyQueryable' => $publiclyQueryable, 'showUi' => $showUi, 'showInNavMenus' => $showInNavMenus, 'showInMenu' => $showInMenu, 'showInAdminBar' => $showInAdminBar, 'menuPosition' => $menuPosition, 'menuIcon' => $menuIcon, 'singleCapabilityType' => $singleCapabilityType, 'pluralCapabilityType' => $pluralCapabilityType, 'capabilities' => $capabilities === null ? null : $capabilities, 'mapMetaCap' => $mapMetaCap, 'hierarchical' => $hierarchical, 'supports' => $supports === null ? null : $supports, 'registerMetaBox' => $registerMetaBox, 'taxonomies' => $taxonomies === null ? null : $taxonomies, 'hasArchive' => $hasArchive, 'archiveSlug' => $archiveSlug, 'rewrite' => $rewrite, 'rewriteSlug' => $rewriteSlug, 'rewriteWithFront' => $rewriteWithFront, 'rewriteFeeds' => $rewriteFeeds, 'rewritePages' => $rewritePages, 'rewriteEndPointMask' => $rewriteEndPointMask, 'enableQueryVar' => $enableQueryVar, 'queryVar' => $queryVar, 'canExport' => $canExport, 'deleteWithUser' => $deleteWithUser, 'showInRest' => $showInRest, 'restBase' => $restBase, 'restControllerClass' => $restControllerClass];
-        return new WordPressPostType($slug, static::$customPostTypes[$slug]);
+        if (PHP::isEmpty($labels['name'])) {
+            throw new WordPressHelperException("Please provide a name for the custom post ('{$slug}').");
+        }
+        if (PHP::isEmpty($labels['singular_name'])) {
+            throw new WordPressHelperException("Please provide a singular name for the custom post ('{$slug}').");
+        }
+        //        static::$customPostTypes[$slug] = [
+        //
+        //            'slug' => $slug,
+        //            'pluralLabel' => $pluralLabel,
+        //            'labels' => $labels,
+        //            'description' => $description,
+        //            'public' => $public,
+        //            'excludeFromSearch' => $excludeFromSearch,
+        //            'publiclyQueryable' => $publiclyQueryable,
+        //            'showUi' => $showUi,
+        //            'showInNavMenus' => $showInNavMenus,
+        //            'showInMenu' => $showInMenu,
+        //            'showInAdminBar' => $showInAdminBar,
+        //            'menuPosition' => $menuPosition,
+        //            'menuIcon' => $menuIcon,
+        //            'singleCapabilityType' => $singleCapabilityType,
+        //            'pluralCapabilityType' => $pluralCapabilityType,
+        //            'capabilities' => ($capabilities === null ? null : $capabilities),
+        //            'mapMetaCap' => $mapMetaCap,
+        //            'hierarchical' => $hierarchical,
+        //            'supports' => ($supports === null ? null : $supports),
+        //            'registerMetaBox' => $registerMetaBox,
+        //            'taxonomies' => ($taxonomies === null ? null : $taxonomies),
+        //            'hasArchive' => $hasArchive,
+        //            'archiveSlug' => $archiveSlug,
+        //            'rewrite' => $rewrite,
+        //            'rewriteSlug' => $rewriteSlug,
+        //            'rewriteWithFront' => $rewriteWithFront,
+        //            'rewriteFeeds' => $rewriteFeeds,
+        //            'rewritePages' => $rewritePages,
+        //            'rewriteEndPointMask' => $rewriteEndPointMask,
+        //            'enableQueryVar' => $enableQueryVar,
+        //            'queryVar' => $queryVar,
+        //            'canExport' => $canExport,
+        //            'deleteWithUser' => $deleteWithUser,
+        //            'showInRest' => $showInRest,
+        //            'restBase' => $restBase,
+        //            'restControllerClass' => $restControllerClass
+        //
+        //        ];
+        $args = array_filter(['label' => $pluralLabel, 'labels' => array_filter($labels, function ($value) {
+            return $value !== null;
+        }), 'description' => $description, 'public' => $public ?? true, 'exclude_from_search' => $excludeFromSearch ?? false, 'publicly_queryable' => $publiclyQueryable ?? false, 'show_ui' => $showUi ?? true, 'show_in_nav_menus' => $showInNavMenus ?? true, 'show_in_menu' => $showInMenu ?? true, 'show_in_admin_bar' => $showInAdminBar ? $publiclyQueryable : $showInAdminBar, 'menu_position' => $menuPosition ?? 25, 'menu_icon' => $menuIcon, 'capability_type' => PHP::isEmpty($singleCapabilityType) ? (array) ['post', 'posts'] : (PHP::isEmpty($pluralCapabilityType) ? $singleCapabilityType : (array) [$singleCapabilityType, $pluralCapabilityType]), 'capabilities' => $capabilities, 'map_meta_cap' => PHP::isEmpty($mapMetaCap) ? true : $mapMetaCap, 'hierarchical' => $hierarchical ?? false, 'supports' => $supports ?? (PHP::count($supports) > 0 ? (array) $supports : false), 'register_meta_box_cb' => $registerMetaBox, 'taxonomies' => $taxonomies ? [] : $taxonomies, 'has_archive' => PHP::isEmpty($hasArchive) ? false : (PHP::isEmpty($archiveSlug) ? (bool) $hasArchive : (string) $archiveSlug), 'rewrite' => PHP::isEmpty($rewrite) ? null : array_filter(['slug' => $rewriteSlug, 'with_front' => $rewriteWithFront, 'feeds' => $rewriteFeeds, 'pages' => $rewritePages, 'ep_mask' => $rewriteEndPointMask], function ($value) {
+            return $value !== null;
+        }), 'query_var' => PHP::isEmpty((bool) $enableQueryVar) ? false : (string) $queryVar, 'can_export' => $canExport, 'delete_with_user' => $deleteWithUser ?? false, 'show_in_rest' => $showInRest ?? true, 'rest_base' => $restBase, 'rest_controller_class' => $restControllerClass], function ($value) {
+            return $value !== null;
+        });
+        register_post_type($slug, $args);
+        return;
+        //        return new WordPressPostType($slug, static::$customPostTypes[$slug]);
     }
     /**
      * method
@@ -100,7 +148,7 @@ SQL;
     {
         return static::postExists($slug, 'page');
     }
-    //FIXME: Method not complete!!!
+    //TODO: Method not complete!!!
     /**
      * method
      * 
@@ -109,29 +157,50 @@ SQL;
      */
     public static function getChildren(bool $depth = null, string $template = null, bool $echo = true) : array
     {
-        $result = [];
-        $output = "";
-        $objId = null;
-        $post = get_post();
-        if (!empty($post)) {
-            $objId = $post->ID;
-        } else {
-            $objId = get_queried_object_id();
-        }
-        if ($objId !== null) {
-            //TODO: Expand to beyond pages
-            $children = get_children(['post_parent' => $objId, 'post_type' => 'page', 'numberposts' => -1, 'post_status' => 'publish']);
-            foreach ($children as $child) {
-                $result[] = ['title' => $child->post_title, 'url' => get_permalink($child->ID)];
-            }
-            //print_r($children);
-        }
-        if ($echo === true) {
-            echo $output;
-        }
-        return $result;
+        throw new Exception("getChildren() has not been fully implemented yet - its on the TODO list!");
+        //        $result = [];
+        //
+        //
+        //        $output = "";
+        //        $objId = null;
+        //
+        //        $post = get_post();
+        //
+        //        if (!empty($post)) {
+        //            $objId = $post->ID;
+        //        } else {
+        //            $objId = get_queried_object_id();
+        //        }
+        //
+        //        if ($objId !== null) {
+        //
+        //            //TODO: Expand to beyond pages
+        //
+        //            $children = get_children([
+        //                'post_parent' => $objId,
+        //                'post_type' => 'page',
+        //                'numberposts' => -1,
+        //                'post_status' => 'publish'
+        //            ]);
+        //
+        //            foreach ($children as $child) {
+        //                $result[] = [
+        //                    'title' => $child->post_title,
+        //                    'url' => get_permalink($child->ID)
+        //                ];
+        //            }
+        //
+        //
+        //            //print_r($children);
+        //        }
+        //
+        //        if ($echo === true) {
+        //
+        //            echo $output;
+        //        }
+        //
+        //        return $result;
     }
-    //TODO
     /**
      * method
      * 
@@ -141,10 +210,6 @@ SQL;
     public static function getPostParentPost(int $postId)
     {
         $post = get_post($postId);
-        //        if(is_post_type_hierarchical($post->post_type)) {
-        //
-        //
-        //        }
         if ($post->post_parent === 0) {
             return null;
         }
@@ -160,7 +225,7 @@ SQL;
     {
         $post = get_post($postId);
         $terms = [];
-        while (PHP::isCountable($terms) && count($terms) === 0 && $post !== null) {
+        while (PHP::count($terms) === 0 && $post !== null) {
             $tmp = get_the_terms($post->ID, $taxonomy);
             if (!is_wp_error($tmp) && $tmp !== false) {
                 $terms = $tmp;
@@ -172,13 +237,11 @@ SQL;
             return null;
         }
         // There is exactly one term, so this is easy
-        if (PHP::isCountable($terms) && count($terms) === 1) {
+        if (PHP::count($terms) === 1) {
             return $terms[0];
         }
         // It gets more complicated... there are multiple terms to choose from; so we have to add criteria where we can
         $uri = PHP::getServerRequestUri();
-        //        if(!is_array($terms))
-        //        var_dump($terms);
         if ($uri !== null) {
             $uriElements = explode('/', $uri);
             foreach ($uriElements as $uriElement) {
@@ -191,6 +254,7 @@ SQL;
                 }
             }
         }
+        // Argh, we'll just prioritise and return the first one
         return $terms[0];
     }
     /**

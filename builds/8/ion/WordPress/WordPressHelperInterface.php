@@ -97,4 +97,8 @@ interface WordPressHelperInterface extends
 
     function uninstall(array $call = null): WordPressHelperInterface;
 
+    static function extend(string $name, callable $extension): WordPressHelperInterface;
+
+    static function __callStatic(string $name, array $arguments);
+
 }
