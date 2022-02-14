@@ -9,7 +9,7 @@ namespace ion\WordPress\Helper\Wrappers;
  */
 interface CronInterface {
 
-    static function addCronInterval(string $name, int $interval, string $description = null): string;
+    static function addCronInterval(string $name, int $interval, string $label = null): string;
 
     static function addCronJob(
 

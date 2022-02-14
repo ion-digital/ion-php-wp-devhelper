@@ -16,7 +16,7 @@ use ion\WordPress\Helper\Constants;
 use ion\Package;
 use ion\PhpHelper as PHP;
 use Parsedown;
-class Tools
+final class Tools
 {
     /**
      * method
@@ -754,7 +754,11 @@ HTML;
                     }
                     $nextRun = implode('<br />', ["<strong>{$when}</strong>", date_i18n("j F Y", $job['time']), date_i18n("g:i a", $job['time'])]);
                     $schedule = null;
-                    $intervals = array_flip(WP::getCronIntervals());
+                    //$intervals = array_flip(WP::getCronIntervals());
+                    $intervals = [];
+                    foreach (WP::getCronIntervals() as $key => $schedule) {
+                        $intervals[$key] = $schedule["display"];
+                    }
                     if (PHP::isString($job['schedule']) && array_key_exists($job['schedule'], $intervals)) {
                         $schedule = $intervals[$job['schedule']];
                     }
