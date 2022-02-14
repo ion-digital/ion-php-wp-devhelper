@@ -29,9 +29,7 @@ trait CronTrait
         static::registerWrapperAction('init', function () {
             foreach (static::$cronIntervals as $intervalName => $interval) {
                 add_filter('cron_schedules', function ($schedules) use($intervalName, $interval) {
-                    //if (!array_key_exists($intervalName, $schedules)/* || (array_key_exists($intervalName, $schedules)) */) {
-                    $schedules[$intervalName] = array('interval' => $interval['interval'], 'display' => esc_html__($interval['description'] !== null ? $interval['description'] : $interval['name']));
-                    //}
+                    $schedules[$intervalName] = array('interval' => $interval['interval'], 'display' => esc_html__(!PHP::isEmpty($interval['label']) ? $interval['label'] : $intervalName));
                     return $schedules;
                 });
             }
@@ -131,9 +129,9 @@ trait CronTrait
             }
         });
     }
-    public static function addCronInterval(string $name, int $interval, string $description = null) : string
+    public static function addCronInterval(string $name, int $interval, string $label = null) : string
     {
-        static::$cronIntervals[$name] = ['interval' => $interval, 'description' => $description];
+        static::$cronIntervals[$name] = ['name' => $name, 'interval' => $interval, 'label' => $label];
         return $name;
     }
     public static function addCronJob(string $name, int $startTimeStamp, string $intervalName, callable $job) : void
@@ -151,11 +149,11 @@ trait CronTrait
     }
     public static function getCronIntervals() : array
     {
-        $result = [];
-        foreach (wp_get_schedules() as $key => $schedule) {
-            $result[$schedule['display']] = $key;
+        $tmp = wp_get_schedules();
+        foreach (static::$cronIntervals as $name => $schedule) {
+            $tmp[$name] = ["interval" => $schedule["interval"], "display" => $schedule["label"]];
         }
-        return $result;
+        return $tmp;
     }
     public static function getCronArray() : array
     {

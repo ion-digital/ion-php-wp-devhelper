@@ -356,14 +356,14 @@ final class HelperContext implements HelperContextInterface
             //throw new WordPressHelperException("Context '{$this->getProjectName()}' has already been initialized.");
             return;
         }
-        foreach (array_values($this->getChildren()) as $childContext) {
-            $childContext->invokeInitializeOperation();
-        }
         if ($this->hasInitializeOperation()) {
             $call = $this->getInitializeOperation();
             if ($call !== null) {
                 $call($this);
             }
+        }
+        foreach (array_values($this->getChildren()) as $childContext) {
+            $childContext->invokeInitializeOperation();
         }
         $this->initialized = true;
         return;

@@ -20,7 +20,7 @@ use \ion\Package;
 use \ion\PhpHelper as PHP;
 use \Parsedown;
 
-class Tools {
+final class Tools {
 
     public static function isHidden() {
         
@@ -1096,8 +1096,15 @@ HTML;
                         ]);
 
                         $schedule = null;
-                        $intervals = array_flip(WP::getCronIntervals());
-
+                        //$intervals = array_flip(WP::getCronIntervals());
+                        
+                        $intervals = [];
+                        
+                        foreach(WP::getCronIntervals() as $key => $schedule) {
+                            
+                            $intervals[$key] = $schedule["display"];
+                        }
+                        
                         if(PHP::isString($job['schedule']) && array_key_exists($job['schedule'], $intervals)) {
 
                             $schedule = $intervals[$job['schedule']];

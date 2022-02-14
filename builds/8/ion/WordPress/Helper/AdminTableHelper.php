@@ -137,6 +137,7 @@ class AdminTableHelper implements AdminTableHelperInterface {
             }
 			
             $tmp = parse_url(PHP::getServerRequestUri());
+
             $scheme = (array_key_exists('scheme', $tmp) ? $tmp['scheme'] . '://' : '');
             $host = (array_key_exists('host', $tmp) ? $tmp['host'] : '');
             $path = (array_key_exists('path', $tmp) ? $tmp['path'] : '');
