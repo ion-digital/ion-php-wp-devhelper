@@ -155,6 +155,10 @@ trait CronTrait
         }
         return $tmp;
     }
+    public static function cronJobExists(string $name) : bool
+    {
+        return (bool) (wp_next_scheduled($name) !== false);
+    }
     public static function getCronArray() : array
     {
         return _get_cron_array();
