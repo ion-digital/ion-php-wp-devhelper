@@ -24,6 +24,8 @@ interface CronInterface {
 
     static function getCronIntervals(): array;
 
+    static function cronJobExists(string $name): bool;
+
     static function getCronArray(): array;
 
 }

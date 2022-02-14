@@ -37,6 +37,13 @@ interface CronInterface
     /**
      * method
      * 
+     * 
+     * @return bool
+     */
+    static function cronJobExists(string $name) : bool;
+    /**
+     * method
+     * 
      * @return array
      */
     static function getCronArray() : array;

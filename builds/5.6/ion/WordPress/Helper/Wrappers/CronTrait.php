@@ -186,6 +186,16 @@ trait CronTrait
     /**
      * method
      * 
+     * 
+     * @return bool
+     */
+    public static function cronJobExists($name)
+    {
+        return (bool) (wp_next_scheduled($name) !== false);
+    }
+    /**
+     * method
+     * 
      * @return array
      */
     public static function getCronArray()
