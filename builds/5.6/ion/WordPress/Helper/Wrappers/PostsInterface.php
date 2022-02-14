@@ -3,7 +3,6 @@ namespace ion\WordPress\Helper\Wrappers;
 
 use WP_Post;
 use WP_Term;
-use ion\WordPress\Helper\WordPressPostTypeInterface;
 /**
  * Description of PostsTrait*
  * @author Justus
@@ -14,7 +13,7 @@ interface PostsInterface
      * method
      * 
      * 
-     * @return WordPressPostTypeInterface
+     * @return void
      */
     static function addCustomPostType($slug, $pluralLabel, $singularLabel, $description = null, $menuIcon = null, array $supports = null, array $taxonomies = null, callable $registerMetaBox = null, $hierarchical = null, $hasArchive = null, $archiveSlug = null, array $labels = null, $public = null, $excludeFromSearch = null, $publiclyQueryable = null, $showUi = null, $showInNavMenus = null, $showInMenu = null, $showInAdminBar = null, $menuPosition = null, $singleCapabilityType = null, $pluralCapabilityType = null, array $capabilities = null, $mapMetaCap = null, $rewrite = null, $rewriteSlug = null, $rewriteWithFront = null, $rewriteFeeds = null, $rewritePages = null, $rewriteEndPointMask = null, $enableQueryVar = null, $queryVar = null, $canExport = null, $deleteWithUser = null, $showInRest = null, $restBase = null, $restControllerClass = null);
     /**
