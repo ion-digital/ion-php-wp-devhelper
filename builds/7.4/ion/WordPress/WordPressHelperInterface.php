@@ -41,4 +41,6 @@ interface WordPressHelperInterface extends ActionsInterface, AdminInterface, Com
     function activate(callable $call = null) : WordPressHelperInterface;
     function deactivate(callable $call = null) : WordPressHelperInterface;
     function uninstall(array $call = null) : WordPressHelperInterface;
+    static function extend(string $name, callable $extension) : WordPressHelperInterface;
+    static function __callStatic(string $name, array $arguments);
 }

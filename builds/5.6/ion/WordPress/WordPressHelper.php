@@ -24,6 +24,7 @@ use ion\SemVerInterface;
 use ion\SemVer;
 use ion\WordPress\Helper\Api\Wrappers\OptionMetaType;
 use ion\WordPress\Helper\WordPressHelperException;
+use ReflectionMethod;
 final class WordPressHelper implements WordPressHelperInterface
 {
     const WORDPRESS_HTACCESS_START = "# BEGIN WordPress";
@@ -53,6 +54,7 @@ final class WordPressHelper implements WordPressHelperInterface
     private static $settings = [];
     private static $contexts = [];
     private static $wrapperActions = [];
+    private static $extensions = [];
     private static $tools = null;
     /**
      * method
@@ -647,5 +649,36 @@ TEMPLATE;
     {
         $this->getCurrentContext()->setUninstallOperation($call);
         return $this;
+    }
+    /**
+     * method
+     * 
+     * 
+     * @return WordPressHelperInterface
+     */
+    public static function extend($name, callable $extension)
+    {
+        static::$extensions[$name] = $extension;
+        return $this;
+    }
+    /**
+     * method
+     * 
+     * 
+     * @return mixed
+     */
+    public static function __callStatic($name, array $arguments)
+    {
+        if (method_exists(static::class, $name)) {
+            $r = new ReflectionMethod(static::class, $name);
+            if (!$r->isPublic()) {
+                throw new WordPressHelperException("Non-public '{$name}' method cannot be called.");
+            }
+            return call_user_func_array([static::class, $name], $arguments);
+        }
+        if (array_key_exists($name, static::$extensions)) {
+            return call_user_func_array(static::$extensions[$name], $arguments);
+        }
+        throw new WordPressHelperException("Unknown extension method called ('{$name}').");
     }
 }

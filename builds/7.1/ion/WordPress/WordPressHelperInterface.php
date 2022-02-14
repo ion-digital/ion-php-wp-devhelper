@@ -160,4 +160,18 @@ interface WordPressHelperInterface extends ActionsInterface, AdminInterface, Com
      * @return WordPressHelperInterface
      */
     function uninstall(array $call = null) : WordPressHelperInterface;
+    /**
+     * method
+     * 
+     * 
+     * @return WordPressHelperInterface
+     */
+    static function extend(string $name, callable $extension) : WordPressHelperInterface;
+    /**
+     * method
+     * 
+     * 
+     * @return mixed
+     */
+    static function __callStatic(string $name, array $arguments);
 }
