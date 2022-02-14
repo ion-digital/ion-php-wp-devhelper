@@ -13,7 +13,7 @@ interface CronInterface
      * 
      * @return string
      */
-    static function addCronInterval(string $name, int $interval, string $description = null) : string;
+    static function addCronInterval(string $name, int $interval, string $label = null) : string;
     /**
      * method
      * 
