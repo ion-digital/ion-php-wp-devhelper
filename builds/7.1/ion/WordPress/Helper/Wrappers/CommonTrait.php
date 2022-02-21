@@ -347,6 +347,19 @@ JS;
      * 
      * @return bool
      */
+    public static function isCustomizer() : bool
+    {
+        $page = filter_input(INPUT_GET, 'customize_theme', FILTER_DEFAULT);
+        if (!PHP::isEmpty($page) || defined("IFRAME_REQUEST")) {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * method
+     * 
+     * @return bool
+     */
     public static function hasPermalinks() : bool
     {
         return PHP::toBool(static::getRawOption('permalink_structure') !== null);

@@ -33,9 +33,10 @@ final class WordPressHelper implements WordPressHelperInterface {
 
     private const WORDPRESS_HTACCESS_START = "# BEGIN WordPress";
     private const WORDPRESS_HTACCESS_END = "# END WordPress";   
-    private const WRAPPER_PRIORITY = 1000000;
+    
     private const CONSTRUCT_PRIORITY = 1;
-    private const INITIALIZE_PRIORITY = 1;    
+    private const INITIALIZE_PRIORITY = 2;    
+    private const WRAPPER_PRIORITY = 100;
     
     use 
         \ion\WordPress\Helper\Wrappers\ActionsTrait,

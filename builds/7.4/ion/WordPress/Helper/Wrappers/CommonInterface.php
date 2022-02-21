@@ -17,6 +17,7 @@ interface CommonInterface
     static function hasStyle(string $id) : bool;
     static function isWordPress() : bool;
     static function isAdmin(bool $includeLoginPage = false) : bool;
+    static function isCustomizer() : bool;
     static function hasPermalinks() : bool;
     static function addImageSize(string $name, int $width = null, int $height = null, bool $crop = null, bool $selectable = null, string $caption = null) : void;
     static function exitWithCode(int $code) : void;

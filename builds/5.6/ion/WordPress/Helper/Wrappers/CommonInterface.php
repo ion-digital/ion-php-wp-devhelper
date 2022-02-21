@@ -75,6 +75,12 @@ interface CommonInterface
      * 
      * @return bool
      */
+    static function isCustomizer();
+    /**
+     * method
+     * 
+     * @return bool
+     */
     static function hasPermalinks();
     /**
      * method
