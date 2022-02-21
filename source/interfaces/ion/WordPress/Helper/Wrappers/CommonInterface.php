@@ -53,6 +53,8 @@ interface CommonInterface {
 
     static function isAdmin(bool $includeLoginPage = false): bool;
 
+    static function isCustomizer(): bool;
+
     static function hasPermalinks(): bool;
 
     static function addImageSize(

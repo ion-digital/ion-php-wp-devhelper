@@ -372,7 +372,7 @@ trait OptionsTrait {
             
             'slug' => ($slug === null ? WP::slugify($title) : $slug),
             'title' => $title,
-            'priority' => ($priority === null ? 30 : $priority),
+            'priority' => ($priority ?? 30),
             'textDomain' => $textDomain,
             'settings' => []
         ];

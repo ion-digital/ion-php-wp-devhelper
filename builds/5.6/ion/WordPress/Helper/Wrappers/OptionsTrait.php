@@ -375,7 +375,7 @@ trait OptionsTrait
      */
     public static function addCustomizationSection($title, $slug = null, $priority = null, $textDomain = null)
     {
-        $themeOption = ['slug' => $slug === null ? WP::slugify($title) : $slug, 'title' => $title, 'priority' => $priority === null ? 30 : $priority, 'textDomain' => $textDomain, 'settings' => []];
+        $themeOption = ['slug' => $slug === null ? WP::slugify($title) : $slug, 'title' => $title, 'priority' => $priority ?? 30, 'textDomain' => $textDomain, 'settings' => []];
         static::$themeOptions[$themeOption['slug']] =& $themeOption;
         return new AdminCustomizeHelper($themeOption['settings']);
     }

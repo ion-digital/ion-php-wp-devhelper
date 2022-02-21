@@ -29,9 +29,9 @@ final class WordPressHelper implements WordPressHelperInterface
 {
     const WORDPRESS_HTACCESS_START = "# BEGIN WordPress";
     const WORDPRESS_HTACCESS_END = "# END WordPress";
-    const WRAPPER_PRIORITY = 1000000;
     const CONSTRUCT_PRIORITY = 1;
-    const INITIALIZE_PRIORITY = 1;
+    const INITIALIZE_PRIORITY = 2;
+    const WRAPPER_PRIORITY = 100;
     use \ion\WordPress\Helper\Wrappers\ActionsTrait, \ion\WordPress\Helper\Wrappers\AdminTrait, \ion\WordPress\Helper\Wrappers\CommonTrait, \ion\WordPress\Helper\Wrappers\CronTrait, \ion\WordPress\Helper\Wrappers\DatabaseTrait, \ion\WordPress\Helper\Wrappers\FiltersTrait, \ion\WordPress\Helper\Wrappers\TemplateTrait, \ion\WordPress\Helper\Wrappers\LoggingTrait, \ion\WordPress\Helper\Wrappers\OptionsTrait, \ion\WordPress\Helper\Wrappers\PathsTrait, \ion\WordPress\Helper\Wrappers\PostsTrait, \ion\WordPress\Helper\Wrappers\RewritesTrait, \ion\WordPress\Helper\Wrappers\ShortCodesTrait, \ion\WordPress\Helper\Wrappers\TaxonomiesTrait, \ion\WordPress\Helper\Wrappers\WidgetsTrait {
         \ion\WordPress\Helper\Wrappers\ActionsTrait::initialize as initializeActions;
         \ion\WordPress\Helper\Wrappers\AdminTrait::initialize as initializeAdmin;
