@@ -406,7 +406,7 @@ final class WordPressHelper implements WordPressHelperInterface {
 
         foreach(array_values(static::getContexts()) as $context) {
             
-            if(static::slugify($context->getPackageName()) !== $slug) {
+            if($context->getPackageName() !== $slug) {
                 
                 continue;
             }
