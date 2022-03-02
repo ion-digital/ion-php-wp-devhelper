@@ -254,7 +254,7 @@ final class WordPressHelper implements WordPressHelperInterface
             return static::getCurrentContext();
         }
         foreach (array_values(static::getContexts()) as $context) {
-            if (static::slugify($context->getPackageName()) !== $slug) {
+            if ($context->getPackageName() !== $slug) {
                 continue;
             }
             return $context;
