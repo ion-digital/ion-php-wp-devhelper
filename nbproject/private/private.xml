@@ -44,10 +44,6 @@
         <group name="PHP">
             <file>file:/D:/justus/Documents/Projects/PHP/ion/wordpress-helper/source/classes/ion/WordPress/Helper/HelperContext.php</file>
         </group>
-        <group name="ION">
-            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/traits/ion/WordPress/Helper/Wrappers/OptionsTrait.php</file>
-            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/Helper/AdminCustomizeHelper.php</file>
-            <file>file:/D:/prj/dev/ion/php/wp-devhelper/source/classes/ion/WordPress/WordPressHelper.php</file>
-        </group>
+        <group name="ION"/>
     </open-files>
 </project-private>
