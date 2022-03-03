@@ -15,7 +15,10 @@ namespace ion\WordPress\Helper;
 use \ion\WordPress\Helper\Constants;
 use \ion\WordPress\WordPressHelper as WP;
 use \ion\PhpHelper as PHP;
-use \ion\WordPress\Helper\Wrappers\OptionMetaType;
+use \WP_Post;
+use \WP_Term;
+use \WP_User;
+use \WP_Comment;
 
 class AdminFormHelper implements AdminFormHelperInterface {
     
@@ -154,40 +157,37 @@ class AdminFormHelper implements AdminFormHelperInterface {
         return $this->render($echo);
     }
     
-    private function setOption(string $key, /* mixed */ $value = null, int $metaId = null, $type = null): void {
+    private function setOption(string $key, /* mixed */ $value = null, int $metaId = null, string $type = null): void {
     
         if($metaId === null && $type !== null) {
             
-            $type = OptionMetaType::POST;
-        }        
-        
-               
-        $type = (string) $type;        
+            $type = WP_Post::class;
+        }                    
         
         if($this->getUseSerialization()) {
             
             $value = ($value === null ? null : @unserialize($value));
         }
         
-        if($type === OptionMetaType::POST) {
+        if($type === WP_Post::class) {
 
             WP::setPostOption($key, $metaId, $value);
             return;
         }
 
-        if($type === OptionMetaType::TERM) {
+        if($type === WP_Term::class) {
 
             WP::setTermOption($key, $metaId, $value);
             return;
         }
 
-        if($type === OptionMetaType::USER) {
+        if($type === WP_User::class) {
 
             WP::setUserOption($key, $metaId, $value);
             return;
         }
 
-        if($type === OptionMetaType::COMMENT) {
+        if($type === WP_Comment::class) {
 
             WP::setCommentOption($key, $metaId, $value);
             return;
@@ -197,40 +197,45 @@ class AdminFormHelper implements AdminFormHelperInterface {
         return;
     }
     
-    private function getOption(string $key, /* mixed */ $default = null, int $metaId = null, $type = null) { 
+    private function getOption(string $key, /* mixed */ $default = null, int $metaId = null, string $type = null) { 
         
         if($metaId === null && $type !== null) {
             
-            $type = OptionMetaType::POST;
+            $type = WP_Post::class;
         }        
-             
-        $type = (string) $type; 
 
         $dbValue = null;
         
-        if($type === OptionMetaType::POST) {
-
-            $dbValue = WP::getPostOption($key, $metaId, null);
-        }
-
-        else if($type === OptionMetaType::TERM) {
-
-            $dbValue = WP::getTermOption($key, $metaId, null);
-        }
-
-        else if($type === OptionMetaType::USER) {
-
-            $dbValue = WP::getUserOption($key, $metaId, null);
-        }
-
-        else if($type === OptionMetaType::COMMENT) {
-
-            $dbValue = WP::getCommentOption($key, $metaId, null);
-        }
+        if($metaId !== null) {
         
-        else {
+            if($type === WP_Post::class) {
+
+                $dbValue = WP::getPostOption($key, $metaId);
+            }
+
+            else if($type === WP_Term::class) {
+
+                $dbValue = WP::getTermOption($key, $metaId);
+            }
+
+            else if($type === WP_User::class) {
+
+                $dbValue = WP::getUserOption($key, $metaId);
+            }
+
+            else if($type === WP_Comment::class) {
+
+                $dbValue = WP::getCommentOption($key, $metaId);
+            }
+
+            else {
+
+                $dbValue = WP::getSiteOption($key);
+            }
             
-            $dbValue = WP::getSiteOption($key, $metaId, null);
+        } else {
+            
+            $dbValue = WP::getSiteOption($key);
         }
         
         if($this->getUseSerialization()) {
@@ -460,19 +465,19 @@ TEMPLATE;
         
         if($isPost) {
             
-            $metaType = new OptionMetaType(OptionMetaType::POST);
+            $metaType = WP_Post::class;
             $metaId = PHP::filterInput('post', [INPUT_GET], FILTER_SANITIZE_NUMBER_INT);
         }
         
         if($isTerm) {
             
-            $metaType = new OptionMetaType(OptionMetaType::TERM);
+            $metaType = WP_Term::class;
             $metaId = PHP::filterInput('tag_ID', [INPUT_GET], FILTER_SANITIZE_NUMBER_INT);
         }
 
         if($isUser) {
             
-            $metaType = new OptionMetaType(OptionMetaType::USER);
+            $metaType = WP_User::class;
             $metaId = PHP::filterInput('user_id', [INPUT_GET], FILTER_SANITIZE_NUMBER_INT);
             
             if($metaId === null) {
@@ -483,7 +488,7 @@ TEMPLATE;
         
         if($isComment) {
             
-            $metaType = new OptionMetaType(OptionMetaType::COMMENT);
+            $metaType = WP_Comment::class;
             
             //TODO
         }         
@@ -810,7 +815,7 @@ TEMPLATE;
 
         if($optionName !== null) {
             
-            return $this->onRead(function(/* string */ $record = null, string $key = null, int $metaId = null, /* string / OptionMetaType(!!) */ $type = null) use ($self, $optionName) {
+            return $this->onRead(function(/* string */ $record = null, string $key = null, int $metaId = null, string $type = null) use ($self, $optionName) {
 
 //                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());                    
 
@@ -838,7 +843,7 @@ TEMPLATE;
                     });
         }
         
-        return $this->onRead(function(/* string */ $record = null, string $key = null, int $metaId = null,  /* string / OptionMetaType(!!) */ $type = null) use ($self) {
+        return $this->onRead(function(/* string */ $record = null, string $key = null, int $metaId = null,  string $type = null) use ($self) {
         
             $result = null;
             
@@ -863,7 +868,7 @@ TEMPLATE;
 
         if($optionName !== null) {
             
-            return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, /* string / OptionMetaType(!!) */ $type = null) use ($self, $optionName) {
+            return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, string $type = null) use ($self, $optionName) {
 
 //                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                         $optionRecords = $this->getOption($optionName, [], $metaId, $type);
@@ -906,7 +911,7 @@ TEMPLATE;
         
 
         
-        return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, /* string / OptionMetaType(!!) */ $type = null) use ($self) {
+        return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, string $type = null) use ($self) {
             
             $options = [];
             
@@ -938,7 +943,7 @@ TEMPLATE;
 
         if($optionName !== null) {
                     
-            return $this->onCreate(function (array $values, string $key = null, int $metaId = null, /* string / OptionMetaType(!!) */ $type = null) use ($optionName) {
+            return $this->onCreate(function (array $values, string $key = null, int $metaId = null, string $type = null) use ($optionName) {
 
 //                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                 $optionRecords = $this->getOption($optionName, [], $metaId, $type);
@@ -958,7 +963,7 @@ TEMPLATE;
             });
         }
         
-        return $this->onCreate(function (array $values, string $key = null, int $metaId = null, /* string / OptionMetaType(!!) */ $type = null) use ($optionName) {
+        return $this->onCreate(function (array $values, string $key = null, int $metaId = null, string $type = null) use ($optionName) {
            
             $options = [];              
             
@@ -982,7 +987,7 @@ TEMPLATE;
         return $this;
     }   
     
-   public function process(int $metaId = null, OptionMetaType $metaType = null) {
+   public function process(int $metaId = null, string $metaType = null) {
        
         if ($this->processed === false) {
 

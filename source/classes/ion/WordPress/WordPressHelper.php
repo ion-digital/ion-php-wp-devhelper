@@ -25,7 +25,6 @@ use \ion\PhpHelper as PHP;
 use \ion\Package;
 use \ion\SemVerInterface;
 use \ion\SemVer;
-use \ion\WordPress\Helper\Api\Wrappers\OptionMetaType;
 use \ion\WordPress\Helper\WordPressHelperException;
 use \ReflectionMethod;
 
@@ -34,43 +33,42 @@ final class WordPressHelper implements WordPressHelperInterface {
     private const WORDPRESS_HTACCESS_START = "# BEGIN WordPress";
     private const WORDPRESS_HTACCESS_END = "# END WordPress";   
     
-    private const CONSTRUCT_PRIORITY = 1;
     private const INITIALIZE_PRIORITY = 2;    
     private const WRAPPER_PRIORITY = 100;
     
     use 
-        \ion\WordPress\Helper\Wrappers\ActionsTrait,
-        \ion\WordPress\Helper\Wrappers\AdminTrait,        
-        \ion\WordPress\Helper\Wrappers\CommonTrait,
-        \ion\WordPress\Helper\Wrappers\CronTrait,
-        \ion\WordPress\Helper\Wrappers\DatabaseTrait,
-        \ion\WordPress\Helper\Wrappers\FiltersTrait,
-        \ion\WordPress\Helper\Wrappers\TemplateTrait,
-        \ion\WordPress\Helper\Wrappers\LoggingTrait,
-        \ion\WordPress\Helper\Wrappers\OptionsTrait,
-        \ion\WordPress\Helper\Wrappers\PathsTrait,
-        \ion\WordPress\Helper\Wrappers\PostsTrait,
-        \ion\WordPress\Helper\Wrappers\RewritesTrait,
-        \ion\WordPress\Helper\Wrappers\ShortCodesTrait,
-        \ion\WordPress\Helper\Wrappers\TaxonomiesTrait,
-        \ion\WordPress\Helper\Wrappers\WidgetsTrait        
+        \ion\WordPress\Helper\ActionsTrait,
+        \ion\WordPress\Helper\AdminTrait,        
+        \ion\WordPress\Helper\CommonTrait,
+        \ion\WordPress\Helper\CronTrait,
+        \ion\WordPress\Helper\DatabaseTrait,
+        \ion\WordPress\Helper\FiltersTrait,
+        \ion\WordPress\Helper\TemplateTrait,
+        \ion\WordPress\Helper\LoggingTrait,
+        \ion\WordPress\Helper\OptionsTrait,
+        \ion\WordPress\Helper\PathsTrait,
+        \ion\WordPress\Helper\PostsTrait,
+        \ion\WordPress\Helper\RewritesTrait,
+        \ion\WordPress\Helper\ShortCodesTrait,
+        \ion\WordPress\Helper\TaxonomiesTrait,
+        \ion\WordPress\Helper\WidgetsTrait        
     {
         
-        \ion\WordPress\Helper\Wrappers\ActionsTrait::initialize as initializeActions;
-        \ion\WordPress\Helper\Wrappers\AdminTrait::initialize as initializeAdmin;
-        \ion\WordPress\Helper\Wrappers\CommonTrait::initialize as initializeCommon;
-        \ion\WordPress\Helper\Wrappers\CronTrait::initialize as initializeCron;
-        \ion\WordPress\Helper\Wrappers\DatabaseTrait::initialize as initializeDatabase;
-        \ion\WordPress\Helper\Wrappers\FiltersTrait::initialize as initializeFilters;
-        \ion\WordPress\Helper\Wrappers\TemplateTrait::initialize as initializeTemplate;
-        \ion\WordPress\Helper\Wrappers\LoggingTrait::initialize as initializeLogging;
-        \ion\WordPress\Helper\Wrappers\OptionsTrait::initialize as initializeOptions;
-        \ion\WordPress\Helper\Wrappers\PathsTrait::initialize as initializePaths;
-        \ion\WordPress\Helper\Wrappers\PostsTrait::initialize as initializePosts;
-        \ion\WordPress\Helper\Wrappers\RewritesTrait::initialize as initializeRewrites;
-        \ion\WordPress\Helper\Wrappers\ShortCodesTrait::initialize as initializeShortCodes;
-        \ion\WordPress\Helper\Wrappers\TaxonomiesTrait::initialize as initializeTaxonomies;
-        \ion\WordPress\Helper\Wrappers\WidgetsTrait::initialize as initializeWidgets;        
+        \ion\WordPress\Helper\ActionsTrait::initialize as initializeActions;
+        \ion\WordPress\Helper\AdminTrait::initialize as initializeAdmin;
+        \ion\WordPress\Helper\CommonTrait::initialize as initializeCommon;
+        \ion\WordPress\Helper\CronTrait::initialize as initializeCron;
+        \ion\WordPress\Helper\DatabaseTrait::initialize as initializeDatabase;
+        \ion\WordPress\Helper\FiltersTrait::initialize as initializeFilters;
+        \ion\WordPress\Helper\TemplateTrait::initialize as initializeTemplate;
+        \ion\WordPress\Helper\LoggingTrait::initialize as initializeLogging;
+        \ion\WordPress\Helper\OptionsTrait::initialize as initializeOptions;
+        \ion\WordPress\Helper\PathsTrait::initialize as initializePaths;
+        \ion\WordPress\Helper\PostsTrait::initialize as initializePosts;
+        \ion\WordPress\Helper\RewritesTrait::initialize as initializeRewrites;
+        \ion\WordPress\Helper\ShortCodesTrait::initialize as initializeShortCodes;
+        \ion\WordPress\Helper\TaxonomiesTrait::initialize as initializeTaxonomies;
+        \ion\WordPress\Helper\WidgetsTrait::initialize as initializeWidgets;        
     }
 
     private static $helperConstructed = false;
@@ -79,6 +77,7 @@ final class WordPressHelper implements WordPressHelperInterface {
     private static $contexts = [];
     private static $wrapperActions = [];
     private static $extensions = [];
+//    private static $overrides = [];
 
     private static $tools = null;
        
@@ -331,19 +330,6 @@ final class WordPressHelper implements WordPressHelperInterface {
         } 
 
         static::$helperConstructed = true;
-        
-        add_action('after_setup_theme', function() { // NOTE: This needs to fire before 'init'
-
-            foreach(static::getContexts() as $helperContext) {
-
-                if($helperContext->hasParent()) {
-
-                    continue;
-                }
-
-                $helperContext->invokeConstructOperation();            
-            }
-        }, self::CONSTRUCT_PRIORITY);
 
         add_action('init', function() {
 
@@ -376,9 +362,7 @@ final class WordPressHelper implements WordPressHelperInterface {
                 $helperContext->invokeFinalizeOperation();
             }              
             
-            
         }, self::INITIALIZE_PRIORITY);           
-        
     }
     
     private static function getContextByIndex(int $index) {
@@ -615,7 +599,6 @@ TEMPLATE;
             string $helperDir = null, 
             array $wpHelperSettings = null,
             SemVerInterface $version = null,
-            callable $construct = null,
             callable $initialize = null,
             callable $finalize = null,
             callable $activate = null, 
@@ -645,7 +628,6 @@ TEMPLATE;
             $helperDir, 
             $wpHelperSettings, 
             $version, 
-            $construct, 
             $initialize, 
             $finalize,
             $activate, 
@@ -667,7 +649,6 @@ TEMPLATE;
             string $helperDir = null, 
             array $wpHelperSettings = null,
             SemVerInterface $version = null,
-            callable $construct = null,
             callable $initialize = null, 
             callable $finalize = null, 
             callable $activate = null, 
@@ -676,19 +657,11 @@ TEMPLATE;
             
     ) {
         
-        $context = new HelperContext($vendorName, $projectName, $loadPath, $helperDir, $wpHelperSettings, $version);
+        $context = new HelperContext($vendorName, $projectName, $loadPath, $version, null);
         
         $this->context = $context;
          
         $this->context
-                
-            ->setConstructOperation(function() use ($construct, $context) {
-                
-                if($construct !== null) {
-                    
-                    $construct($context);
-                }
-            })
 
             ->setInitializeOperation(function() use ($initialize, $context) {
 
@@ -725,13 +698,7 @@ TEMPLATE;
 
             ->setUninstallOperation($uninstall);        
     }
-    
-    public function construct(callable $call = null): WordPressHelperInterface {
-        
-        $this->getCurrentContext()->setConstructOperation($call);
-        return $this;
-    }
-    
+
     public function initialize(callable $call = null): WordPressHelperInterface {
     
        $this->getCurrentContext()->setInitializeOperation($call);       
@@ -762,13 +729,18 @@ TEMPLATE;
         return $this;        
     }
 
-    public static function extend(string $name, callable $extension): WordPressHelperInterface {
+    final public static function extend(string $name, callable $extension): void {
      
-        static::$extensions[$name] = $extension;
-        return $this;
+        static::$extensions[strtolower($name)] = $extension;
+        return;
     }
     
-    public static function __callStatic(string $name, array $arguments) {
+    final public static function __callStatic(string $name, array $arguments) {
+                
+        if(array_key_exists(strtolower($name), static::$extensions)) {
+            
+            return call_user_func_array(static::$extensions[strtolower($name)], $arguments);
+        }     
         
         if(method_exists(static::class, $name)) {
             
@@ -776,17 +748,12 @@ TEMPLATE;
             
             if(!$r->isPublic()) {
                 
-                throw new WordPressHelperException("Non-public '{$name}' method cannot be called.");
+                throw new WordPressHelperException("A non-public '{$name}' method cannot be called.");
             }
             
             return call_user_func_array([static::class, $name], $arguments);
         }
-        
-        if(array_key_exists($name, static::$extensions)) {
-            
-            return call_user_func_array(static::$extensions[$name], $arguments);
-        }
-        
+
         throw new WordPressHelperException("Unknown extension method called ('{$name}').");
     }
 }
