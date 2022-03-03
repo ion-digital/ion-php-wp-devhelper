@@ -1401,10 +1401,13 @@ TEMPLATE;
 
                 foreach ($values as $key => $selectValue) {
                     
-                    if (is_array($selectValue) === true) {
+                    if (is_array($selectValue)) {
 
-                        $optionsHtmlTemplate .= "<optgroup label=\"$key\">\n";
-
+                        if(PHP::count($values) > 1) {
+                        
+                            $optionsHtmlTemplate .= "<optgroup label=\"{$key}\">\n";
+                        }
+                        
                         foreach ($selectValue as $valueKey => $valueValue) {
 
                             $tmp = '';
@@ -1414,10 +1417,13 @@ TEMPLATE;
                             }
 
                             // NOTE: The string-only comparison below
-                            $optionsHtmlTemplate .= "<option value=\"$tmp\"" . ((string) $valueValue === (string) $value || PHP::count($values) === 1 ? " selected" : "") . ">{$valueKey}</option>\n";
+                            $optionsHtmlTemplate .= "<option value=\"{$tmp}\"" . ((string) $valueValue === (string) $value ? " selected" : "") . ">{$valueKey}</option>\n";
                         }
 
-                        $optionsHtmlTemplate .= "</optgroup>\n";
+                        if(PHP::count($values) > 1) {
+                        
+                            $optionsHtmlTemplate .= "</optgroup>\n";
+                        }
                         
                     } else {
 
@@ -1429,7 +1435,7 @@ TEMPLATE;
                         }
                         
                         // NOTE: The string-only comparison below
-                        $optionsHtmlTemplate .= "<option value=\"$tmp\"" . ((string) $selectValue === (string) $value || PHP::count($values) === 1 ? " selected" : "") . ">$key</option>\n";
+                        $optionsHtmlTemplate .= "<option value=\"$tmp\"" . ((string) $selectValue === (string) $value || PHP::count($values) === 1 ? " selected" : "") . ">{$key}</option>\n";
                     }
                 }
 
