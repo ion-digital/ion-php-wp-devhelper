@@ -196,13 +196,22 @@ final class HelperContext implements HelperContextInterface {
         $this->version = $version; 
 
         
-        add_action('admin_init', function() {
+//        add_action('admin_init', function() {
 
+        if(WP::isAdmin()) {
+            
             if($this->getUninstallOperation() instanceof \Closure) {
 
                 throw new WordPressHelperException("The uninstall hook for context '{$this->getProjectName()}' cannot be a Closure - it must be unspecified (NULL), a function or a static method.");
             }              
 
+//            var_dump($this->contextType);
+//var_dump($this->getType()); 
+//var_dump(Constants::CONTEXT_PLUGIN);
+//die("X");
+            
+//throw new \Exception($this->loadPath);            
+            
             if($this->getType() === Constants::CONTEXT_PLUGIN) {
 
                 register_activation_hook($this->loadPath, function() {
@@ -234,7 +243,7 @@ final class HelperContext implements HelperContextInterface {
 
                 });                   
             }  
-        });              
+        }        
         
         return;
     }
