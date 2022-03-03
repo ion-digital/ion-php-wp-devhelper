@@ -372,6 +372,22 @@ TEMPLATE;
      * method
      * 
      * 
+     * @return mixed
+     */
+    private static function getDescriptorKeys(array $descriptor)
+    {
+        $keys = [];
+        foreach ($descriptor["groups"] as $group) {
+            foreach ($group["fields"] as $field) {
+                $keys[] = $field["name"];
+            }
+        }
+        return $keys;
+    }
+    /**
+     * method
+     * 
+     * 
      * @return string
      */
     public function render(bool $echo = true) : string
@@ -438,12 +454,12 @@ TEMPLATE;
                     if ($state['record'] !== null && $state['key'] !== null) {
                         $formAction .= '&record=' . $state['record'];
                         foreach ($this->onReadHandlers as $handler) {
-                            $data = $handler($state['record'], $state['key'], $metaId, $metaType);
+                            $data = $handler($state['record'], $state['key'], $metaId, $metaType, static::getDescriptorKeys($this->descriptor));
                         }
                     }
                 } else {
                     foreach ($this->onReadHandlers as $handler) {
-                        $data = $handler(null, null, $metaId, $metaType);
+                        $data = $handler(null, null, $metaId, $metaType, static::getDescriptorKeys($this->descriptor));
                         if ($data !== null && !PHP::isAssociativeArray($data) && PHP::isCountable($data) && count($data) > 0) {
                             if (PHP::isAssociativeArray($data[0])) {
                                 $data = $data[0];
@@ -658,7 +674,7 @@ TEMPLATE;
     {
         $self = $this;
         if ($optionName !== null) {
-            return $this->onRead(function ($record = null, string $key = null, int $metaId = null, string $type = null) use($self, $optionName) {
+            return $this->onRead(function ($record = null, string $key = null, int $metaId = null, string $type = null, array $descriptor = []) use($self, $optionName) {
                 //                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                 $optionRecords = $this->getOption($optionName, [], $metaId, $type);
                 $result = null;
@@ -675,7 +691,7 @@ TEMPLATE;
                 return $result;
             });
         }
-        return $this->onRead(function ($record = null, string $key = null, int $metaId = null, string $type = null) use($self) {
+        return $this->onRead(function ($record = null, string $key = null, int $metaId = null, string $type = null, array $descriptor = []) use($self) {
             $result = null;
             foreach ($self->descriptor['groups'] as $group) {
                 foreach ($group['fields'] as $field) {
@@ -722,7 +738,7 @@ TEMPLATE;
                 $this->setOption($optionName, $optionRecords, $metaId, $type);
             });
         }
-        return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, string $type = null) use($self) {
+        return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, string $type = null, array $descriptor = []) use($self) {
             $options = [];
             foreach ($oldValues as $key => $value) {
                 $options[($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key] = $value;
@@ -816,7 +832,7 @@ TEMPLATE;
                 $oldValues = [];
                 $data = null;
                 foreach ($this->onReadHandlers as $handler) {
-                    $data = $handler($state['record'], $state['key'], $metaId, $metaType);
+                    $data = $handler($state['record'], $state['key'], $metaId, $metaType, static::getDescriptorKeys($this->descriptor));
                     // We want the read processor to return nulls; but for updating, we only want to know which values are not null.
                     if ($data !== null && PHP::isAssociativeArray($data)) {
                         foreach ($data as $key => $value) {

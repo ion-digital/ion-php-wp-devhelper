@@ -173,15 +173,23 @@ trait CronTrait
     /**
      * method
      * 
+     * 
      * @return array
      */
-    public static function getCronIntervals()
+    public static function getCronIntervals($asList = false)
     {
-        $tmp = wp_get_schedules();
+        $schedules = wp_get_schedules();
         foreach (static::$cronIntervals as $name => $schedule) {
-            $tmp[$name] = ["interval" => $schedule["interval"], "display" => $schedule["label"]];
+            $schedules[$name] = ["interval" => $schedule["interval"], "display" => $schedule["label"]];
         }
-        return $tmp;
+        if ($asList) {
+            $tmp = [];
+            foreach ($schedules as $name => $schedule) {
+                $tmp[$schedule["display"]] = $name;
+            }
+            return $tmp;
+        }
+        return $schedules;
     }
     /**
      * method
