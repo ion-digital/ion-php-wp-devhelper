@@ -420,6 +420,21 @@ TEMPLATE;
         return $output;
     }
     
+    private static function getDescriptorKeys(array $descriptor) {
+        
+        $keys = [];
+
+        foreach($descriptor["groups"] as $group) {
+            
+            foreach($group["fields"] as $field) {
+
+                $keys[] = $field["name"];
+            }
+        }
+        
+        return $keys;
+    }
+    
     public function render(bool $echo = true): string {
 
         if ($this->output !== null) {
@@ -530,8 +545,8 @@ TEMPLATE;
                     $formAction .= '&record=' . $state['record'];
 
                     foreach($this->onReadHandlers as $handler) {
-
-                        $data = $handler($state['record'], $state['key'], $metaId, $metaType);
+                        
+                        $data = $handler($state['record'], $state['key'], $metaId, $metaType, static::getDescriptorKeys($this->descriptor));
                     }
 
                 }
@@ -540,8 +555,8 @@ TEMPLATE;
                     
                 foreach($this->onReadHandlers as $handler) {               
 
-                    $data = $handler(null, null, $metaId, $metaType);
-                    
+                    $data = $handler(null, null, $metaId, $metaType, static::getDescriptorKeys($this->descriptor));
+                
                     if($data !== null && !PHP::isAssociativeArray($data) && PHP::isCountable($data) && count($data) > 0) {
 
                         if(PHP::isAssociativeArray($data[0])) {
@@ -815,7 +830,15 @@ TEMPLATE;
 
         if($optionName !== null) {
             
-            return $this->onRead(function(/* string */ $record = null, string $key = null, int $metaId = null, string $type = null) use ($self, $optionName) {
+            return $this->onRead(function(
+                    
+                /* string */ $record = null, 
+                string $key = null, 
+                int $metaId = null, 
+                string $type = null,
+                array $descriptor = []
+                    
+            ) use ($self, $optionName) {
 
 //                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());                    
 
@@ -843,7 +866,13 @@ TEMPLATE;
                     });
         }
         
-        return $this->onRead(function(/* string */ $record = null, string $key = null, int $metaId = null,  string $type = null) use ($self) {
+        return $this->onRead(function(
+                
+            /* string */ $record = null,
+            string $key = null,
+            int $metaId = null,
+            string $type = null,
+            array $descriptor = []) use ($self) {
         
             $result = null;
             
@@ -868,7 +897,16 @@ TEMPLATE;
 
         if($optionName !== null) {
             
-            return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, string $type = null) use ($self, $optionName) {
+            return $this->onUpdate(function (
+                    
+                $index, 
+                $newValues, 
+                $oldValues, 
+                $key = null, 
+                int $metaId = null, 
+                string $type = null
+                    
+            ) use ($self, $optionName) {
 
 //                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                         $optionRecords = $this->getOption($optionName, [], $metaId, $type);
@@ -911,7 +949,17 @@ TEMPLATE;
         
 
         
-        return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, string $type = null) use ($self) {
+        return $this->onUpdate(function (
+                
+            $index, 
+            $newValues, 
+            $oldValues, 
+            $key = null, 
+            int $metaId = null, 
+            string $type = null,
+            array $descriptor = []
+                
+        ) use ($self) {
             
             $options = [];
             
@@ -943,7 +991,14 @@ TEMPLATE;
 
         if($optionName !== null) {
                     
-            return $this->onCreate(function (array $values, string $key = null, int $metaId = null, string $type = null) use ($optionName) {
+            return $this->onCreate(function (
+                    
+                array $values, 
+                string $key = null, 
+                int $metaId = null, 
+                string $type = null
+                    
+            ) use ($optionName) {
 
 //                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                 $optionRecords = $this->getOption($optionName, [], $metaId, $type);
@@ -963,7 +1018,14 @@ TEMPLATE;
             });
         }
         
-        return $this->onCreate(function (array $values, string $key = null, int $metaId = null, string $type = null) use ($optionName) {
+        return $this->onCreate(function (
+                
+            array $values, 
+            string $key = null, 
+            int $metaId = null, 
+            string $type = null
+                
+        ) use ($optionName) {
            
             $options = [];              
             
@@ -1041,7 +1103,7 @@ TEMPLATE;
                 
                 foreach($this->onReadHandlers as $handler) {
                     
-                    $data = $handler($state['record'], $state['key'], $metaId, $metaType);
+                    $data = $handler($state['record'], $state['key'], $metaId, $metaType, static::getDescriptorKeys($this->descriptor));
                                         
                     // We want the read processor to return nulls; but for updating, we only want to know which values are not null.
                     if($data !== null && PHP::isAssociativeArray($data)) {

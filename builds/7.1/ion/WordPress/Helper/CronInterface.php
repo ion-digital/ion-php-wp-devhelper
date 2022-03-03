@@ -31,9 +31,10 @@ interface CronInterface
     /**
      * method
      * 
+     * 
      * @return array
      */
-    static function getCronIntervals() : array;
+    static function getCronIntervals(bool $asList = false) : array;
     /**
      * method
      * 

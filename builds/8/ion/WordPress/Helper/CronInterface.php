@@ -22,7 +22,7 @@ interface CronInterface {
 
     static function removeCronJob(string $name): void;
 
-    static function getCronIntervals(): array;
+    static function getCronIntervals(bool $asList = false): array;
 
     static function cronJobExists(string $name): bool;
 
