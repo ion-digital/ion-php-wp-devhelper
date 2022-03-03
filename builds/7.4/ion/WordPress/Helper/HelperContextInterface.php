@@ -13,7 +13,6 @@ interface HelperContextInterface
     function hasChildren() : bool;
     function addChild(HelperContextInterface $child) : void;
     function getLog() : WordPressHelperLogInterface;
-    function isConstructed() : bool;
     function isInitialized() : bool;
     function isFinalized() : bool;
     function getId() : int;
@@ -21,30 +20,24 @@ interface HelperContextInterface
     function getVendorName() : string;
     function getProjectName() : string;
     function isPrimary() : bool;
-    function getView(string $viewSlug) : callable;
     function getWorkingUri() : string;
     function getWorkingDirectory() : string;
     function getLoadPath() : string;
-    function getViewDirectory() : string;
-    function getConstructOperation() : ?callable;
     function getInitializeOperation() : ?callable;
     function getFinalizeOperation() : ?callable;
     function getActivateOperation() : ?callable;
     function getDeactivateOperation() : ?callable;
     function getUninstallOperation() : ?array;
-    function setConstructOperation(callable $operation = null) : HelperContextInterface;
     function setInitializeOperation(callable $operation = null) : ?HelperContextInterface;
     function setFinalizeOperation(callable $operation = null) : ?HelperContextInterface;
     function setActivateOperation(callable $operation = null) : HelperContextInterface;
     function setDeactivateOperation(callable $operation = null) : HelperContextInterface;
     function setUninstallOperation(array $operation = null) : HelperContextInterface;
-    function hasConstructOperation() : bool;
     function hasInitializeOperation() : bool;
     function hasFinalizeOperation() : bool;
     function hasActivateOperation() : bool;
     function hasDeactivateOperation() : bool;
     function hasUninstallOperation() : bool;
-    function invokeConstructOperation() : void;
     function invokeInitializeOperation() : void;
     function invokeFinalizeOperation() : void;
     function invokeActivateOperation() : void;
@@ -56,5 +49,6 @@ interface HelperContextInterface
     function getActivationVersion() : ?SemVerInterface;
     function getTemplates(bool $flat = true, bool $themeOnly = false, bool $labels = false, string $nullItem = null, string $relativePath = null) : array;
     function templateExists(string $name) : bool;
-    function template(string $name, bool $echo = false) : string;
+    function extend(string $name, callable $extension) : void;
+    function __call(string $name, array $arguments);
 }

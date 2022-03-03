@@ -60,12 +60,6 @@ interface HelperContextInterface
      * 
      * @return bool
      */
-    function isConstructed();
-    /**
-     * method
-     * 
-     * @return bool
-     */
     function isInitialized();
     /**
      * method
@@ -106,13 +100,6 @@ interface HelperContextInterface
     /**
      * method
      * 
-     * 
-     * @return callable
-     */
-    function getView($viewSlug);
-    /**
-     * method
-     * 
      * @return string
      */
     function getWorkingUri();
@@ -128,18 +115,6 @@ interface HelperContextInterface
      * @return string
      */
     function getLoadPath();
-    /**
-     * method
-     * 
-     * @return string
-     */
-    function getViewDirectory();
-    /**
-     * method
-     * 
-     * @return ?callable
-     */
-    function getConstructOperation();
     /**
      * method
      * 
@@ -170,13 +145,6 @@ interface HelperContextInterface
      * @return ?array
      */
     function getUninstallOperation();
-    /**
-     * method
-     * 
-     * 
-     * @return HelperContextInterface
-     */
-    function setConstructOperation(callable $operation = null);
     /**
      * method
      * 
@@ -217,12 +185,6 @@ interface HelperContextInterface
      * 
      * @return bool
      */
-    function hasConstructOperation();
-    /**
-     * method
-     * 
-     * @return bool
-     */
     function hasInitializeOperation();
     /**
      * method
@@ -248,12 +210,6 @@ interface HelperContextInterface
      * @return bool
      */
     function hasUninstallOperation();
-    /**
-     * method
-     * 
-     * @return void
-     */
-    function invokeConstructOperation();
     /**
      * method
      * 
@@ -326,7 +282,14 @@ interface HelperContextInterface
      * method
      * 
      * 
-     * @return string
+     * @return void
      */
-    function template($name, $echo = false);
+    function extend($name, callable $extension);
+    /**
+     * method
+     * 
+     * 
+     * @return mixed
+     */
+    function __call($name, array $arguments);
 }

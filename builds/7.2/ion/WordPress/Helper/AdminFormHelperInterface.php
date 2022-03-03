@@ -1,7 +1,6 @@
 <?php
 namespace ion\WordPress\Helper;
 
-use ion\WordPress\Helper\Wrappers\OptionMetaType;
 interface AdminFormHelperInterface
 {
     static function createGroupDescriptorInstance(string $title = null, string $description = null, string $id = null, int $columns = null) : array;
@@ -22,7 +21,7 @@ interface AdminFormHelperInterface
     function updateToOptions(string $optionName = null) : AdminFormHelperInterface;
     function createToOptions(string $optionName = null) : AdminFormHelperInterface;
     function redirect(callable $redirect) : AdminFormHelperInterface;
-    function process(int $metaId = null, OptionMetaType $metaType = null);
+    function process(int $metaId = null, string $metaType = null);
     function readFromSqlQuery(string $query) : AdminFormHelperInterface;
     function readFromSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null, string $recordField = null, int $recordId = null) : AdminFormHelperInterface;
     function updateToSqlTable(string $tableNameWithoutPrefix, string $tableNamePrefix = null, string $recordField = null, int $recordId = null) : AdminFormHelperInterface;

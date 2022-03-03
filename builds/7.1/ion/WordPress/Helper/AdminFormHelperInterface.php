@@ -1,7 +1,6 @@
 <?php
 namespace ion\WordPress\Helper;
 
-use ion\WordPress\Helper\Wrappers\OptionMetaType;
 interface AdminFormHelperInterface
 {
     /**
@@ -133,7 +132,7 @@ interface AdminFormHelperInterface
      * 
      * @return mixed
      */
-    function process(int $metaId = null, OptionMetaType $metaType = null);
+    function process(int $metaId = null, string $metaType = null);
     /**
      * method
      * 
