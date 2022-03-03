@@ -155,7 +155,7 @@ MESSAGE
                 if ($addPrefix === true) {
                     $tableName = $wpdb->prefix . $tableName;
                 }
-                $sql = "CREATE ABLETrait{$tableName} (\n";
+                $sql = "CREATE TABLE {$tableName} (\n";
                 $sql .= join(",\n", $lines);
                 if ($primary === null) {
                     throw new WordPressHelperException('No primary key has been defined.');
