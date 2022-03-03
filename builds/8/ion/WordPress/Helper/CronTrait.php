@@ -244,21 +244,33 @@ trait CronTrait {
         return;
     }    
     
-    public static function getCronIntervals(): array {
+    public static function getCronIntervals(bool $asList = false): array {
         
-        $tmp = wp_get_schedules();
-        
+        $schedules = wp_get_schedules();
+                
         foreach(static::$cronIntervals as $name => $schedule) {
             
-            $tmp[$name] = [
+            $schedules[$name] = [
               
                 "interval" => $schedule["interval"],
                 "display" => $schedule["label"]
                 
             ];
         }
+        
+        if($asList) {
+            
+            $tmp = [];
+            
+            foreach($schedules as $name => $schedule) {
+                
+                $tmp[$schedule["display"]] = $name;
+            }
+            
+            return $tmp;
+        }        
 
-        return $tmp;
+        return $schedules;
     }    
     
     public static function cronJobExists(string $name): bool {
