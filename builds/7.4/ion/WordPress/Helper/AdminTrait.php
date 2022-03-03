@@ -855,17 +855,21 @@ TEMPLATE;
             }
             if (PHP::count($values) > 0) {
                 foreach ($values as $key => $selectValue) {
-                    if (is_array($selectValue) === true) {
-                        $optionsHtmlTemplate .= "<optgroup label=\"{$key}\">\n";
+                    if (is_array($selectValue)) {
+                        if (PHP::count($values) > 1) {
+                            $optionsHtmlTemplate .= "<optgroup label=\"{$key}\">\n";
+                        }
                         foreach ($selectValue as $valueKey => $valueValue) {
                             $tmp = '';
                             if ($valueValue !== null) {
                                 $tmp = (string) $valueValue;
                             }
                             // NOTE: The string-only comparison below
-                            $optionsHtmlTemplate .= "<option value=\"{$tmp}\"" . ((string) $valueValue === (string) $value || PHP::count($values) === 1 ? " selected" : "") . ">{$valueKey}</option>\n";
+                            $optionsHtmlTemplate .= "<option value=\"{$tmp}\"" . ((string) $valueValue === (string) $value ? " selected" : "") . ">{$valueKey}</option>\n";
                         }
-                        $optionsHtmlTemplate .= "</optgroup>\n";
+                        if (PHP::count($values) > 1) {
+                            $optionsHtmlTemplate .= "</optgroup>\n";
+                        }
                     } else {
                         $tmp = '';
                         if ($selectValue !== null) {
