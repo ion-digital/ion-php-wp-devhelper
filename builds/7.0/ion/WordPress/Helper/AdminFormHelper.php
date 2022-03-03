@@ -12,7 +12,10 @@ namespace ion\WordPress\Helper;
 use ion\WordPress\Helper\Constants;
 use ion\WordPress\WordPressHelper as WP;
 use ion\PhpHelper as PHP;
-use ion\WordPress\Helper\Wrappers\OptionMetaType;
+use WP_Post;
+use WP_Term;
+use WP_User;
+use WP_Comment;
 class AdminFormHelper implements AdminFormHelperInterface
 {
     const WP_HELPER_LEGACY = 'WP_HELPER_LEGACY';
@@ -174,28 +177,27 @@ class AdminFormHelper implements AdminFormHelperInterface
      * 
      * @return void
      */
-    private function setOption(string $key, $value = null, int $metaId = null, $type = null)
+    private function setOption(string $key, $value = null, int $metaId = null, string $type = null)
     {
         if ($metaId === null && $type !== null) {
-            $type = OptionMetaType::POST;
+            $type = WP_Post::class;
         }
-        $type = (string) $type;
         if ($this->getUseSerialization()) {
             $value = $value === null ? null : @unserialize($value);
         }
-        if ($type === OptionMetaType::POST) {
+        if ($type === WP_Post::class) {
             WP::setPostOption($key, $metaId, $value);
             return;
         }
-        if ($type === OptionMetaType::TERM) {
+        if ($type === WP_Term::class) {
             WP::setTermOption($key, $metaId, $value);
             return;
         }
-        if ($type === OptionMetaType::USER) {
+        if ($type === WP_User::class) {
             WP::setUserOption($key, $metaId, $value);
             return;
         }
-        if ($type === OptionMetaType::COMMENT) {
+        if ($type === WP_Comment::class) {
             WP::setCommentOption($key, $metaId, $value);
             return;
         }
@@ -208,29 +210,32 @@ class AdminFormHelper implements AdminFormHelperInterface
      * 
      * @return mixed
      */
-    private function getOption(string $key, $default = null, int $metaId = null, $type = null)
+    private function getOption(string $key, $default = null, int $metaId = null, string $type = null)
     {
         if ($metaId === null && $type !== null) {
-            $type = OptionMetaType::POST;
+            $type = WP_Post::class;
         }
-        $type = (string) $type;
         $dbValue = null;
-        if ($type === OptionMetaType::POST) {
-            $dbValue = WP::getPostOption($key, $metaId, null);
-        } else {
-            if ($type === OptionMetaType::TERM) {
-                $dbValue = WP::getTermOption($key, $metaId, null);
+        if ($metaId !== null) {
+            if ($type === WP_Post::class) {
+                $dbValue = WP::getPostOption($key, $metaId);
             } else {
-                if ($type === OptionMetaType::USER) {
-                    $dbValue = WP::getUserOption($key, $metaId, null);
+                if ($type === WP_Term::class) {
+                    $dbValue = WP::getTermOption($key, $metaId);
                 } else {
-                    if ($type === OptionMetaType::COMMENT) {
-                        $dbValue = WP::getCommentOption($key, $metaId, null);
+                    if ($type === WP_User::class) {
+                        $dbValue = WP::getUserOption($key, $metaId);
                     } else {
-                        $dbValue = WP::getSiteOption($key, $metaId, null);
+                        if ($type === WP_Comment::class) {
+                            $dbValue = WP::getCommentOption($key, $metaId);
+                        } else {
+                            $dbValue = WP::getSiteOption($key);
+                        }
                     }
                 }
             }
+        } else {
+            $dbValue = WP::getSiteOption($key);
         }
         if ($this->getUseSerialization()) {
             $dbValue = $dbValue === null ? null : @unserialize($dbValue);
@@ -394,22 +399,22 @@ TEMPLATE;
         $metaId = null;
         $metaType = null;
         if ($isPost) {
-            $metaType = new OptionMetaType(OptionMetaType::POST);
+            $metaType = WP_Post::class;
             $metaId = PHP::filterInput('post', [INPUT_GET], FILTER_SANITIZE_NUMBER_INT);
         }
         if ($isTerm) {
-            $metaType = new OptionMetaType(OptionMetaType::TERM);
+            $metaType = WP_Term::class;
             $metaId = PHP::filterInput('tag_ID', [INPUT_GET], FILTER_SANITIZE_NUMBER_INT);
         }
         if ($isUser) {
-            $metaType = new OptionMetaType(OptionMetaType::USER);
+            $metaType = WP_User::class;
             $metaId = PHP::filterInput('user_id', [INPUT_GET], FILTER_SANITIZE_NUMBER_INT);
             if ($metaId === null) {
                 $metaId = 1;
             }
         }
         if ($isComment) {
-            $metaType = new OptionMetaType(OptionMetaType::COMMENT);
+            $metaType = WP_Comment::class;
             //TODO
         }
         if (!PHP::isEmpty($page)) {
@@ -653,7 +658,7 @@ TEMPLATE;
     {
         $self = $this;
         if ($optionName !== null) {
-            return $this->onRead(function ($record = null, string $key = null, int $metaId = null, $type = null) use($self, $optionName) {
+            return $this->onRead(function ($record = null, string $key = null, int $metaId = null, string $type = null) use($self, $optionName) {
                 //                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                 $optionRecords = $this->getOption($optionName, [], $metaId, $type);
                 $result = null;
@@ -670,7 +675,7 @@ TEMPLATE;
                 return $result;
             });
         }
-        return $this->onRead(function ($record = null, string $key = null, int $metaId = null, $type = null) use($self) {
+        return $this->onRead(function ($record = null, string $key = null, int $metaId = null, string $type = null) use($self) {
             $result = null;
             foreach ($self->descriptor['groups'] as $group) {
                 foreach ($group['fields'] as $field) {
@@ -692,7 +697,7 @@ TEMPLATE;
     {
         $self = $this;
         if ($optionName !== null) {
-            return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, $type = null) use($self, $optionName) {
+            return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, string $type = null) use($self, $optionName) {
                 //                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                 $optionRecords = $this->getOption($optionName, [], $metaId, $type);
                 if (count($optionRecords) > 0) {
@@ -717,7 +722,7 @@ TEMPLATE;
                 $this->setOption($optionName, $optionRecords, $metaId, $type);
             });
         }
-        return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, $type = null) use($self) {
+        return $this->onUpdate(function ($index, $newValues, $oldValues, $key = null, int $metaId = null, string $type = null) use($self) {
             $options = [];
             foreach ($oldValues as $key => $value) {
                 $options[($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key] = $value;
@@ -742,7 +747,7 @@ TEMPLATE;
     {
         $self = $this;
         if ($optionName !== null) {
-            return $this->onCreate(function (array $values, string $key = null, int $metaId = null, $type = null) use($optionName) {
+            return $this->onCreate(function (array $values, string $key = null, int $metaId = null, string $type = null) use($optionName) {
                 //                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());
                 $optionRecords = $this->getOption($optionName, [], $metaId, $type);
                 if (array_key_exists($key, $values)) {
@@ -755,7 +760,7 @@ TEMPLATE;
                 return;
             });
         }
-        return $this->onCreate(function (array $values, string $key = null, int $metaId = null, $type = null) use($optionName) {
+        return $this->onCreate(function (array $values, string $key = null, int $metaId = null, string $type = null) use($optionName) {
             $options = [];
             foreach ($values as $key => $value) {
                 $options[($this->getOptionPrefix() !== null ? $this->getOptionPrefix() . ':' : '') . $key] = $value;
@@ -784,7 +789,7 @@ TEMPLATE;
      * 
      * @return mixed
      */
-    public function process(int $metaId = null, OptionMetaType $metaType = null)
+    public function process(int $metaId = null, string $metaType = null)
     {
         if ($this->processed === false) {
             $postBack = filter_input(INPUT_POST, '__postBack', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

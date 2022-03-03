@@ -2,8 +2,6 @@
 
 namespace ion\WordPress\Helper;
 
-use \ion\WordPress\Helper\Wrappers\OptionMetaType;
-
 interface AdminFormHelperInterface {
 
     static function createGroupDescriptorInstance(
@@ -56,7 +54,7 @@ interface AdminFormHelperInterface {
 
     function redirect(callable $redirect): AdminFormHelperInterface;
 
-    function process(int $metaId = null, OptionMetaType $metaType = null);
+    function process(int $metaId = null, string $metaType = null);
 
     function readFromSqlQuery(string $query): AdminFormHelperInterface;
 

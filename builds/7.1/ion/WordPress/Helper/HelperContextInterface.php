@@ -60,12 +60,6 @@ interface HelperContextInterface
      * 
      * @return bool
      */
-    function isConstructed() : bool;
-    /**
-     * method
-     * 
-     * @return bool
-     */
     function isInitialized() : bool;
     /**
      * method
@@ -106,13 +100,6 @@ interface HelperContextInterface
     /**
      * method
      * 
-     * 
-     * @return callable
-     */
-    function getView(string $viewSlug) : callable;
-    /**
-     * method
-     * 
      * @return string
      */
     function getWorkingUri() : string;
@@ -128,18 +115,6 @@ interface HelperContextInterface
      * @return string
      */
     function getLoadPath() : string;
-    /**
-     * method
-     * 
-     * @return string
-     */
-    function getViewDirectory() : string;
-    /**
-     * method
-     * 
-     * @return ?callable
-     */
-    function getConstructOperation() : ?callable;
     /**
      * method
      * 
@@ -170,13 +145,6 @@ interface HelperContextInterface
      * @return ?array
      */
     function getUninstallOperation() : ?array;
-    /**
-     * method
-     * 
-     * 
-     * @return HelperContextInterface
-     */
-    function setConstructOperation(callable $operation = null) : HelperContextInterface;
     /**
      * method
      * 
@@ -217,12 +185,6 @@ interface HelperContextInterface
      * 
      * @return bool
      */
-    function hasConstructOperation() : bool;
-    /**
-     * method
-     * 
-     * @return bool
-     */
     function hasInitializeOperation() : bool;
     /**
      * method
@@ -248,12 +210,6 @@ interface HelperContextInterface
      * @return bool
      */
     function hasUninstallOperation() : bool;
-    /**
-     * method
-     * 
-     * @return void
-     */
-    function invokeConstructOperation() : void;
     /**
      * method
      * 
@@ -326,7 +282,14 @@ interface HelperContextInterface
      * method
      * 
      * 
-     * @return string
+     * @return void
      */
-    function template(string $name, bool $echo = false) : string;
+    function extend(string $name, callable $extension) : void;
+    /**
+     * method
+     * 
+     * 
+     * @return mixed
+     */
+    function __call(string $name, array $arguments);
 }
