@@ -4,21 +4,21 @@ namespace ion\WordPress;
 
 use \ion\WordPress\Helper\HelperContextInterface;
 use \ion\SemVerInterface;
-use \ion\WordPress\Helper\Wrappers\ActionsInterface;
-use \ion\WordPress\Helper\Wrappers\AdminInterface;
-use \ion\WordPress\Helper\Wrappers\CommonInterface;
-use \ion\WordPress\Helper\Wrappers\CronInterface;
-use \ion\WordPress\Helper\Wrappers\DatabaseInterface;
-use \ion\WordPress\Helper\Wrappers\FiltersInterface;
-use \ion\WordPress\Helper\Wrappers\TemplateInterface;
-use \ion\WordPress\Helper\Wrappers\LoggingInterface;
-use \ion\WordPress\Helper\Wrappers\OptionsInterface;
-use \ion\WordPress\Helper\Wrappers\PathsInterface;
-use \ion\WordPress\Helper\Wrappers\PostsInterface;
-use \ion\WordPress\Helper\Wrappers\RewritesInterface;
-use \ion\WordPress\Helper\Wrappers\ShortCodesInterface;
-use \ion\WordPress\Helper\Wrappers\TaxonomiesInterface;
-use \ion\WordPress\Helper\Wrappers\WidgetsInterface;
+use \ion\WordPress\Helper\ActionsInterface;
+use \ion\WordPress\Helper\AdminInterface;
+use \ion\WordPress\Helper\CommonInterface;
+use \ion\WordPress\Helper\CronInterface;
+use \ion\WordPress\Helper\DatabaseInterface;
+use \ion\WordPress\Helper\FiltersInterface;
+use \ion\WordPress\Helper\TemplateInterface;
+use \ion\WordPress\Helper\LoggingInterface;
+use \ion\WordPress\Helper\OptionsInterface;
+use \ion\WordPress\Helper\PathsInterface;
+use \ion\WordPress\Helper\PostsInterface;
+use \ion\WordPress\Helper\RewritesInterface;
+use \ion\WordPress\Helper\ShortCodesInterface;
+use \ion\WordPress\Helper\TaxonomiesInterface;
+use \ion\WordPress\Helper\WidgetsInterface;
 
 interface WordPressHelperInterface extends 
 
@@ -48,8 +48,6 @@ interface WordPressHelperInterface extends
 
     static function getCurrentContext(): HelperContextInterface;
 
-    static function isHelperConstructed(): bool;
-
     static function isHelperInitialized(): bool;
 
     static function slugify(string $s): string;
@@ -76,7 +74,6 @@ interface WordPressHelperInterface extends
         string $helperDir = null,
         array $wpHelperSettings = null,
         SemVerInterface $version = null,
-        callable $construct = null,
         callable $initialize = null,
         callable $finalize = null,
         callable $activate = null,
@@ -84,8 +81,6 @@ interface WordPressHelperInterface extends
         array $uninstall = null
 
     ): WordPressHelperInterface;
-
-    function construct(callable $call = null): WordPressHelperInterface;
 
     function initialize(callable $call = null): WordPressHelperInterface;
 
@@ -97,7 +92,7 @@ interface WordPressHelperInterface extends
 
     function uninstall(array $call = null): WordPressHelperInterface;
 
-    static function extend(string $name, callable $extension): WordPressHelperInterface;
+    static function extend(string $name, callable $extension): void;
 
     static function __callStatic(string $name, array $arguments);
 

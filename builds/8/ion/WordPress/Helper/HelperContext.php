@@ -31,7 +31,8 @@ final class HelperContext implements HelperContextInterface {
         // empty for now!
     }        
     
-    private $constructed = false;
+    private $extensions = [];
+    
     private $initialized = false;
     private $finalized = false;
     
@@ -49,7 +50,6 @@ final class HelperContext implements HelperContextInterface {
     private $children = null;   
     private $parent = null;
     
-    private $construct = null;   
     private $initialize = null; 
     private $finalize = null;
     private $activate = null;
@@ -61,19 +61,12 @@ final class HelperContext implements HelperContextInterface {
         string $vendorName,
         string $projectName,
         string $loadPath, 
-        string $helperDir = null, 
-        array $wpHelperSettings = null,
         SemVerInterface $version = null,
         HelperContextInterface $parent = null
             
     ) {
 
-//        $this->setParent($parent);
-        
-        $this->setConstructOperation(function() {
-                
-            /* empty for now! */
-        });
+        $this->setParent($parent);        
         
         $this->setInitializeOperation(function() {
                 
@@ -291,12 +284,6 @@ final class HelperContext implements HelperContextInterface {
         
         return $this->log;
     }        
-    
-    
-    public function isConstructed(): bool {
-        
-        return $this->constructed;
-    }    
 
     public function isInitialized(): bool {
         
@@ -333,28 +320,6 @@ final class HelperContext implements HelperContextInterface {
         return (bool) $this->primary;
     }
 
-    public function getView(string $viewSlug): callable {
-        
-        return function () use ($viewSlug) {
-        
-            $path = $this->getViewDirectory() . $viewSlug . ".php";
-
-            if (file_exists($path)) {
-
-                // Load the PHP view and strip the PHP tags before 
-
-                $view = file_get_contents($path);
-                $view = preg_replace("/^(<\\s*\\?(\\s*php)?\\s+)/", "", $view);
-                $view = preg_replace("/(\\s*\\?>\\s*)\$/", "", $view);
-
-                //FIXME: Use includes here instead
-                
-                ob_start();
-                eval($view);
-                echo ob_get_clean();
-            }
-        };
-    }
     
     public function getWorkingUri(): string {
         
@@ -371,32 +336,6 @@ final class HelperContext implements HelperContextInterface {
         return $this->loadPath;
     }
 
-    public function getViewDirectory(): string {
-        
-        $dirs = [
-            
-            'views/',
-            'source/views/',
-            'includes/views/'
-        ];
-        
-        foreach($dirs as $subDir) {
-            
-            $dir = $this->getWorkingDirectory() . $subDir;
-            
-            if(is_dir($dir)) {
-                
-                return $dir;
-            }
-        }
-        
-        return $this->getWorkingDirectory();
-    }   
-
-    public function getConstructOperation() : ?callable {
-        
-        return $this->construct;
-    }   
     
     public function getInitializeOperation() : ?callable {
         
@@ -422,12 +361,6 @@ final class HelperContext implements HelperContextInterface {
         
         return $this->uninstall;
     } 
-    
-    public function setConstructOperation(callable $operation = null) : HelperContextInterface {
-        
-        $this->construct = $operation;
-        return $this;
-    }
     
     public function setInitializeOperation(callable $operation = null) : ?HelperContextInterface {
         
@@ -458,11 +391,6 @@ final class HelperContext implements HelperContextInterface {
         $this->uninstall = $operation;
         return $this;
     }   
-    
-    public function hasConstructOperation(): bool {
-        
-        return ($this->getConstructOperation() !== null);
-    }    
         
     public function hasInitializeOperation(): bool {
         
@@ -488,36 +416,6 @@ final class HelperContext implements HelperContextInterface {
         
         return ($this->getUninstallOperation() !== null);
     }          
-     
-    public function invokeConstructOperation(): void {
-                
-        if($this->isConstructed()) { 
-            
-            return;
-        }  
-        
-        foreach(array_values($this->getChildren()) as $childContext) {
-
-            $childContext->invokeConstructOperation();
-        }              
-        
-        if ($this->hasConstructOperation() === false) {
-            
-//            throw new WordPressHelperException('No construct operation to invoke.');
-            return;
-        }            
-
-        $call = $this->getConstructOperation();
-        
-        if ($call !== null) {
-            
-            $call($this);
-        }
-        
-        $this->constructed = true;
-        
-        return;        
-    }    
     
     public function invokeInitializeOperation(): void {
 
@@ -586,13 +484,13 @@ final class HelperContext implements HelperContextInterface {
         if($this->getActivationVersion() === null) {
 
             $this->activationVersion = $this->getVersion();            
-            WP::setOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_VERSION, ($this->getActivationVersion() !== null ? $this->getActivationVersion()->toString() : null));
+            WP::setSiteOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_VERSION, ($this->getActivationVersion() !== null ? $this->getActivationVersion()->toString() : null));
         }
 
         if($this->getActivationTimeStamp() === null) {
 
             $this->activationTimeStamp = PHP::toInt(current_time('timestamp', 1));
-            WP::setOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_TIMESTAMP, $this->activationTimeStamp);
+            WP::setSiteOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_TIMESTAMP, $this->activationTimeStamp);
         }         
         
         if ($this->hasActivateOperation() === false) {
@@ -618,7 +516,7 @@ final class HelperContext implements HelperContextInterface {
             $childContext->invokeDeactivateOperation();
         }        
         
-       if(WP::hasOption("{$this->getPackageName()}:". self::OPTION_ACTIVATION_VERSION)) {
+       if(WP::hasSiteOption("{$this->getPackageName()}:". self::OPTION_ACTIVATION_VERSION)) {
 
             if(!WP::removeOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_VERSION)) {
                 
@@ -626,7 +524,7 @@ final class HelperContext implements HelperContextInterface {
             }
         }
 
-        if(WP::hasOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_TIMESTAMP)) {
+        if(WP::hasSiteOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_TIMESTAMP)) {
 
             if(!WP::removeOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_TIMESTAMP)) {
                 
@@ -722,8 +620,11 @@ final class HelperContext implements HelperContextInterface {
         }
         
         if ($flat == true) {
+            
             $templates = $wpTemplates;
+            
         } else {
+            
             if (count($wpTemplates) > 0) {
                 
                 if ($labels === true) {
@@ -767,6 +668,7 @@ final class HelperContext implements HelperContextInterface {
                 $name = $file;
 
                 if (preg_match('|Template Name:(.*)$|mi', file_get_contents($this->getWorkingDirectory() . "/{$relativePath}/" . $file), $matches)) {
+
                     $name = trim($matches[1]);
                 }
 
@@ -811,34 +713,32 @@ final class HelperContext implements HelperContextInterface {
         return true;
     }       
     
-	//TODO: Kill this method - there is a better way to do this and its caused enough trouble!!!
-    public function template(string $name, bool $echo = false): string {        
-
-        if (substr_compare($name, '.php', -strlen('.php')) !== 0) {
+    final public function extend(string $name, callable $extension): void {
+     
+        $this->extensions[strtolower($name)] = $extension;
+        return;
+    }
+    
+    final public function __call(string $name, array $arguments) {
+                
+        if(array_key_exists(strtolower($name), $this->extensions)) {
             
-            $name = $name . '.php';
+            return call_user_func_array($this->extensions[strtolower($name)], $arguments);
+        }     
+        
+        if(method_exists($this, $name)) {
+            
+            $r = new ReflectionMethod(static::class, $name);
+            
+            if(!$r->isPublic()) {
+                
+                throw new WordPressHelperException("A non-public '{$name}' context method cannot be called.");
+            }
+            
+            return call_user_func_array([$this, $name], $arguments);
         }
 
-        ob_start();
-
-        if ($overriddenTemplate = locate_template($name)) {
-            
-            load_template($overriddenTemplate);
-            
-        } else {
-            
-            load_template($this->getWorkingDirectory() . "templates/$name");
-        }
-
-        $output = ob_get_clean();
-
-        if ($echo === true) {            
-            
-            http_response_code(200);
-            echo $output;
-        }
-
-        return $output;
-    }        
+        throw new WordPressHelperException("Unknown context extension method called ('{$name}').");
+    }
     
 }

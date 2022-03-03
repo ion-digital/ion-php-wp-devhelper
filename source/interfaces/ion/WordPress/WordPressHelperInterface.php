@@ -48,8 +48,6 @@ interface WordPressHelperInterface extends
 
     static function getCurrentContext(): HelperContextInterface;
 
-    static function isHelperConstructed(): bool;
-
     static function isHelperInitialized(): bool;
 
     static function slugify(string $s): string;

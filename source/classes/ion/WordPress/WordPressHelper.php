@@ -484,13 +484,7 @@ TEMPLATE;
         }
 
         return static::$contexts;
-    }    
-
-    
-    public static function isHelperConstructed(): bool {
-        
-        return (bool) static::$helperConstructed;
-    }        
+    }         
     
     public static function isHelperInitialized(): bool {
         

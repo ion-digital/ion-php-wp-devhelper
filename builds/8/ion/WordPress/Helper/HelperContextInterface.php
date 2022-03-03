@@ -23,8 +23,6 @@ interface HelperContextInterface {
 
     function getLog(): WordPressHelperLogInterface;
 
-    function isConstructed(): bool;
-
     function isInitialized(): bool;
 
     function isFinalized(): bool;
@@ -39,17 +37,11 @@ interface HelperContextInterface {
 
     function isPrimary(): bool;
 
-    function getView(string $viewSlug): callable;
-
     function getWorkingUri(): string;
 
     function getWorkingDirectory(): string;
 
     function getLoadPath(): string;
-
-    function getViewDirectory(): string;
-
-    function getConstructOperation(): ?callable;
 
     function getInitializeOperation(): ?callable;
 
@@ -61,8 +53,6 @@ interface HelperContextInterface {
 
     function getUninstallOperation(): ?array;
 
-    function setConstructOperation(callable $operation = null): HelperContextInterface;
-
     function setInitializeOperation(callable $operation = null): ?HelperContextInterface;
 
     function setFinalizeOperation(callable $operation = null): ?HelperContextInterface;
@@ -73,8 +63,6 @@ interface HelperContextInterface {
 
     function setUninstallOperation(array $operation = null): HelperContextInterface;
 
-    function hasConstructOperation(): bool;
-
     function hasInitializeOperation(): bool;
 
     function hasFinalizeOperation(): bool;
@@ -84,8 +72,6 @@ interface HelperContextInterface {
     function hasDeactivateOperation(): bool;
 
     function hasUninstallOperation(): bool;
-
-    function invokeConstructOperation(): void;
 
     function invokeInitializeOperation(): void;
 
@@ -117,6 +103,8 @@ interface HelperContextInterface {
 
     function templateExists(string $name): bool;
 
-    function template(string $name, bool $echo = false): string;
+    function extend(string $name, callable $extension): void;
+
+    function __call(string $name, array $arguments);
 
 }

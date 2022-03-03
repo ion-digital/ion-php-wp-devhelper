@@ -49,7 +49,7 @@ trait ContextTrait
      * 
      * @return mixed
      */
-    public function __construct(PackageInterface $package, array $helperSettings = null, callable $onConstruct = null, callable $onConstructed = null, callable $onInitialize = null, callable $onInitialized = null, callable $onFinalize = null)
+    public function __construct(PackageInterface $package, array $helperSettings = null, callable $onInitialize = null, callable $onInitialized = null, callable $onFinalize = null)
     {
         if (!array_key_exists(static::class, self::$contextInstances)) {
             self::$contextInstances[static::class] = [];
@@ -59,16 +59,7 @@ trait ContextTrait
         $this->package = $package;
         $helper = WP::createContext($package->getVendor(), $package->getProject(), $package->getProjectEntry(), null, $helperSettings);
         $this->helperContext = $helper->getContext();
-        $helper->construct(function (HelperContextInterface $context) use($onConstruct, $onConstructed) {
-            if ($onConstruct !== null) {
-                $onConstruct($this);
-            }
-            $this->construct();
-            if ($onConstructed !== null) {
-                $onConstructed($this);
-            }
-            return;
-        })->initialize(function (HelperContextInterface $context) use($onInitialize, $onInitialized) {
+        $helper->initialize(function (HelperContextInterface $context) use($onInitialize, $onInitialized) {
             if ($onInitialize !== null) {
                 $onInitialize($this);
             }
@@ -113,15 +104,6 @@ trait ContextTrait
             throw new WordPressHelperException("Context is not initialized yet.");
         }
         return $this->package;
-    }
-    /**
-     * method
-     * 
-     * @return void
-     */
-    protected function construct()
-    {
-        // Empty, for now...
     }
     /**
      * method

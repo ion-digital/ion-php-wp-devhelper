@@ -12,7 +12,7 @@ namespace ion\WordPress\Helper;
  * @author Justus
  */
 
-use \ion\WordPress\IWordPressHelper;
+use \ion\WordPress\WordPressHelperInterface;
 use \ion\WordPress\WordPressHelper AS WP;
 use \ion\WordPress\Helper\IHelperContext;
 use \ion\WordPress\Helper\Constants;
@@ -24,7 +24,8 @@ final class Tools {
 
     public static function isHidden() {
         
-        if (WP::hasOption(Constants::TOOLS_FULLY_HIDDEN_OPTION) === false) {
+        if (WP::hasSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION) === false) {
+            
             return false;
         }
 
@@ -33,17 +34,14 @@ final class Tools {
 
     public static function isDisabled() {
 
-        //print_r(WP::getOption(Constants::TOOLS_HIDDEN_OPTION, false));
-        //die("X");
-
-        if (WP::hasOption(Constants::TOOLS_HIDDEN_OPTION) === false) {
+        if (WP::hasSiteOption(Constants::TOOLS_HIDDEN_OPTION) === false) {
 
             if (WP::isDebugMode()) {
+                
                 return false;
             }
 
             return true;
-            
         }
 
         return ((bool) WP::getSiteOption(Constants::TOOLS_HIDDEN_OPTION, false)) === true;
@@ -118,30 +116,30 @@ final class Tools {
             }                
             
             WP::addAdminForm("Settings", 'wp-devhelper-settings')
-            ->setOptionPrefix(null)
-            ->addGroup("General")
-            ->addField(WP::checkBoxInputField("Hide settings interface", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Devhelper settings interface (you can enable it again, by navigating to 'Tools &gt; Helper')."))
-            ->addField(WP::checkBoxInputField("HTML Auto paragraphs", Constants::TOOLS_AUTO_PARAGRAPHS_OPTION, null, null, "Enable automatic paragraph insertion for content."))
-            ->addGroup("Logging", null, null, 1)
-            ->addField(WP::checkBoxInputField("Enable logging", Constants::ENABLE_LOGGING, null, null, "Enable logging functionality."))
-            //->addField(WP::checkBoxInputField("Log to database", Constants::LOG_TO_DATABASE, null, null, "Create log entries in the database, if enabled - otherwise send log entries to a text file."))
-            //->addField(WP::textInputField("Archive age", Constants::LOGS_ARCHIVE_AGE, null, null, "The amount of days before fresh log entries are archived (specify <em>0</em> for never)."))
-            ->addField(WP::textInputField("Purge age", Constants::LOGS_PURGE_AGE, null, null, "The amount of days before archived log entries are purged (specify <em>0</em> for never)."))
-            ->addField(WP::textInputField("Max displayed log entries", Constants::MAX_DISPLAYED_LOG_ENTRIES, null, null, "The maximum amount of records to display when viewing a log (in the administration panel)."))
-            ->addGroup("Development Tools", null, null, 1)                    
-            ->addField(WP::checkBoxInputField("Enable quick 404 override", Constants::QUICK_404_OPTION, null, null, "Override the 404 functionality of the site to immediately display a very simple message and end the script."))
-            ->redirect(function ($values) {
-
-                // /wordpress/wp-admin/tools.php?page=wp-devhelper-enable
-
-                if ($values[Constants::TOOLS_HIDDEN_OPTION] === true) {
-                    WP::setSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false);
-                    WP::redirect(WP::getAdminUrl('tools') . '?page=wp-devhelper-enable');
-                }
-            })
-            ->render();
                     
-            //var_dump($f->
+                ->setOptionPrefix(null)
+                    
+                ->addGroup("General")
+                    ->addField(WP::checkBoxInputField("Hide settings interface", Constants::TOOLS_HIDDEN_OPTION, null, null, "Hide the WP Devhelper settings interface (you can enable it again, by navigating to 'Tools &gt; Helper')."))
+                    ->addField(WP::checkBoxInputField("HTML Auto paragraphs", Constants::TOOLS_AUTO_PARAGRAPHS_OPTION, null, null, "Enable automatic paragraph insertion for content."))
+                ->addGroup("Logging", null, null, 1)
+                    ->addField(WP::checkBoxInputField("Enable logging", Constants::ENABLE_LOGGING, null, null, "Enable logging functionality."))
+                    //->addField(WP::checkBoxInputField("Log to database", Constants::LOG_TO_DATABASE, null, null, "Create log entries in the database, if enabled - otherwise send log entries to a text file."))
+                    //->addField(WP::textInputField("Archive age", Constants::LOGS_ARCHIVE_AGE, null, null, "The amount of days before fresh log entries are archived (specify <em>0</em> for never)."))
+                    ->addField(WP::textInputField("Purge age", Constants::LOGS_PURGE_AGE, null, null, "The amount of days before archived log entries are purged (specify <em>0</em> for never)."))
+                    ->addField(WP::textInputField("Max displayed log entries", Constants::MAX_DISPLAYED_LOG_ENTRIES, null, null, "The maximum amount of records to display when viewing a log (in the administration panel)."))
+                ->addGroup("Development Tools", null, null, 1)                    
+                    ->addField(WP::checkBoxInputField("Enable quick 404 override", Constants::QUICK_404_OPTION, null, null, "Override the 404 functionality of the site to immediately display a very simple message and end the script."))
+                    
+                ->redirect(function ($values) {
+
+                    if ($values[Constants::TOOLS_HIDDEN_OPTION] === true) {
+                        WP::setSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false);
+                        WP::redirect(WP::getAdminUrl('tools') . '?page=wp-devhelper-enable');
+                    }
+                })
+                ->render();
+
         };
     }
 
@@ -616,7 +614,7 @@ HTML;
             ->setOptionPrefix(null)
             ->addField(WP::textInputField('Name', 'option_name'))
             ->addField($valueField)
-            ->addField(WP::checkBoxInputField('Auto-load', 'autoload', null, null, "If the 'Auto-load' field is modified, the option needs to be removed and recreated, and will we appended to the options table."))
+            ->addField(WP::checkBoxInputField('Auto-load', 'autoload', null, null, "If the 'Auto-load' field is modified, the option needs to be removed and recreated, and will be appended to the options table."))
             ->readFromSqlTable('options')
             ->onUpdate(function ($index, $newValues, $oldValues) {                    
 
@@ -777,14 +775,14 @@ HTML;
 
         add_action('init', function() use ($context, $wpHelperSettings) {
 
-            if (!WP::hasOption(Constants::TOOLS_HIDDEN_OPTION) || !WP::hasOption(Constants::TOOLS_FULLY_HIDDEN_OPTION)) {
+            if (!WP::hasSiteOption(Constants::TOOLS_HIDDEN_OPTION) || !WP::hasSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION)) {
 
-                if (!WP::hasOption(Constants::TOOLS_HIDDEN_OPTION)) {
+                if (!WP::hasSiteOption(Constants::TOOLS_HIDDEN_OPTION)) {
 
                     WP::setSiteOption(Constants::TOOLS_HIDDEN_OPTION, true);
                 }
 
-                if (!WP::hasOption(Constants::TOOLS_FULLY_HIDDEN_OPTION)) {
+                if (!WP::hasSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION)) {
 
                     WP::setSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION, false);
                 }
