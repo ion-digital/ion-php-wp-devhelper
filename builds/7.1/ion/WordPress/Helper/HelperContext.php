@@ -552,12 +552,12 @@ final class HelperContext implements HelperContextInterface
             $childContext->invokeDeactivateOperation();
         }
         if (WP::hasSiteOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_VERSION)) {
-            if (!WP::removeOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_VERSION)) {
+            if (!WP::removeSiteOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_VERSION)) {
                 throw new WordPressHelperException("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_VERSION . " could not be removed.");
             }
         }
         if (WP::hasSiteOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_TIMESTAMP)) {
-            if (!WP::removeOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_TIMESTAMP)) {
+            if (!WP::removeSiteOption("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_TIMESTAMP)) {
                 throw new WordPressHelperException("{$this->getPackageName()}:" . self::OPTION_ACTIVATION_TIMESTAMP . " could not be removed.");
             }
         }
