@@ -620,7 +620,7 @@ HTML;
 
                 if ($newValues['autoload'] !== $oldValues['autoload']) {
 
-                    WP::removeOption($index, null);
+                    WP::removeSiteOption($index, null);
                 }
 
                 WP::setSiteOption($index, $newValues['option_value'], $newValues['autoload']);
@@ -676,7 +676,7 @@ HTML;
 
                 foreach ($items as $item) {
 
-                    WP::removeOption($item);
+                    WP::removeSiteOption($item);
                 }
             })
             ->render();

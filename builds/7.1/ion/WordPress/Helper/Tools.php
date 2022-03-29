@@ -450,7 +450,7 @@ HTML;
             $valueField = WP::textInputField('Value', 'option_value', null, null, null, true);
             WP::addAdminForm("Edit Option", 'wp-devhelper-edit-wordpress-option', null, 1, false)->setOptionPrefix(null)->addField(WP::textInputField('Name', 'option_name'))->addField($valueField)->addField(WP::checkBoxInputField('Auto-load', 'autoload', null, null, "If the 'Auto-load' field is modified, the option needs to be removed and recreated, and will be appended to the options table."))->readFromSqlTable('options')->onUpdate(function ($index, $newValues, $oldValues) {
                 if ($newValues['autoload'] !== $oldValues['autoload']) {
-                    WP::removeOption($index, null);
+                    WP::removeSiteOption($index, null);
                 }
                 WP::setSiteOption($index, $newValues['option_value'], $newValues['autoload']);
             })->onRead(function (string $index = null) {
@@ -482,7 +482,7 @@ HTML;
         return function () use($context) {
             WP::addAdminTable('Options', 'wordpress-options', 'Option', 'Options', 'option_name', static::getWordPressOptionDetailView($context), true, true, true)->addColumn(WP::textTableColumn('Name', 'option_name', 'option-name'))->addColumn(WP::textTableColumn('Value', 'option_value', 'option-value'))->addColumn(WP::checkBoxTableColumn('Auto-load', 'autoload', 'autoload'))->readFromSqlTable('options', ['option_name' => ['not like' => '\\_%']])->onDelete(function ($items) {
                 foreach ($items as $item) {
-                    WP::removeOption($item);
+                    WP::removeSiteOption($item);
                 }
             })->render();
         };
