@@ -23,7 +23,7 @@ use \Parsedown;
 final class Tools {
 
     public static function isHidden() {
-        
+
         if (WP::hasSiteOption(Constants::TOOLS_FULLY_HIDDEN_OPTION) === false) {
             
             return false;
