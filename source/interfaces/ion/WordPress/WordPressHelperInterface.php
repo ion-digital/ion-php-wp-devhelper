@@ -1,24 +1,24 @@
 <?php
 
-namespace ion\WordPress;
+namespace Ion\WordPress;
 
-use \ion\WordPress\Helper\HelperContextInterface;
-use \ion\SemVerInterface;
-use \ion\WordPress\Helper\ActionsInterface;
-use \ion\WordPress\Helper\AdminInterface;
-use \ion\WordPress\Helper\CommonInterface;
-use \ion\WordPress\Helper\CronInterface;
-use \ion\WordPress\Helper\DatabaseInterface;
-use \ion\WordPress\Helper\FiltersInterface;
-use \ion\WordPress\Helper\TemplateInterface;
-use \ion\WordPress\Helper\LoggingInterface;
-use \ion\WordPress\Helper\OptionsInterface;
-use \ion\WordPress\Helper\PathsInterface;
-use \ion\WordPress\Helper\PostsInterface;
-use \ion\WordPress\Helper\RewritesInterface;
-use \ion\WordPress\Helper\ShortCodesInterface;
-use \ion\WordPress\Helper\TaxonomiesInterface;
-use \ion\WordPress\Helper\WidgetsInterface;
+use \Ion\WordPress\Helper\HelperContextInterface;
+use \Ion\SemVerInterface;
+use \Ion\WordPress\Helper\ActionsInterface;
+use \Ion\WordPress\Helper\AdminInterface;
+use \Ion\WordPress\Helper\CommonInterface;
+use \Ion\WordPress\Helper\CronInterface;
+use \Ion\WordPress\Helper\DatabaseInterface;
+use \Ion\WordPress\Helper\FiltersInterface;
+use \Ion\WordPress\Helper\TemplateInterface;
+use \Ion\WordPress\Helper\LoggingInterface;
+use \Ion\WordPress\Helper\OptionsInterface;
+use \Ion\WordPress\Helper\PathsInterface;
+use \Ion\WordPress\Helper\PostsInterface;
+use \Ion\WordPress\Helper\RewritesInterface;
+use \Ion\WordPress\Helper\ShortCodesInterface;
+use \Ion\WordPress\Helper\TaxonomiesInterface;
+use \Ion\WordPress\Helper\WidgetsInterface;
 
 interface WordPressHelperInterface extends 
 

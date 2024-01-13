@@ -26,7 +26,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace ion\WordPress\Tests;
+namespace Ion\WordPress\Tests;
 
 /**
  * Description of TTemplateTags

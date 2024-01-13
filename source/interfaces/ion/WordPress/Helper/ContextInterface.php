@@ -1,9 +1,9 @@
 <?php
 
-namespace ion\WordPress\Helper;
+namespace Ion\WordPress\Helper;
 
-use \ion\PackageInterface;
-use \ion\WordPress\Helper\HelperContextInterface;
+use \Ion\PackageInterface;
+use \Ion\WordPress\Helper\HelperContextInterface;
 
 interface ContextInterface {
 

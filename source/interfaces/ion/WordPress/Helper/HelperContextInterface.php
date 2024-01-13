@@ -1,9 +1,9 @@
 <?php
 
-namespace ion\WordPress\Helper;
+namespace Ion\WordPress\Helper;
 
-use \ion\SemVerInterface;
-use \ion\WordPress\Helper\WordPressHelperLogInterface;
+use \Ion\SemVerInterface;
+use \Ion\WordPress\Helper\WordPressHelperLogInterface;
 
 interface HelperContextInterface {
 

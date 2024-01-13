@@ -1,10 +1,10 @@
 <?php
 
-namespace ion\WordPress\Helper;
+namespace Ion\WordPress\Helper;
 
-use \ion\WordPress\Helper\AdminFormHelperInterface;
-use \ion\WordPress\Helper\AdminTableHelperInterface;
-use \ion\WordPress\Helper\AdminMenuPageHelperInterface;
+use \Ion\WordPress\Helper\AdminFormHelperInterface;
+use \Ion\WordPress\Helper\AdminTableHelperInterface;
+use \Ion\WordPress\Helper\AdminMenuPageHelperInterface;
 
 
 /**

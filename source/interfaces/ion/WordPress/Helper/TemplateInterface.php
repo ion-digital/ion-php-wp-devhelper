@@ -1,8 +1,8 @@
 <?php
 
-namespace ion\WordPress\Helper;
+namespace Ion\WordPress\Helper;
 
-use \ion\WordPress\Helper\WordPressWidgetInterface;
+use \Ion\WordPress\Helper\WordPressWidgetInterface;
 use \WP_Query;
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace ion\WordPress\Helper;
+namespace Ion\WordPress\Helper;
 
 use \WP_Post;
 use \WP_Term;

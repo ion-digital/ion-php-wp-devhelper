@@ -1,8 +1,8 @@
 <?php
 
-namespace ion\WordPress\Helper;
+namespace Ion\WordPress\Helper;
 
-use \ion\WordPress\Helper\WordPressHelperLoggerInterface;
+use \Ion\WordPress\Helper\WordPressHelperLoggerInterface;
 
 interface WordPressHelperLogInterface {
 

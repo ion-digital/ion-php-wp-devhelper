@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ion\WordPress\Tests;
+namespace Ion\WordPress\Tests;
 
 /**
  * Description of RedIFeedFilterWidget
