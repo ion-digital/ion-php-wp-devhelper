@@ -62,12 +62,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ion-digital/ion-php-autoloader.git",
-                "reference": "58749bb25a41b298ed3332c2ae1852037dd92610"
+                "reference": "8e788c00624bccd6106669de1e7b04b3cbd5715e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ion-digital/ion-php-autoloader/zipball/58749bb25a41b298ed3332c2ae1852037dd92610",
-                "reference": "58749bb25a41b298ed3332c2ae1852037dd92610",
+                "url": "https://api.github.com/repos/ion-digital/ion-php-autoloader/zipball/8e788c00624bccd6106669de1e7b04b3cbd5715e",
+                "reference": "8e788c00624bccd6106669de1e7b04b3cbd5715e",
                 "shasum": ""
             },
             "require": {
@@ -120,7 +120,7 @@
                 "source": "https://github.com/ion-digital/ion-php-autoloader/tree/main",
                 "issues": "https://github.com/ion-digital/ion-php-autoloader/issues"
             },
-            "time": "2024-01-11T15:31:26+00:00"
+            "time": "2024-01-14T14:21:32+00:00"
         },
         {
             "name": "ion/packaging",
@@ -191,12 +191,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ion-digital/ion-php-helper.git",
-                "reference": "a943090223260ed51cc303eab00b69d559d746a2"
+                "reference": "1f06549e56cb6fd281bbeb478e6ee097ee2237c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ion-digital/ion-php-helper/zipball/a943090223260ed51cc303eab00b69d559d746a2",
-                "reference": "a943090223260ed51cc303eab00b69d559d746a2",
+                "url": "https://api.github.com/repos/ion-digital/ion-php-helper/zipball/1f06549e56cb6fd281bbeb478e6ee097ee2237c6",
+                "reference": "1f06549e56cb6fd281bbeb478e6ee097ee2237c6",
                 "shasum": ""
             },
             "require": {
@@ -249,7 +249,7 @@
                 "source": "https://github.com/ion-digital/ion-php-helper/tree/main",
                 "issues": "https://github.com/ion-digital/ion-php-helper/issues"
             },
-            "time": "2024-01-11T19:52:35+00:00"
+            "time": "2024-01-14T14:21:53+00:00"
         },
         {
             "name": "psr/log",
@@ -1432,16 +1432,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.5",
+            "version": "10.5.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "ed21115d505b4b4f7dc7b5651464e19a2c7f7856"
+                "reference": "ab9a20b623b235165d24faa9d1da925cb54939c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ed21115d505b4b4f7dc7b5651464e19a2c7f7856",
-                "reference": "ed21115d505b4b4f7dc7b5651464e19a2c7f7856",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ab9a20b623b235165d24faa9d1da925cb54939c0",
+                "reference": "ab9a20b623b235165d24faa9d1da925cb54939c0",
                 "shasum": ""
             },
             "require": {
@@ -1513,7 +1513,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.5"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.6"
             },
             "funding": [
                 {
@@ -1529,7 +1529,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-27T15:13:52+00:00"
+            "time": "2024-01-13T12:49:56+00:00"
         },
         {
             "name": "psr/container",
