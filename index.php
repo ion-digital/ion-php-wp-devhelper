@@ -15,6 +15,8 @@
 
  */
 
+require_once __DIR__ . DIRECTORY_SEPARATOR . "vendor/autoload.php";
+
 \Ion\Package::create("ion", "wp-devhelper", function($package) {
 
     $loader = \Ion\Autoloading\Autoloader::create(
