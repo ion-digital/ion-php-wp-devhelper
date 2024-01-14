@@ -49,5 +49,6 @@ jobs:
         local_path: './*'
         remote_path: '${{ vars.SFTP_HOME }}/${{ vars.SFTP_REMOTE_PATH }}'
         sftp_only: true
+        delete_remote_files: true
         
           
