@@ -62,12 +62,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ion-digital/ion-php-autoloader.git",
-                "reference": "163b214d320e0ff6731a6732de3fc0db93a30bb7"
+                "reference": "0e445dafd2691f9641968011b42a2a735e0e9713"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ion-digital/ion-php-autoloader/zipball/163b214d320e0ff6731a6732de3fc0db93a30bb7",
-                "reference": "163b214d320e0ff6731a6732de3fc0db93a30bb7",
+                "url": "https://api.github.com/repos/ion-digital/ion-php-autoloader/zipball/0e445dafd2691f9641968011b42a2a735e0e9713",
+                "reference": "0e445dafd2691f9641968011b42a2a735e0e9713",
                 "shasum": ""
             },
             "require": {
@@ -120,7 +120,7 @@
                 "source": "https://github.com/ion-digital/ion-php-autoloader/tree/main",
                 "issues": "https://github.com/ion-digital/ion-php-autoloader/issues"
             },
-            "time": "2024-01-15T23:22:46+00:00"
+            "time": "2024-01-15T23:44:33+00:00"
         },
         {
             "name": "ion/packaging",
@@ -128,12 +128,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ion-digital/ion-php-packaging.git",
-                "reference": "72d9541e506217043bd4c97e9afd349011f40052"
+                "reference": "4c7743177746c8744980919b46068a7d27297ddc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ion-digital/ion-php-packaging/zipball/72d9541e506217043bd4c97e9afd349011f40052",
-                "reference": "72d9541e506217043bd4c97e9afd349011f40052",
+                "url": "https://api.github.com/repos/ion-digital/ion-php-packaging/zipball/4c7743177746c8744980919b46068a7d27297ddc",
+                "reference": "4c7743177746c8744980919b46068a7d27297ddc",
                 "shasum": ""
             },
             "require": {
@@ -183,7 +183,7 @@
                 "source": "https://github.com/ion-digital/ion-php-packaging/tree/main",
                 "issues": "https://github.com/ion-digital/ion-php-packaging/issues"
             },
-            "time": "2024-01-15T18:27:50+00:00"
+            "time": "2024-01-15T23:43:09+00:00"
         },
         {
             "name": "ion/php-helper",
@@ -191,12 +191,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ion-digital/ion-php-helper.git",
-                "reference": "36c3df74433c47b298b8189d79b70d39bbd7d5f3"
+                "reference": "dd5cce89ac16bc5e290b3d4707517daf92d1fe8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ion-digital/ion-php-helper/zipball/36c3df74433c47b298b8189d79b70d39bbd7d5f3",
-                "reference": "36c3df74433c47b298b8189d79b70d39bbd7d5f3",
+                "url": "https://api.github.com/repos/ion-digital/ion-php-helper/zipball/dd5cce89ac16bc5e290b3d4707517daf92d1fe8a",
+                "reference": "dd5cce89ac16bc5e290b3d4707517daf92d1fe8a",
                 "shasum": ""
             },
             "require": {
@@ -249,7 +249,7 @@
                 "source": "https://github.com/ion-digital/ion-php-helper/tree/main",
                 "issues": "https://github.com/ion-digital/ion-php-helper/issues"
             },
-            "time": "2024-01-15T23:25:08+00:00"
+            "time": "2024-01-15T23:45:49+00:00"
         },
         {
             "name": "psr/log",

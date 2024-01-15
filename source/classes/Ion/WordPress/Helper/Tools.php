@@ -18,6 +18,7 @@ use \Ion\WordPress\Helper\IHelperContext;
 use \Ion\WordPress\Helper\Constants;
 use \Ion\Package;
 use \Ion\Autoloading\Autoloader;
+use \Ion\Autoloading\AutoloaderSettings;
 use \Ion\PhpHelper as PHP;
 use \Parsedown;
 
