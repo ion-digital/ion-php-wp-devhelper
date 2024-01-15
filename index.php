@@ -15,53 +15,52 @@
 
  */
 
-$composer = __DIR__ . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "autoload.php";
+if(class_exists("\\Ion\\Package")) {
 
-if(file_exists($composer))
-    require_once $composer;
+    \Ion\Package::create("ion", "wp-devhelper", function($package) {
 
-\Ion\Package::create("ion", "wp-devhelper", function($package) {
-
-    $loader = \Ion\Autoloading\Autoloader::create(
-        
-        $package, 
-        [ 
-            "source/classes",
-            "source/interfaces",
-            "source/traits"
-        ], 
-        [
-            "builds/" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION,
-            "builds/" . PHP_MAJOR_VERSION,
-        ]
-    );
-
-    if (defined("ABSPATH")) {
-
-        require_once( ABSPATH . 'wp-admin' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'upgrade.php' );
-        
-        \Ion\WordPress\WordPressHelper::createContext('ion', 'wp-devhelper', __FILE__, __DIR__, [])
-                
-            ->initialize(function($context) {
-
-                // empty for now!
-            })
-        
-            ->activate(function($context) {
-        
-                // empty for now!
-            })
+        $loader = \Ion\Autoloading\Autoloader::create(
             
-            ->deactivate(function($context) {
-        
-                // empty for now!
-            })
-        
-            ->uninstall(null)
-        
-        ->finalize();    
-    }
+            $package, 
+            [ 
+                "source/classes",
+                "source/interfaces",
+                "source/traits"
+            ], 
+            [
+                "builds/" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION,
+                "builds/" . PHP_MAJOR_VERSION,
+            ]
+        );
 
-    return $loader;
-    
-}, __FILE__);
+        if (defined("ABSPATH")) {
+
+            require_once( ABSPATH . 'wp-admin' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'upgrade.php' );
+            
+            \Ion\WordPress\WordPressHelper::createContext('ion', 'wp-devhelper', __FILE__, __DIR__, [])
+                    
+                ->initialize(function($context) {
+
+                    // empty for now!
+                })
+            
+                ->activate(function($context) {
+            
+                    // empty for now!
+                })
+                
+                ->deactivate(function($context) {
+            
+                    // empty for now!
+                })
+            
+                ->uninstall(null)
+            
+            ->finalize();    
+        }
+
+        return $loader;
+        
+    }, __FILE__);
+
+}
