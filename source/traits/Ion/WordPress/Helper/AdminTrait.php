@@ -1146,7 +1146,7 @@ TEMPLATE;
 
             // The following values are NOT applied to the field array - they are temporarily modified here
 
-            $field["value"] = htmlentities($value);
+            $field["value"] = htmlentities($value ?? "");
             $field['disabled'] = ($field['disabled'] === true ? ' disabled' : '');
             $field['readOnly'] = ($field['readOnly'] === true ? ' readonly' : '');
             
