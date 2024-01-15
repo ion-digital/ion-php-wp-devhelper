@@ -17,6 +17,7 @@ use \Ion\WordPress\WordPressHelper AS WP;
 use \Ion\WordPress\Helper\IHelperContext;
 use \Ion\WordPress\Helper\Constants;
 use \Ion\Package;
+use \Ion\Autoloading\Autoloader;
 use \Ion\PhpHelper as PHP;
 use \Parsedown;
 
@@ -152,12 +153,14 @@ final class Tools {
         
         return function () use ($context) {
 
+            $package = Package::getInstance('ion', 'wp-devhelper');
+
             echo "<h2>Primary WP Dev/helper package</h2>";
             
-            echo "<p>Version: <strong>" . Package::getInstance('ion', 'wp-devhelper')->getVersion()->toString() . "</strong></p>";
+            echo "<p>Version: <strong>" . $package->getVersion()->toString() . "</strong></p>";
             echo "<p>Path: <strong>" . WP::getHelperDirectory() . "</strong></p>";
             
-            $debug = Package::getInstance('ion', 'wp-devhelper')->getConfiguration()->getSetting('debug', false);
+            $debug = AutoloaderSettings::get($package)->isDebugEnabled();
             
             echo "<p>Package mode: <strong>" . ($debug ? "Development" : "Release") . "</strong></p>";
             

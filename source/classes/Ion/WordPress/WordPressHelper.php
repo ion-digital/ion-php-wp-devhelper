@@ -653,9 +653,7 @@ TEMPLATE;
         
         $context = new HelperContext($vendorName, $projectName, $loadPath, $version, null);
         
-        $this->context = $context;
-         
-        $this->context
+        $context
 
             ->setInitializeOperation(function() use ($initialize, $context) {
 

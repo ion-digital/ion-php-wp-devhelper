@@ -41,6 +41,8 @@ final class HelperContext implements HelperContextInterface {
     private $loadPath = null;
     private $contextId = null;
     private $contextType = null;
+    private $contextVendorName = null;
+    private $contextProjectName = null;
     private $primary = false;
     private $log = null;
     private $version = null;
@@ -154,6 +156,7 @@ final class HelperContext implements HelperContextInterface {
         WP::getContexts()[] = $this;
 
         $aliases = [
+            
             'wp-devhelper' => 'WP Devhelper'
         ];      
 
