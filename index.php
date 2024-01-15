@@ -15,7 +15,10 @@
 
  */
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . "vendor/autoload.php";
+$composer = __DIR__ . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "autoload.php";
+
+if(file_exists($composer))
+    require_once $composer;
 
 \Ion\Package::create("ion", "wp-devhelper", function($package) {
 
