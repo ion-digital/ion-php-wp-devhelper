@@ -21,6 +21,7 @@ use \Ion\Autoloading\Autoloader;
 use \Ion\Autoloading\AutoloaderSettings;
 use \Ion\PhpHelper as PHP;
 use \Parsedown;
+use \IntlDateFormatter;
 
 final class Tools {
 
@@ -506,29 +507,32 @@ JS
 
                 $formatTime = function($time) {
 
-                    //return strftime('%F', strtotime('-1 day', $time)) . ' ' . strftime('%F', strtotime('-1 day', current_time('timestamp')));
+                    // $today = strftime('%F', current_time('timestamp'));
+                    // $yesterday = strftime('%F', strtotime('-1 day', current_time('timestamp')));
 
-                    $today = strftime('%F', current_time('timestamp'));
-                    $yesterday = strftime('%F', strtotime('-1 day', current_time('timestamp')));
+                    $today = date('Y-m-d', current_time('timestamp'));
+                    $yesterday = date('Y-m-d', strtotime('-1 day', current_time('timestamp')));
 
-                    //return "$today vs $yesterday";
                     // Today
 
-                    if (strftime('%F', $time) == $today) {
+                    if (date('Y-m-d', $time) == $today) {
 
-                        return strftime('<strong>Today</strong> %T', $time);
+                        // return strftime('<strong>Today</strong> %T', $time);
+                        return "<strong>Today</strong> " . date('H:i:s', $time);
                     }
 
                     // Yesterday
 
-                    if (strftime('%F', $time) == $yesterday) {
+                    if (date('Y-m-d', $time) == $yesterday) {
 
-                        return strftime('<strong>Yesterday</strong> %T', $time);
+                        // return strftime('<strong>Yesterday</strong> %T', $time);
+                        return "<strong>Yesterday</strong> " . date('H:i:s', $time);
                     }
 
                     // Other days
 
-                    return strftime('<strong>%a %F</strong> %T', $time);
+                    // return strftime('<strong>%a %F</strong> %T', $time);
+                    return "<strong>" . date("D Y-m-d", $time) . "</strong> " . date('H:i:s', $time);
                 };
 
                 $formatMessage = function($message) {
@@ -759,10 +763,11 @@ HTML;
 
         WP::addFilter('admin_footer_text', function () {
             
-            $formatter = new IntlDateFormatter('en_US', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
-            
-            $serverTime = $formatter->format(time());
-            $serverTime = $formatter->format(current_time('timestamp', 0));
+            // $serverFormatter = new IntlDateFormatter(null, IntlDateFormatter::LONG, IntlDateFormatter::LONG);
+            // $serverTime = $serverFormatter->format(time());
+
+            $wordpressFormatter = new IntlDateFormatter(get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::LONG);
+            $wordPressTime = $wordpressFormatter->format(current_time('timestamp', 0));
 
             //$serverTime = strftime('%a %e %b %G, %R');
             //$wordPressTime = strftime('%a %e %b %G, %R', current_time('timestamp', 0));
@@ -780,7 +785,8 @@ HTML;
             $wpBlurbUri = Constants::WORDPRESS_SITE;
             $wpDevBlurb = Constants::AUTHOR_SITE;
             
-            echo '<span>Powered by <a href="'. $wpBlurbUri . '" target="_blank">WordPress</a> <strong>' . $wordPressVersion . '</strong></span> | <span>Fueled by <a href="' . $wpHelperBlurbUri . '" target="_blank">WP Dev/helper</a> <strong>' . $helperVersion . '</strong></span> | <span>Need Custom WordPress Solutions? <a href="' . $wpDevBlurb . '" target="_blank">Custom WordPress Development</a></span> | <span>Server time: ' . $serverTime . '</span> | <span>WordPress time: ' . $wordPressTime . '</span> | <span>Peak memory usage: ' . $mem . '</span>';
+            // echo '<span>Powered by <a href="'. $wpBlurbUri . '" target="_blank">WordPress</a> <strong>' . $wordPressVersion . '</strong></span> | <span>Fueled by <a href="' . $wpHelperBlurbUri . '" target="_blank">WP Dev/helper</a> <strong>' . $helperVersion . '</strong></span> | <span>Need Custom WordPress Solutions? <a href="' . $wpDevBlurb . '" target="_blank">Custom WordPress Development</a></span> | <span>Server time: ' . $serverTime . '</span> | <span>WordPress time: ' . $wordPressTime . '</span> | <span>Peak memory usage: ' . $mem . '</span>';
+            echo '<span>Powered by <a href="'. $wpBlurbUri . '" target="_blank">WordPress</a> <strong>' . $wordPressVersion . '</strong></span> | <span>Fueled by <a href="' . $wpHelperBlurbUri . '" target="_blank">WP Dev/helper</a> <strong>' . $helperVersion . '</strong></span> | <span>Need Custom WordPress Solutions? <a href="' . $wpDevBlurb . '" target="_blank">Custom WordPress Development</a></span> | <span>Time: ' . $wordPressTime . '</span> | <span>Peak memory usage: ' . $mem . '</span>';
         });
 
         add_action('init', function() use ($context, $wpHelperSettings) {

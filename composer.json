@@ -33,7 +33,7 @@
         "ion/autoloader": "dev-main",   
         "ion/php-helper": "dev-main",
         "psr/log": "^3.0.0",
-        "erusev/parsedown": "^1.7.1"
+        "erusev/parsedown": "^1.7.4"
     },
     "require-dev": {
         "ion/packaging-dev": "dev-main"

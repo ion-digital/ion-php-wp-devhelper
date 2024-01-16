@@ -6,8 +6,8 @@
 
 namespace Ion\WordPress\Helper;
 
-
-use Psr\Log\AbstractLogger;
+use \Stringable;
+use \Psr\Log\AbstractLogger;
 use \Ion\WordPress\WordPressHelper;
 
 abstract class WordPressHelperLogger extends AbstractLogger implements WordPressHelperLoggerInterface {
@@ -18,9 +18,13 @@ abstract class WordPressHelperLogger extends AbstractLogger implements WordPress
     private $flushImmediately = true;
     private $initialized = false;
 
-    public function __construct(/* string */ $slug, /* int */ $purgeAge = null, /* bool */ $flushImmediately = true)
-    {
+    public function __construct(
         
+            string $slug, 
+            int $purgeAge = null, 
+            bool $flushImmediately = true
+        )
+    {
         $this->slug = WordPressHelper::slugify($slug);
 
         $this->entries = [];
@@ -29,18 +33,14 @@ abstract class WordPressHelperLogger extends AbstractLogger implements WordPress
 
         $this->initialize($slug);
 
-        if($purgeAge !== null & $purgeAge !== 0) {
-            
+        if($purgeAge !== null & $purgeAge !== 0)
             $this->purge();
-        }
     }
 
     public function __destruct()
     {
-        if($this->isFlushed() === false) {
-            
+        if($this->isFlushed() === false)
             $this->flush();
-        }
     }
 
     protected function isInitialized() {
@@ -69,10 +69,8 @@ abstract class WordPressHelperLogger extends AbstractLogger implements WordPress
     public function getEntries($ageInDays = null)
     {
         
-        if($ageInDays === null) {
-            
+        if($ageInDays === null)            
             return $this->entries;
-        }
 
         return array_merge(($this->loadEntries($ageInDays) === null ? [] : $this->loadEntries($ageInDays)), $this->entries);
         //return $this->entries;
@@ -83,7 +81,7 @@ abstract class WordPressHelperLogger extends AbstractLogger implements WordPress
         return $this->flushImmediately;
     }
 
-    public function log($level, $message, array $context = [])
+    public function log($level, Stringable|string $message, array $context = []): void
     {
         $this->entries[] = [
             
@@ -93,10 +91,8 @@ abstract class WordPressHelperLogger extends AbstractLogger implements WordPress
             'context' => $context
         ];
 
-        if($this->getFlushImmediately() === true && !$this->isFlushed()) {
-            
+        if($this->getFlushImmediately() === true && !$this->isFlushed())            
             $this->flush();
-        }
     }
 
     public function isFlushed() {

@@ -10,6 +10,7 @@ use \Ion\WordPress\WordPressHelper as WP;
 use \Ion\PhpHelper as PHP;
 use \Ion\WordPress\Helper\Constants;
 use \Monolog\Logger;
+use \IntlDateFormatter;
 
 class WordPressHelperDatabaseLogger extends WordPressHelperLogger
 {
@@ -36,12 +37,14 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
         if(PHP::count($tableExists) === 0 || $force) {
 
             WP::dbDeltaTable(static::TABLE_NAME, [
+
                 'id' => [ 'type' => 'int(11)', 'null' => false, 'primary' => true, 'auto' => true ],
                 'slug' => [ 'type' => 'varchar(250)', 'null' => false ],
                 'time' => [ 'type' => 'datetime', 'null' => false ],
                 'level' => [ 'type' => 'varchar(250)', 'null' => false ],
                 'message' => [ 'type' => 'text', 'null' => false ],
                 'context' => [ 'type' => 'text', 'null' => true ]
+
             ], true);
         }        
     }
@@ -73,10 +76,8 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
 
         $limit = PHP::toInt(WP::getSiteOption(Constants::MAX_DISPLAYED_LOG_ENTRIES, null));
 
-        if(PHP::isEmpty($limit)) {
-            
+        if(PHP::isEmpty($limit))
             $limit = 100;
-        }
 
         if (PHP::isEmpty($ageInDays)) {
             
@@ -86,7 +87,11 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
 
             $age = ($ageInDays === null ? 1 : $ageInDays);
             $ageTimeStamp = strtotime("-$age days", $currentTimeStamp);
-            $ageTime = strftime('%F %T', $ageTimeStamp);
+            // //$ageTime = strftime('%F %T', $ageTimeStamp);
+            // $formatter = new IntlDateFormatter(get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::LONG);
+            // $ageTime = $formatter->format($ageTimeStamp); 
+            
+            $ageTime = date("Y-m-d H:m:s", $ageTimeStamp);
 
             $records = WP::dbQuery("SELECT * FROM `$table` WHERE `slug` = '$slug' AND `time` > '$ageTime' ORDER BY `time` DESC, `id` DESC LIMIT $limit");
         }
@@ -94,7 +99,9 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
         $result = [];
 
         foreach($records as $entry) {
+
             $result[] = [
+
                 'id' => (int) $entry['id'],
                 'slug' => $entry['slug'],
                 'time' => strtotime($entry['time']),
@@ -117,7 +124,11 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
         $currentTimeStamp = (int) current_time('timestamp');
         $purgeTimeStamp = strtotime("-$purgeAge days", $currentTimeStamp);
 
-        $purgeTime = strftime('%F %T', $purgeTimeStamp);
+        // //$purgeTime = strftime('%F %T', $purgeTimeStamp);
+        // $formatter = new IntlDateFormatter(get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::LONG);
+        // $purgeTime = $formatter->format($purgeTimeStamp);
+
+        $purgeTime = date("Y-m-d H:m:s", $purgeTimeStamp);
 
         $slug = $this->getSlug();
 
@@ -140,12 +151,15 @@ class WordPressHelperDatabaseLogger extends WordPressHelperLogger
         $lines = [];
         $values = [];
         
+        //$formatter = new IntlDateFormatter(get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::LONG);
+
         foreach($this->getEntries(null) as $entry) {
 
             $values = [
                 
                 'slug' => "'" . $this->getSlug() . "'",
-                'time' => "'" . strftime('%F %T', $entry['time']) . "'",
+                // 'time' => "'" . strftime('%F %T', $entry['time']) . "'",
+                'time' => "'" . date("Y-m-d H:m:s", $entry['time']) . "'",
                 'level' => "'" . $entry['level'] . "'",
                 'message' => "'" . str_replace('\'', '\\\'', $entry['message']) . "'",
                 'context' => "'" . serialize($entry['context']) . "'"

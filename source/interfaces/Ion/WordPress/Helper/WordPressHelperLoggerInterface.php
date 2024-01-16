@@ -2,6 +2,8 @@
 
 namespace Ion\WordPress\Helper;
 
+use \Stringable;
+
 interface WordPressHelperLoggerInterface {
 
     function __destruct();
@@ -18,7 +20,7 @@ interface WordPressHelperLoggerInterface {
 
     function getFlushImmediately();
 
-    function log($level, $message, array $context = []);
+    function log($level, Stringable|string $message, array $context = []): void;
 
     function isFlushed();
 
