@@ -759,9 +759,14 @@ HTML;
 
         WP::addFilter('admin_footer_text', function () {
             
-            $serverTime = strftime('%a %e %b %G, %R');
-            $wordPressTime = strftime('%a %e %b %G, %R', current_time('timestamp', 0));
+            $formatter = new IntlDateFormatter('en_US', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
             
+            $serverTime = $formatter->format(time());
+            $serverTime = $formatter->format(current_time('timestamp', 0));
+
+            //$serverTime = strftime('%a %e %b %G, %R');
+            //$wordPressTime = strftime('%a %e %b %G, %R', current_time('timestamp', 0));
+
             $mem = memory_get_peak_usage(true) / 1024 / 1024 . 'Mb';
             $helperVersion = Package::getInstance('ion', 'wp-devhelper')->getVersion()->toString();
             $wordPressVersion = get_bloginfo('version'); //TODO: Need a wrapper function for bloginfo?
