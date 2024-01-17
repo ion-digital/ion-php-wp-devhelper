@@ -7,8 +7,6 @@ use \Ion\WordPress\Helper\WordPressHelperLogInterface;
 
 interface HelperContextInterface {
 
-    static function uninstall(): void;
-
     function setParent(HelperContextInterface $context = null): HelperContextInterface;
 
     function getParent(): ?HelperContextInterface;

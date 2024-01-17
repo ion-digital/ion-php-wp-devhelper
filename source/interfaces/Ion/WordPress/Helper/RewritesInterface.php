@@ -9,8 +9,6 @@ namespace Ion\WordPress\Helper;
  */
 interface RewritesInterface {
 
-    static function addRewriteRule(string $pattern, string $target, bool $top = false): void;
-
-    static function flushRewriteRules(bool $hard = true): void;
+    // No public methods!
 
 }

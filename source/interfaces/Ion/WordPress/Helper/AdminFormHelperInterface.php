@@ -4,15 +4,6 @@ namespace Ion\WordPress\Helper;
 
 interface AdminFormHelperInterface {
 
-    static function createGroupDescriptorInstance(
-
-        string $title = null,
-        string $description = null,
-        string $id = null,
-        int $columns = null
-
-    ): array;
-
     function onRead(callable $onRead = null): AdminFormHelperInterface;
 
     function onCreate(callable $onCreate = null): AdminFormHelperInterface;

@@ -10,8 +10,6 @@ namespace Ion\WordPress\Helper;
  */
 interface AdminTableHelperInterface {
 
-    static function inDetailMode(): bool;
-
     function onRead(callable $onRead): AdminTableHelperInterface;
 
     function onDelete(callable $onDelete): AdminTableHelperInterface;
