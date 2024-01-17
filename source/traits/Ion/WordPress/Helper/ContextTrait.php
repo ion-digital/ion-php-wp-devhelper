@@ -66,7 +66,7 @@ trait ContextTrait {
                 
             $package->getVendor(),
             $package->getProject(),
-            $package->getProjectEntry(),
+            $package->getProjectRootFile(),
             null,
             $helperSettings
         );
