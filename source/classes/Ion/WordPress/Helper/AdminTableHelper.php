@@ -315,8 +315,6 @@ SQL
 
             $table = ($tableNamePrefix === null ? $wpdb->prefix : $tableNamePrefix) . $tableNameWithoutPrefix;
 
-          
-            
             if ($key !== null && count($items) > 0) {
                 
                 $where = [];

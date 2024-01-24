@@ -39,15 +39,27 @@ final class Tools {
 
         if (WP::hasSiteOption(Constants::TOOLS_HIDDEN_OPTION) === false) {
 
-            if (WP::isDebugMode()) {
-                
+            if (WP::isDebugMode())
                 return false;
-            }
 
             return true;
         }
 
         return ((bool) WP::getSiteOption(Constants::TOOLS_HIDDEN_OPTION, false)) === true;
+    }
+
+    public static function isQuick404Enabled(): bool {
+
+        if(static::isDisabled())
+            return false;
+
+        if (!WP::isDebugMode())
+            return false;
+
+        if(PHP::toBool(PHP::filterInput('wp-devhelper-disable-quick-404', [ INPUT_GET ], FILTER_DEFAULT /* FILTER_VALIDATE_BOOLEAN */)))
+            return false;
+
+        return (bool) WP::getSiteOption(Constants::QUICK_404_OPTION, false);
     }
 
     public static function enable() {
