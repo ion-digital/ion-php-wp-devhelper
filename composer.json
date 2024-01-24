@@ -28,11 +28,11 @@
     ],
     "require": {
 
-        "php": ">=8.0",
+        "php": ">=7.4",
         "ion/packaging": "dev-main",
         "ion/autoloader": "dev-main",   
         "ion/php-helper": "dev-main",
-        "psr/log": "^3.0.0",
+        "psr/log": "^1.1.4",
         "erusev/parsedown": "^1.7.4"
     },
     "require-dev": {

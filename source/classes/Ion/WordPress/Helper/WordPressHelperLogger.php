@@ -81,7 +81,8 @@ abstract class WordPressHelperLogger extends AbstractLogger implements WordPress
         return $this->flushImmediately;
     }
 
-    public function log($level, Stringable|string $message, array $context = []): void
+    //public function log($level, Stringable|string $message, array $context = []): void
+    public function log($level, $message, array $context = array())
     {
         $this->entries[] = [
             
