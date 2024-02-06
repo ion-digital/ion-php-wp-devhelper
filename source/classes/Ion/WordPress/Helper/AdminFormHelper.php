@@ -53,6 +53,7 @@ class AdminFormHelper implements AdminFormHelperInterface {
     private $rendered;
     
     public function __construct(array &$descriptor) {
+
         $this->descriptor = &$descriptor;
         $this->group = &$descriptor["groups"][0];
         $this->processed = false;
@@ -151,7 +152,7 @@ class AdminFormHelper implements AdminFormHelperInterface {
         return $this;
     }
 
-    public function processAndRender(bool $echo = true, int $post = null): string {
+    public function processAndRender(bool $echo = false, int $post = null): string {
         
         $this->process($post);
         return $this->render($echo);
@@ -435,10 +436,13 @@ TEMPLATE;
         return $keys;
     }
     
-    public function render(bool $echo = true): string {
+    public function render(bool $echo = false): string {
 
         if ($this->output !== null) {
             
+            if($echo)
+                echo $this->output;
+
             return $this->output;
         }
 
