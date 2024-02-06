@@ -24,8 +24,20 @@ abstract class Context implements ContextInterface {
         \ion\WordPress\Helper\ContextTrait::__construct as private __construct_ContextTrait;
     }
     
-    public function __construct(PackageInterface $package, array $helperSettings = null) {
+    public function __construct(
+        
+        PackageInterface $package, 
+        array $helperSettings = null,
+        callable $onFinalize = null
+    ) {
 
-        $this->__construct_ContextTrait($package, $helperSettings);
+        $this->__construct_ContextTrait(
+            
+            $package,             
+            $helperSettings,
+            null,
+            null,
+            $onFinalize
+        );
     }
 }
