@@ -92,7 +92,7 @@ trait ContextTrait {
             return;
         })  
         ->finalize(function(HelperContextInterface $context) use ($onFinalize) {         
-            
+
             if($onFinalize !== null) {
                 
                 $onFinalize($this);

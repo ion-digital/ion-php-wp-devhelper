@@ -29,7 +29,7 @@ abstract class Context implements ContextInterface {
         PackageInterface $package, 
         array $helperSettings = null,
         callable $onFinalize = null
-    ) {
+    ) {       
 
         $this->__construct_ContextTrait(
             
