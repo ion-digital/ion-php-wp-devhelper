@@ -177,7 +177,7 @@ trait OptionsTrait {
             
             return $default;
         }
-        
+
         $value = get_option($name, null);       
 
         if (PHP::isEmpty($value, false, false)) {
