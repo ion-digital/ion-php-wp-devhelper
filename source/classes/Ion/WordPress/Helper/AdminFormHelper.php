@@ -846,28 +846,29 @@ TEMPLATE;
 
 //                        $optionRecords = WP::getOption($optionName, [], $metaId, $type, $this->getRawOptionOperations());                    
 
-                        $optionRecords = $this->getOption($optionName, [], $metaId, $type);                    
-                
-                        $result = null;
+                $optionRecords = $this->getOption($optionName, [], $metaId, $type);                    
+        
+                $result = null;
 
-                        if (PHP::isCountable($optionRecords) && count($optionRecords) > 0) {
+                if (PHP::isCountable($optionRecords) && count($optionRecords) > 0) {
 
-                            $result = [];
+                    $result = [];
 
-                            if ($record !== null && array_key_exists((string) $record, $optionRecords)) {
+                    if ($record !== null && array_key_exists((string) $record, $optionRecords)) {
 
-                                $result = $optionRecords[(string) $record];
-                            } else {
+                        $result = $optionRecords[(string) $record];
+                        
+                    } else {
 
-                                foreach($optionRecords as $optionRecord) {
+                        foreach($optionRecords as $optionRecord) {
 
-                                    $result[] = $optionRecord;
-                                }
-                            }
+                            $result[] = $optionRecord;
                         }
+                    }
+                }
 
-                        return $result;
-                    });
+                return $result;
+            });
         }
         
         return $this->onRead(function(
