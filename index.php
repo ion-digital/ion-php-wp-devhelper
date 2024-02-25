@@ -10,7 +10,7 @@
     Author: Justus Meyer
     Author URI: https://ion.digital
     Description: WP Devhelper provides a list of methods to aid in WordPress theme- and plug-in development, as well as various tools to aid in debugging.
-    Text Domain: WordPressHelper
+    Text Domain: ion
     Domain Path: /languages
 
  */
