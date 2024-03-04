@@ -155,7 +155,14 @@ trait OptionsTrait {
         $sqlQuery = null;
         $optionField = 'option_name';            
         
-        $dbPrefix = ($type === "user" ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->get_blog_prefix()) ?? $wpdb->prefix;
+        $dbPrefix = null;
+
+        if(defined("BLOG_ID_CURRENT_SITE")) {
+
+            $dbPrefix = ($type === "user" ? $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) : $wpdb->get_blog_prefix());
+        }
+
+        $dbPrefix = $dbPrefix ?? $wpdb->prefix;
 
         if($id === null || $type === null) {
             
