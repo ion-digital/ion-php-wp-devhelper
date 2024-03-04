@@ -155,16 +155,14 @@ trait OptionsTrait {
         $sqlQuery = null;
         $optionField = 'option_name';            
         
-        $dbPrefix = null;
+        $dbPrefix = $wpdb->get_blog_prefix() ?? $wpdb->prefix;
 
         if($id === null || $type === null) {
             
-            $dbPrefix = $wpdb->prefix;
             $sqlQuery = "SELECT * FROM `{$dbPrefix}options` WHERE {$optionField} LIKE ('{$name}') LIMIT 1";
         }
-        else {
+        else {            
             
-            $dbPrefix = $wpdb->get_blog_prefix(BLOG_ID_CURRENT_SITE) ?? $wpdb->prefix;
             $sqlQuery = "SELECT * FROM `{$dbPrefix}{$type}meta` WHERE `meta_key` LIKE ('{$name}') AND `{$type}_id` = {$id} LIMIT 1";
         }
 
