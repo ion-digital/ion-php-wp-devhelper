@@ -25,13 +25,13 @@
             "role": "developer",
             "homepage": "https://ion.digital"
         }
-    ],
+    ],    
     "require": {
 
         "php": ">=7.4",
-        "ion/packaging": "dev-main",
-        "ion/autoloader": "dev-main",   
-        "ion/php-helper": "dev-main",
+        "ion/packaging": "^1.0.0",
+        "ion/autoloader": "^1.0.0",   
+        "ion/php-helper": "^0.20.1",
         "psr/log": "^1.1.4",
         "erusev/parsedown": "^1.7.4"
     },
@@ -90,6 +90,9 @@
         ]
     },
     "config": {
+
+        "process-timeout": 900,
+
         "allow-plugins": {
             "ion/packaging-dev": true,
             "ion/dev": true
