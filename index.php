@@ -5,7 +5,7 @@
     See license information at the package root in LICENSE.md
 
     Plugin Name: WP Dev/helper
-    Version: 0.85.6 (main)
+    Version: 0.90.1 (main)
     Plugin URI: https://ion.digital/wp-devhelper
     Author: Justus Meyer
     Author URI: https://ion.digital
