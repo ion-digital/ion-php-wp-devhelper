@@ -17,33 +17,85 @@
         "WordPress Themes",
         "logging"
     ],
-    "homepage": "https://bitbucket.org/ion-digital-projects/wordpress-helper/",
-    "license": "LGPL-3.0-or-later",
+    "homepage": "https://github.com/ion-digital/ion-wp-devhelper",
+    "license": "LGPL-3.0",
     "authors": [
         {
             "name": "Justus Meyer",
             "role": "developer",
-            "homepage": "https://justusmeyer.com",
-            "email": "justus@justusmeyer.com"
+            "homepage": "https://ion.digital"
         }
-    ],
-    "support": {
-        "issues": "https://bitbucket.org/ion-digital-projects/wordpress-helper/issues"
-    },
+    ],    
     "require": {
-        "php": ">=5.6",    
-        "ion/php-helper": "^0.10",
-        "psr/log": "1.0.2",
-        "erusev/parsedown": "^1.7.1"
+
+        "php": ">=7.4",
+        "ion/packaging": "^1.0.0",
+        "ion/autoloader": "^1.0.0",   
+        "ion/php-helper": "^0.20.1",
+        "psr/log": "^1.1.4",
+        "erusev/parsedown": "^1.7.4"
     },
     "require-dev": {
-        "php": ">=7.2",
-        "ion/dev": "^0.7"
+        "ion/packaging-dev": "dev-main"
     },       
+    "prefer-stable": true,
+    "minimum-stability": "dev", 
+
     "autoload": {
         "files": [
-            "autoload.php"
+            "index.php"
+        ]
+    },    
+    "autoload-dev": {
+        "psr-4": {
+            "Ion\\": [ 
+                "tests/unit/Ion/"
+            ]
+        }
+    },
+    "repositories": [   
+        {
+            "type": "vcs",
+            "url": "https://github.com/ion-digital/ion-php-helper/"
+        },             
+        {
+            "type": "vcs",
+            "url": "https://github.com/ion-digital/ion-php-autoloader/"
+        },         
+        {
+            "type": "vcs",
+            "url": "https://github.com/ion-digital/ion-php-packaging/"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/ion-digital/ion-php-packaging-dev.git"
+        },  
+        {
+            "type": "vcs",
+            "url": "https://github.com/ion-digital/ion-php-dev.git"
+        },
+        {
+            "type": "composer",
+            "url": "https://composer.packages.ion.digital"
+        }        
+    ],
+    "scripts": {
+        "make": [
+
+            "./vendor/bin/phing -f ./build.xml"
+        ],
+        "tests": [
+
+            "./vendor/bin/phpunit ./tests/unit"
         ]
     },
-    "minimum-stability": "dev"
+    "config": {
+
+        "process-timeout": 900,
+
+        "allow-plugins": {
+            "ion/packaging-dev": true,
+            "ion/dev": true
+        }
+    }
 }
